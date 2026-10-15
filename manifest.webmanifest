@@ -1,0 +1,21 @@
+{
+  "name": "প্রশ্ন — প্রশ্নপত্র ও এমসিকিউ পরীক্ষা",
+  "short_name": "প্রশ্ন",
+  "description": "Make print-ready question papers from the Class 3–8 question bank and check MCQ sheets with your phone.",
+  "lang": "bn",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f4f7f3",
+  "theme_color": "#1CD5E5",
+  "icons": [
+    {"src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png"},
+    {"src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png"},
+    {"src": "icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
+  ],
+  "shortcuts": [
+    {"name": "প্রশ্নপত্র তৈরি", "url": "./#create"},
+    {"name": "এমসিকিউ পরীক্ষা", "url": "./#check"}
+  ],
+  "categories": ["education", "productivity"]
+}

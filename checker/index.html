@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
 <title>MCQ</title>
 <meta name="description" content="Check MCQ answer sheets with your phone camera.">
-<meta name="theme-color" content="#ABC2FD" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#1C3597" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#FFD3E6" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#4A0F2C" media="(prefers-color-scheme: dark)">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -15,13 +15,13 @@
 <link rel="icon" href="icons/favicon-32.png" type="image/png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <style>:root{
-  --top:#ABC2FD; --bot:#DCC6F2; --bg:#EDF1FB; --blob1:#8FB0FF; --blob2:#A6EAD8; --blob3:#FFC9DF; --blob4:#C9B8FF;
+  --top:#FFD3E6; --bot:#FCE4F0; --bg:#FFF4F9; --blob1:#FFB3D3; --blob2:#FFE0EE; --blob3:#FFC2DD; --blob4:#F7D0E6;
   --glass:rgba(255,255,255,.56); --glass-2:rgba(255,255,255,.78); --glass-3:rgba(255,255,255,.34);
   --stroke:rgba(255,255,255,.75); --stroke-2:rgba(20,30,70,.08);
   --hi:inset 0 1px 0 rgba(255,255,255,.9), inset 0 -1px 0 rgba(255,255,255,.2);
   --shadow:0 10px 30px -8px rgba(28,40,96,.22), 0 2px 6px rgba(28,40,96,.06);
   --ink:#0B1222; --ink-2:#4A5470; --ink-3:#8790A8;
-  --primary:#2F5BFF; --primary-2:#6A87FF; --on-primary:#FFFFFF; --primary-soft:rgba(47,91,255,.12);
+  --primary:#E5006E; --primary-2:#FF2E8A; --on-primary:#FFFFFF; --primary-soft:rgba(229,0,110,.12);
   --ok:#14924A; --ok-soft:rgba(20,146,74,.14); --bad:#DC3B41; --bad-soft:rgba(220,59,65,.13);
   --warn:#C26A00; --warn-soft:rgba(245,158,11,.2); --mute:#6B7590; --mute-soft:rgba(107,117,144,.14);
   --f:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display","Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
@@ -30,26 +30,26 @@
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
-    --top:#1C3597; --bot:#45246A; --bg:#060A14; --blob1:#1F3CA8; --blob2:#0D5C57; --blob3:#5B1D4A; --blob4:#3A2A8C;
+    --top:#4A0F2C; --bot:#2A0B1E; --bg:#12060C; --blob1:#6E1440; --blob2:#3B0D26; --blob3:#5B1D4A; --blob4:#401033;
     --glass:rgba(28,36,58,.55); --glass-2:rgba(36,46,72,.8); --glass-3:rgba(28,36,58,.35);
     --stroke:rgba(255,255,255,.13); --stroke-2:rgba(255,255,255,.07);
     --hi:inset 0 1px 0 rgba(255,255,255,.14), inset 0 -1px 0 rgba(255,255,255,.03);
     --shadow:0 12px 34px -8px rgba(0,0,0,.6), 0 2px 6px rgba(0,0,0,.3);
     --ink:#EEF2FC; --ink-2:#A9B2CB; --ink-3:#6E7894;
-    --primary:#7194FF; --primary-2:#98B0FF; --on-primary:#06102A; --primary-soft:rgba(113,148,255,.18);
+    --primary:#FF3D93; --primary-2:#FF6FAE; --on-primary:#2A0015; --primary-soft:rgba(255,61,147,.18);
     --ok:#4CD684; --ok-soft:rgba(76,214,132,.16); --bad:#FF7A7E; --bad-soft:rgba(255,122,126,.16);
     --warn:#FFB547; --warn-soft:rgba(255,181,71,.18); --mute:#98A2BC; --mute-soft:rgba(152,162,188,.14);
     color-scheme:dark;
   }
 }
 :root[data-theme="dark"]{
-  --top:#1C3597; --bot:#45246A; --bg:#060A14; --blob1:#1F3CA8; --blob2:#0D5C57; --blob3:#5B1D4A; --blob4:#3A2A8C;
+  --top:#4A0F2C; --bot:#2A0B1E; --bg:#12060C; --blob1:#6E1440; --blob2:#3B0D26; --blob3:#5B1D4A; --blob4:#401033;
   --glass:rgba(28,36,58,.55); --glass-2:rgba(36,46,72,.8); --glass-3:rgba(28,36,58,.35);
   --stroke:rgba(255,255,255,.13); --stroke-2:rgba(255,255,255,.07);
   --hi:inset 0 1px 0 rgba(255,255,255,.14), inset 0 -1px 0 rgba(255,255,255,.03);
   --shadow:0 12px 34px -8px rgba(0,0,0,.6), 0 2px 6px rgba(0,0,0,.3);
   --ink:#EEF2FC; --ink-2:#A9B2CB; --ink-3:#6E7894;
-  --primary:#7194FF; --primary-2:#98B0FF; --on-primary:#06102A; --primary-soft:rgba(113,148,255,.18);
+  --primary:#FF3D93; --primary-2:#FF6FAE; --on-primary:#2A0015; --primary-soft:rgba(255,61,147,.18);
   --ok:#4CD684; --ok-soft:rgba(76,214,132,.16); --bad:#FF7A7E; --bad-soft:rgba(255,122,126,.16);
   --warn:#FFB547; --warn-soft:rgba(255,181,71,.18); --mute:#98A2BC; --mute-soft:rgba(152,162,188,.14);
   color-scheme:dark;
@@ -1642,6 +1642,170 @@ function importFromPaper() {
   }
 })();
 
+</script>
+<script>
+/* ---------------- interface language: বাংলা / English ----------------
+   The interface text is translated in place (the question paper itself keeps the language of its subject).
+   PAIRS: exact [English, বাংলা]. PATS: [regex on the original text, english(...groups), bangla(...groups)].
+   Every node remembers its original text, so switching back and forth never compounds. */
+const I18N = (() => {
+  const BNd = '০১২৩৪৫৬৭৮৯';
+  const toBn = s => String(s).replace(/[0-9]/g, d => BNd[d]);
+  const toEn = s => String(s).replace(/[০-৯]/g, d => BNd.indexOf(d));
+  const en2bn = new Map(), bn2en = new Map();
+  const norm = t => t.replace(/\s+/g, ' ').trim();
+  function add(pairs){ pairs.forEach(([e, b]) => { en2bn.set(norm(e), b); bn2en.set(norm(b), e); }); }
+  const pats = [];
+  function addPats(list){ pats.push(...list); }
+  let lang = 'bn'; try{ lang = localStorage.getItem('proshno-ui-lang') || 'bn'; }catch(e){}
+  function tr(orig){
+    const t = norm(orig); if(!t) return orig;
+    const lead = orig.match(/^\s*/)[0], trail = orig.match(/\s*$/)[0];
+    let out = null;
+    if(lang === 'bn'){ if(en2bn.has(t)) out = en2bn.get(t); }
+    else { if(bn2en.has(t)) out = bn2en.get(t); }
+    if(out === null) for(const [re, fe, fb] of pats){ const m = t.match(re); if(m){ out = (lang === 'bn' ? fb : fe)(...m.slice(1)); break; } }
+    if(out === null && /^[\d০-৯\s+=×.,%°\-–:/]+$/.test(t)) out = lang === 'bn' ? toBn(t) : toEn(t);
+    return out === null ? orig : lead + out + trail;
+  }
+  const SKIP = 'script,style,iframe,textarea,.exporthost,#fontPrev,[data-noi18n]';
+  const seen = new WeakMap();   // text node -> {o: original, s: shown}
+  const aseen = new WeakMap();  // element -> {attr: {o, s}}
+  const ATTRS = ['placeholder', 'title', 'aria-label', 'label'];
+  function skip(el){ if(!el) return true; if(el.closest(SKIP)) return true; const pg = el.closest('.page'); return !!(pg && !el.closest('.qtools')); }
+  function doText(n){
+    if(skip(n.parentElement)) return;
+    let r = seen.get(n); const v = n.nodeValue;
+    if(!r || v !== r.s){ r = {o: v}; seen.set(n, r); }
+    const nv = tr(r.o); r.s = nv; if(nv !== v) n.nodeValue = nv;
+  }
+  function doEl(el){
+    if(skip(el)) return;
+    let rec = aseen.get(el); if(!rec){ rec = {}; aseen.set(el, rec); }
+    const list = ATTRS.slice(); if(el.tagName === 'INPUT' && el.disabled && el.type === 'text') list.push('value');
+    list.forEach(a => { const v = a === 'value' ? el.value : el.getAttribute(a); if(v == null || v === '') return;
+      let r = rec[a]; if(!r || v !== r.s) r = rec[a] = {o: v};
+      const nv = tr(r.o); r.s = nv; if(nv !== v){ if(a === 'value') el.value = nv; else el.setAttribute(a, nv); } });
+  }
+  function walk(root){
+    if(root.nodeType === 3) return doText(root);
+    if(root.nodeType !== 1) return;
+    doEl(root);
+    const w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT | NodeFilter.SHOW_ELEMENT, { acceptNode: n => n.nodeType === 1 && n.matches(SKIP) ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT });
+    let n; while((n = w.nextNode())) n.nodeType === 3 ? doText(n) : doEl(n);
+  }
+  let mo = null, pend = new Set(), raf = 0;
+  function flush(){ raf = 0; mo && mo.disconnect(); const list = [...pend]; pend.clear(); list.forEach(n => n.isConnected && walk(n)); observe(); }
+  function observe(){ mo.observe(document.body, {childList: true, subtree: true, characterData: true, attributes: true, attributeFilter: ATTRS}); }
+  const listeners = [];
+  function apply(){
+    document.documentElement.lang = lang;
+    document.documentElement.dataset.ui = lang;
+    mo && mo.disconnect(); walk(document.body); mo && observe();
+    document.querySelectorAll('.langsw button').forEach(b => b.setAttribute('aria-pressed', b.dataset.lang === lang));
+    listeners.forEach(f => f(lang));
+  }
+  function set(l){ lang = l === 'en' ? 'en' : 'bn'; try{ localStorage.setItem('proshno-ui-lang', lang); }catch(e){} apply(); }
+  function start(){
+    mo = new MutationObserver(ms => { ms.forEach(m => { if(m.type === 'characterData') pend.add(m.target); else if(m.type === 'attributes') pend.add(m.target); else m.addedNodes.forEach(n => pend.add(n)); }); flush(); });
+    apply();
+    document.addEventListener('click', e => { const b = e.target.closest('.langsw button'); if(b) set(b.dataset.lang); });
+  }
+  return { add, addPats, start, set, get lang(){ return lang; }, tr, toBn, toEn, onChange: f => listeners.push(f), apply };
+})();
+
+/* words for the MCQ test (checker): [English, বাংলা] */
+I18N.add([
+  ['Home', 'হোম'], ['Back to home', 'হোমে ফিরুন'], ['Back', 'পেছনে'], ['Settings', 'সেটিংস'], ['Close', 'বন্ধ'], ['Less', 'কম'], ['More', 'বেশি'],
+  ['MCQ', 'এমসিকিউ'], ['Exams', 'পরীক্ষাসমূহ'],
+  ['Check MCQ papers with your camera', 'ক্যামেরা দিয়ে এমসিকিউ খাতা দেখুন'],
+  ['Create an exam', 'পরীক্ষা তৈরি করুন'], ['Give it a name and the number of questions.', 'নাম আর প্রশ্নের সংখ্যা দিন।'],
+  ['Set the answer key', 'উত্তরমালা দিন'], ['Scan one filled sheet, or type the answers.', 'একটি পূরণ করা শিট স্ক্যান করুন, অথবা উত্তর টাইপ করুন।'],
+  ['Scan the papers', 'খাতা স্ক্যান করুন'], ['Point at each sheet — the marks show up at once.', 'প্রতিটি শিটের দিকে ক্যামেরা ধরুন — নম্বর সাথে সাথে দেখাবে।'],
+  ['Create your first exam', 'প্রথম পরীক্ষা তৈরি করুন'], ['New exam', 'নতুন পরীক্ষা'],
+  ['Install on this phone', 'এই মোবাইলে ইনস্টল করুন'], ['Everything is stored on this phone and works offline.', 'সব তথ্য এই মোবাইলেই থাকে, ইন্টারনেট ছাড়াও চলে।'],
+  ['Install MCQ', 'এমসিকিউ ইনস্টল করুন'], ['Opens from your home screen, full screen, and works without internet.', 'হোম স্ক্রিন থেকে পুরো স্ক্রিনে খুলবে, ইন্টারনেট ছাড়াও চলবে।'],
+  ['Open this link on your phone to install it there.', 'মোবাইলে ইনস্টল করতে এই লিংকটি মোবাইলে খুলুন।'], ['Not now', 'এখন না'], ['Install app', 'অ্যাপ ইনস্টল'], ['Install', 'ইনস্টল'],
+  ['Exam name', 'পরীক্ষার নাম'], ['Type your exam name', 'পরীক্ষার নাম লিখুন'], ['Questions', 'প্রশ্ন'], ['Custom number of questions', 'নিজের মতো প্রশ্নের সংখ্যা'],
+  ['Roll number bubbles on the sheet', 'শিটে রোল নম্বরের বাবল'], ['None — I will type names', 'নেই — নাম আমি টাইপ করব'],
+  ['Create exam', 'পরীক্ষা তৈরি করুন'], ['Give the exam a name.', 'পরীক্ষার একটি নাম দিন।'], ['Between 1 and 100.', '১ থেকে ১০০-এর মধ্যে।'], ['More than 0.', '০-এর বেশি।'],
+  ['Answer key', 'উত্তরমালা'], ['Scan', 'স্ক্যান'], ['Results', 'ফলাফল'],
+  ['Scan answer key', 'উত্তরমালা স্ক্যান'], ['Scan the answer key', 'উত্তরমালা স্ক্যান করুন'],
+  ['Fill the correct bubbles on one blank sheet and point the camera at it.', 'একটি ফাঁকা শিটে সঠিক বাবলগুলো ভরাট করে ক্যামেরা ধরুন।'],
+  ['From gallery', 'গ্যালারি থেকে'], ['Type answers', 'উত্তর টাইপ করুন'], ['Try with a sample key photo', 'নমুনা ছবি দিয়ে চেষ্টা করুন'],
+  ['Quick type: ACBDA…', 'দ্রুত লিখুন: ACBDA…'], ['Fill', 'পূরণ'], ['Start over', 'আবার শুরু'], ['Keep the current key', 'আগের উত্তরমালা রাখুন'],
+  ['Scan papers', 'খাতা স্ক্যান করুন'],
+  ['Point at a sheet and tap the button. You\'ll see the score right away — tap', 'শিটের দিকে ক্যামেরা ধরে বোতাম চাপুন। সাথে সাথে নম্বর দেখবেন — পরের খাতার জন্য চাপুন'],
+  ['Next paper', 'পরের খাতা'], ['for the next one.', '।'],
+  ['Answer key saved. Start scanning.', 'উত্তরমালা সংরক্ষিত। এবার স্ক্যান শুরু করুন।'],
+  ['No results yet', 'এখনও কোনো ফলাফল নেই'], ['No results yet.', 'এখনও কোনো ফলাফল নেই।'], ['Scanned papers show up here with their scores.', 'স্ক্যান করা খাতা নম্বরসহ এখানে দেখাবে।'],
+  ['Answer key confirmed', 'উত্তরমালা নিশ্চিত'], ['Edit', 'বদলান'], ['Edit answer key', 'উত্তরমালা বদলান'], ['Share results', 'ফলাফল শেয়ার'], ['Delete exam', 'পরীক্ষা মুছুন'],
+  ['Answer key first', 'আগে উত্তরমালা দিন'], ['Papers are marked against the key.', 'উত্তরমালার সাথে মিলিয়ে নম্বর দেওয়া হয়।'],
+  ['Sample', 'নমুনা'], ['Sample papers', 'নমুনা খাতা'], ['Scanned', 'স্ক্যান হয়েছে'], ['average', 'গড়'], ['papers', 'খাতা'], ['paper', 'খাতা'], ['need roll/name', 'রোল/নাম লাগবে'],
+  ['Unnamed paper', 'নামহীন খাতা'], ['Add roll or name', 'রোল বা নাম দিন'], ['Search roll or name', 'রোল বা নাম খুঁজুন'], ['No match.', 'মেলেনি।'],
+  ['Roll', 'রোল'], ['Roll number', 'রোল নম্বর'], ['· needed', '· দরকার'], ['Type roll number', 'রোল নম্বর লিখুন'], ['Name', 'নাম'], ['Optional', 'ঐচ্ছিক'],
+  ['Scan this paper again', 'খাতাটি আবার স্ক্যান করুন'], ['right', 'সঠিক'], ['wrong', 'ভুল'], ['Answers', 'উত্তর'], ['Show answers as', 'উত্তর দেখান'], ['Grid', 'ঘর'], ['Table', 'তালিকা'],
+  ['Scanned sheet', 'স্ক্যান করা শিট'], ['Scanned sheet with marks', 'দাগসহ স্ক্যান করা শিট'], ['This paper', 'এই খাতা'], ['View full sheet', 'পুরো শিট দেখুন'],
+  ['Read the photo again', 'ছবিটি আবার পড়ুন'], ['Delete paper', 'খাতা মুছুন'], ['Correct', 'সঠিক'], ['Wrong', 'ভুল'], ['Correct answer', 'সঠিক উত্তর'],
+  ['On the sheet', 'শিটে দেওয়া'], ['Confidence', 'নিশ্চয়তা'], ['Change the answer if it was read wrong:', 'ভুল পড়া হলে উত্তর বদলান:'], ['No answer', 'উত্তর নেই'],
+  ['Student', 'শিক্ষার্থী'], ['Key', 'উত্তরমালা'], ['Result', 'ফল'], ['Question', 'প্রশ্ন'], ['Undo', 'ফিরিয়ে আনুন'], ['Score', 'নম্বর'], ['marks', 'নম্বর'],
+  ['Send to WhatsApp, email, Drive or save to your phone.', 'WhatsApp, ইমেইল, Drive-এ পাঠান বা মোবাইলে রাখুন।'], ['PDF report', 'PDF রিপোর্ট'], ['Excel sheet', 'Excel শিট'], ['CSV file', 'CSV ফাইল'], ['Cancel', 'বাতিল'],
+  ['Camera is blocked', 'ক্যামেরা বন্ধ আছে'], ['MCQ needs the camera to scan sheets. Photos are read on this phone and never uploaded.', 'শিট স্ক্যান করতে ক্যামেরা লাগবে। ছবি এই মোবাইলেই পড়া হয়, কোথাও আপলোড হয় না।'],
+  ['Use the phone\'s camera app', 'মোবাইলের ক্যামেরা অ্যাপ ব্যবহার করুন'], ['Pick from gallery', 'গ্যালারি থেকে নিন'],
+  ['Reading answers…', 'উত্তর পড়া হচ্ছে…'], ['See answers', 'উত্তর দেখুন'], ['Done', 'শেষ'], ['Done.', 'শেষ।'], ['Take photo again', 'আবার ছবি তুলুন'], ['Starting camera…', 'ক্যামেরা চালু হচ্ছে…'],
+  ['Auto', 'অটো'], ['Automatic capture', 'নিজে থেকে ছবি তোলা'], ['Take photo', 'ছবি তুলুন'], ['Taking photo…', 'ছবি তোলা হচ্ছে…'],
+  ['Already scanned', 'আগেই স্ক্যান হয়েছে'], ['This is the sheet you just scanned. Put the next one in view.', 'এই শিটটি এইমাত্র স্ক্যান হয়েছে। পরেরটি সামনে ধরুন।'],
+  ['Point at the answer sheet', 'উত্তরপত্রের দিকে ক্যামেরা ধরুন'], ['Hold steady…', 'স্থির রাখুন…'], ['Hold the sheet steady to capture again', 'আবার তুলতে শিট স্থির রাখুন'], ['Show the next sheet', 'পরের শিট দেখান'],
+  ['Move closer', 'আরও কাছে আনুন'], ['Move farther away', 'একটু দূরে নিন'], ['Move the whole sheet into the frame', 'পুরো শিট ফ্রেমের ভেতরে আনুন'], ['Too dark', 'খুব অন্ধকার'],
+  ['Too dark — move to better light', 'খুব অন্ধকার — আলোতে যান'], ['Too much glare', 'বেশি ঝলক'], ['Hold steady — image is blurry', 'স্থির রাখুন — ছবি ঝাপসা'], ['Hold the phone flat above the sheet', 'মোবাইল শিটের ঠিক উপরে সোজা ধরুন'],
+  ['Finding the sheet', 'শিট খোঁজা হচ্ছে'], ['Finding bubbles', 'বাবল খোঁজা হচ্ছে'],
+  ['Not a photo', 'এটি ছবি নয়'], ['Pick a JPG or PNG photo of the answer sheet.', 'উত্তরপত্রের JPG বা PNG ছবি দিন।'], ['Photo is too large', 'ছবি অনেক বড়'],
+  ['Use a photo under 40 MB — a normal phone photo is 2–6 MB.', '৪০ MB-এর ছোট ছবি দিন — সাধারণ মোবাইল ছবি ২–৬ MB।'], ['Reading took too long', 'পড়তে অনেক সময় লাগছে'],
+  ['Try again with the sheet filling most of the photo, flat and in good light.', 'শিট সোজা রেখে, ভালো আলোতে, ছবির বেশিরভাগ জুড়ে রেখে আবার চেষ্টা করুন।'],
+  ['Set the answer key first.', 'আগে উত্তরমালা দিন।'], ['No answer bubbles found. Photograph the whole sheet, flat and sharp.', 'কোনো বাবল পাওয়া যায়নি। পুরো শিট সোজা ও স্পষ্ট করে ছবি তুলুন।'],
+  ['Could not read that photo.', 'ছবিটি পড়া যায়নি।'], ['The camera is busy in another app. Close it, or take the photo with the camera app.', 'ক্যামেরা অন্য অ্যাপে চালু আছে। সেটি বন্ধ করুন, বা ক্যামেরা অ্যাপ দিয়ে ছবি তুলুন।'],
+  ['Fill one bubble completely with a dark pencil or black pen.', 'গাঢ় পেন্সিল বা কালো কলম দিয়ে একটি বাবল পুরো ভরাট করুন।'],
+  ['Hold the phone steady and tap the screen to focus before taking the photo.', 'ছবি তোলার আগে মোবাইল স্থির রেখে স্ক্রিনে চাপ দিয়ে ফোকাস করুন।'],
+  ['Hold the phone straight above the sheet, fill the frame with the page and make sure the bubbles are in focus.', 'মোবাইল শিটের ঠিক উপরে ধরুন, পুরো পাতা ফ্রেমে রাখুন আর বাবলগুলো স্পষ্ট আছে কিনা দেখুন।'],
+  ['Keep the four black corner squares visible in the photo.', 'চার কোণের কালো বর্গগুলো ছবিতে রাখুন।'], ['Move to better light and keep your shadow off the sheet.', 'ভালো আলোতে যান, শিটের উপর নিজের ছায়া ফেলবেন না।'],
+  ['A column of answers was not found', 'উত্তরের একটি কলাম পাওয়া যায়নি'],
+  ['Part of a column of bubbles was not found, so answers could land on the wrong question. Retake the photo flat, in even light, with the whole answer area in view.', 'বাবলের একটি কলামের অংশ পাওয়া যায়নি, তাই উত্তর ভুল প্রশ্নে যেতে পারে। শিট সোজা রেখে, সমান আলোতে, পুরো উত্তর অংশ ফ্রেমে রেখে আবার ছবি তুলুন।'],
+  ['There seem to be answers left of the ones that were found. Retake the photo flat, in even light, with the whole answer area in view.', 'পাওয়া উত্তরগুলোর বাঁ দিকে আরও উত্তর আছে মনে হচ্ছে। শিট সোজা রেখে, সমান আলোতে, পুরো উত্তর অংশ ফ্রেমে রেখে আবার ছবি তুলুন।'],
+  ['PDF export is still loading, try again.', 'PDF এখনও লোড হচ্ছে, আবার চেষ্টা করুন।'], ['Preparing the PDF…', 'PDF তৈরি হচ্ছে…'],
+  ['Delete this exam?', 'পরীক্ষাটি মুছবেন?'], ['Exam deleted.', 'পরীক্ষা মুছে ফেলা হয়েছে।'], ['Delete this paper?', 'খাতাটি মুছবেন?'], ['Paper deleted.', 'খাতা মুছে ফেলা হয়েছে।'],
+  ['Delete', 'মুছুন'], ['Scan the sheet again. It will replace this paper.', 'শিটটি আবার স্ক্যান করুন। এটি আগের খাতার জায়গায় বসবে।'],
+  ['Original photo not available.', 'আসল ছবি পাওয়া যাচ্ছে না।'], ['Reading again…', 'আবার পড়া হচ্ছে…'], ['Installed. Open MCQ from your home screen.', 'ইনস্টল হয়েছে। হোম স্ক্রিন থেকে খুলুন।'],
+  ['Could not read the answer key from the question paper.', 'প্রশ্নপত্র থেকে উত্তরমালা পড়া যায়নি।'], ['This question paper is already here.', 'এই প্রশ্নপত্রটি আগেই যোগ করা আছে।'],
+  ['Something went wrong', 'কিছু একটা সমস্যা হয়েছে'], ['to check', 'যাচাই বাকি'], ['All checked', 'সব যাচাই হয়েছে'],
+  ['See what was found', 'কী পাওয়া গেছে দেখুন'], ['They\'re highlighted below. Tap the right option.', 'নিচে চিহ্নিত করা আছে। সঠিক অপশনে চাপুন।'], ['Check a few, then confirm.', 'কয়েকটি মিলিয়ে দেখে নিশ্চিত করুন।'],
+  ['Tap the', 'চাপুন'], ['Share', 'Share'], ['button', 'বোতাম'], ['at the bottom of Safari', '(Safari-র নিচে)'], ['Scroll and tap', 'নিচে গিয়ে চাপুন'], ['Add to Home Screen', 'Add to Home Screen'],
+  ['Tap', 'চাপুন'], ['Add', 'Add'], ['. MCQ appears with your apps.', '। অ্যাপের তালিকায় এমসিকিউ দেখাবে।'], ['menu in Chrome', 'মেনু (Chrome)'], ['or', 'অথবা'], ['Add to Home screen', 'Add to Home screen'],
+  ['To install on iPhone: tap the Share button in Safari, then', 'iPhone-এ ইনস্টল: Safari-র Share বোতাম চাপুন, তারপর'],
+  ['Sign in', 'সাইন ইন'], ['Email', 'ইমেইল'], ['Password', 'পাসওয়ার্ড'], ['Show password', 'পাসওয়ার্ড দেখান'],
+  ['When a mark is unclear', 'দাগ অস্পষ্ট হলে'], ['Question order on your own sheets', 'নিজের শিটে প্রশ্নের ক্রম'], ['Down each column', 'কলাম ধরে নিচে'], ['Across each row', 'সারি ধরে পাশে'], ['Show sample exam', 'নমুনা পরীক্ষা দেখান'],
+]);
+I18N.addPats([
+  [/^(\d+) digits$/, n => `${n} digits`, n => `${I18N.toBn(n)} অঙ্ক`],
+  [/^(\d+) questions · A–([A-E])(?: · \+([\d.]+))?(?: \/ −([\d.]+))?(?: ·)?$/, (n, l, m, g) => `${n} questions · A–${l}${m ? ' · +' + m : ''}${g ? ' / −' + g : ''}`, (n, l, m, g) => `${I18N.toBn(n)}টি প্রশ্ন · A–${l}${m ? ' · +' + I18N.toBn(m) : ''}${g ? ' / −' + I18N.toBn(g) : ''}`],
+  [/^(\d+) questions · (\d+) papers?$/, (n, p) => `${n} questions · ${p} papers`, (n, p) => `${I18N.toBn(n)}টি প্রশ্ন · ${I18N.toBn(p)}টি খাতা`],
+  [/^(\d+) right · (\d+) wrong$/, (r, w) => `${r} right · ${w} wrong`, (r, w) => `${I18N.toBn(r)} সঠিক · ${I18N.toBn(w)} ভুল`],
+  [/^Confirm key · (\d+)\/(\d+)$/, (a, b) => `Confirm key · ${a}/${b}`, (a, b) => `উত্তরমালা নিশ্চিত করুন · ${I18N.toBn(a)}/${I18N.toBn(b)}`],
+  [/^Q(\d+) ([A-E])$/, (q, o) => `Q${q} ${o}`, (q, o) => `প্রশ্ন ${I18N.toBn(q)} ${o}`],
+  [/^Question (\d+)(?: (Correct|Wrong|Unanswered|Unclear))?$/, (q, s) => `Question ${q}${s ? ' ' + s : ''}`, (q, s) => `প্রশ্ন ${I18N.toBn(q)}${s ? ' ' + ({Correct: 'সঠিক', Wrong: 'ভুল', Unanswered: 'উত্তর নেই', Unclear: 'অস্পষ্ট'})[s] : ''}`],
+  [/^(\d+) answers? (?:was|were) only partly filled and (?:was|were) still read\.$/, n => `${n} answer(s) only partly filled but still read.`, n => `${I18N.toBn(n)}টি উত্তর আংশিক ভরাট ছিল, তবুও পড়া গেছে।`],
+  [/^(.+) — counted as wrong\. Tap a question to correct it if the scan was wrong\.$/, x => `${x} — counted as wrong. Tap a question to correct it if the scan was wrong.`, x => `${I18N.toBn(x.replace(/(\d+) not answered/, '$1টির উত্তর নেই').replace(/(\d+) with two marks/, '$1টিতে দুটি দাগ').replace(/(\d+) unclear/, '$1টি অস্পষ্ট'))} — ভুল ধরা হয়েছে। স্ক্যান ভুল হলে প্রশ্নে চেপে ঠিক করুন।`],
+  [/^Found (\d+) of (\d+) questions$/, (a, b) => `Found ${a} of ${b} questions`, (a, b) => `${I18N.toBn(b)}টির মধ্যে ${I18N.toBn(a)}টি প্রশ্ন পাওয়া গেছে`],
+  [/^Could not line up (\d+) of (\d+) questions$/, (a, b) => `Could not line up ${a} of ${b} questions`, (a, b) => `${I18N.toBn(b)}টির মধ্যে ${I18N.toBn(a)}টি প্রশ্ন মেলানো যায়নি`],
+  [/^Answer key added from your question paper(?: \((\d+) sets\))?\. Print the answer sheets, then scan\.$/, n => `Answer key added from your question paper${n ? ` (${n} sets)` : ''}. Print the answer sheets, then scan.`, n => `প্রশ্নপত্রের উত্তরমালা যোগ হয়েছে${n ? ` (${I18N.toBn(n)}টি সেট)` : ''}। উত্তরপত্র প্রিন্ট করে স্ক্যান করুন।`],
+  [/^Needs internet to sign in\. After that MCQ works offline for up to (\d+) days\.$/, n => `Needs internet to sign in. After that MCQ works offline for up to ${n} days.`, n => `সাইন ইন করতে ইন্টারনেট লাগবে। তারপর ${I18N.toBn(n)} দিন পর্যন্ত ইন্টারনেট ছাড়া চলবে।`],
+]);
+I18N.add([
+  ['Physics class test', 'পদার্থবিজ্ঞান ক্লাস টেস্ট'], ['· Physics class test', '· পদার্থবিজ্ঞান ক্লাস টেস্ট'],
+  ['Use the email and password you were given.', 'আপনাকে দেওয়া ইমেইল ও পাসওয়ার্ড দিন।'], ['Your sign-in has run out.', 'আপনার সাইন-ইনের মেয়াদ শেষ।'],
+]);
+
+window.addEventListener('message', e => { if (e.origin === location.origin && e.data && e.data.proshnoLang) I18N.set(e.data.proshnoLang); });
+I18N.start();
 </script>
 </body>
 </html>

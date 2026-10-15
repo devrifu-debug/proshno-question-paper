@@ -8,6 +8,8 @@ A no-AI tool for Bangladeshi teachers: pick a class and subject, tick chapters, 
 - Print or download as PDF
 - **Take an MCQ Test** (`checker/`, opened from the first screen): print bubble answer sheets and check them with a phone camera.
 
+- Install as an app (PWA) on phones and computers — works offline after the first visit
+
 Notes on textbook problems and question corrections are in `docs/`.
 
 ## Run locally

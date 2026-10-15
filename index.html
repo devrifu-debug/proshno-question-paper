@@ -3,7 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Proshno Question Bank</title>
+<title>প্রশ্ন — প্রশ্নপত্র ও এমসিকিউ</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#1CD5E5">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="প্রশ্ন">
+<link rel="icon" href="icons/favicon-32.png" type="image/png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Noto+Serif+Bengali:wght@400;600;700&family=Noto+Serif:wght@400;700&display=swap">
@@ -221,36 +228,224 @@ input[type=range]{width:100%;accent-color:var(--accent)}
 .chkbar b{font-size:15px}
 .chkframe{flex:1;width:100%;border:0;background:var(--bg)}
 body.locked{overflow:hidden}
+/* ===== visual refresh ===== */
+:root{
+  --bg:#f4f7f3; --surface:#ffffff; --surface-2:#f1f5f1; --line:#dfe7e0; --fg:#14231b; --muted:#5d6e64;
+  --accent:#0a7a4b; --accent-2:#0f9a5f; --accent-ink:#ffffff; --accent-soft:#e2f4ea; --red:#e23a4a; --red-soft:#fde8ea;
+  --warn:#a35a00; --warn-soft:#fff2dc; --danger:#c62a36; --desk:#e9eee9;
+  --shadow:0 1px 2px rgba(16,40,26,.06),0 6px 20px rgba(16,40,26,.07); --shadow-h:0 4px 10px rgba(16,40,26,.08),0 14px 34px rgba(16,40,26,.12);
+  --r:14px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0e1612; --surface:#16211b; --surface-2:#1c2a22; --line:#2a3a31; --fg:#e6efe9; --muted:#9db0a5;
+  --accent:#34c27e; --accent-2:#4fd492; --accent-ink:#06150d; --accent-soft:#183528; --red:#ff6b77; --red-soft:#3a1a1e;
+  --warn:#f0b35a; --warn-soft:#3a2a12; --danger:#ff8a8a; --desk:#0a110d;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.35); --shadow-h:0 6px 16px rgba(0,0,0,.45),0 16px 40px rgba(0,0,0,.4)}}
+:root[data-theme="dark"]{
+  --bg:#0e1612; --surface:#16211b; --surface-2:#1c2a22; --line:#2a3a31; --fg:#e6efe9; --muted:#9db0a5;
+  --accent:#34c27e; --accent-2:#4fd492; --accent-ink:#06150d; --accent-soft:#183528; --red:#ff6b77; --red-soft:#3a1a1e;
+  --warn:#f0b35a; --warn-soft:#3a2a12; --danger:#ff8a8a; --desk:#0a110d;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.35); --shadow-h:0 6px 16px rgba(0,0,0,.45),0 16px 40px rgba(0,0,0,.4)}
+body{font-size:15.5px}
+/* motion: small lifts and presses, off for people who prefer less motion */
+.btn,.clsgrid button,.subgrid button,.chlist label,.choice,.tabs button,.seg button{transition:transform .16s ease,box-shadow .16s ease,border-color .16s ease,background-color .16s ease}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+/* top bar */
+.topbar{padding:10px 16px;border-bottom:0;box-shadow:0 1px 0 var(--line)}
+.flow{display:none}
+.brand b{color:var(--accent);font-size:23px}
+.brand b::after{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--red);margin-left:3px;vertical-align:super}
+.chklink{border-radius:999px;padding:7px 14px;background:var(--surface-2);border-color:transparent}
+.chklink:hover{background:var(--accent-soft);color:var(--accent)}
+
+/* buttons */
+.btn{border-radius:12px;padding:9px 16px;box-shadow:0 1px 1px rgba(16,40,26,.04)}
+.btn:hover{border-color:var(--accent);transform:translateY(-1px)}
+.btn:active{transform:translateY(0) scale(.97)}
+.btn.primary{background:linear-gradient(135deg,var(--accent-2),var(--accent));border:0;box-shadow:0 6px 16px rgba(10,122,75,.28)}
+.btn.primary:hover{filter:none;box-shadow:0 10px 22px rgba(10,122,75,.34)}
+.btn.block{padding:14px 16px;font-size:16.5px;border-radius:14px}
+.linkbtn{padding:4px 10px;border-radius:999px;background:var(--accent-soft)}
+.linkbtn:hover{filter:brightness(.97)}
+
+/* side panel + tabs */
+.panel{background:var(--bg)}
+.tabs{background:var(--surface);border:0;box-shadow:var(--shadow);border-radius:16px;padding:5px;gap:5px}
+.tabs button{border-radius:12px;padding:9px 4px;font-size:14px;font-weight:600}
+.tabs button:hover{background:var(--surface-2);color:var(--fg)}
+.tabs button[aria-selected="true"]{background:var(--accent);color:var(--accent-ink);box-shadow:0 4px 12px rgba(10,122,75,.25)}
+.tabs button[aria-selected="true"] .n{background:var(--accent-ink);color:var(--accent);border-color:var(--accent-ink)}
+.tabs button .n{width:21px;height:21px;font-size:12px;font-weight:700}
+.step h2{font-size:19px;font-weight:700}
+.stephead{font-size:15px;color:var(--fg);font-weight:700;margin:6px 0 10px}
+
+/* class cards: one friendly colour each */
+.clsgrid{gap:10px}
+.clsgrid button{position:relative;border:0;border-radius:var(--r);padding:14px 16px;background:var(--surface);box-shadow:var(--shadow);border-top:4px solid var(--c,var(--accent))}
+.clsgrid button:nth-child(6n+1){--c:#0a7a4b}.clsgrid button:nth-child(6n+2){--c:#e23a4a}.clsgrid button:nth-child(6n+3){--c:#2f6fdc}
+.clsgrid button:nth-child(6n+4){--c:#e08a00}.clsgrid button:nth-child(6n+5){--c:#7a4fd6}.clsgrid button:nth-child(6n){--c:#0b8a8f}
+.clsgrid button b{font-size:20px;color:var(--c)}
+.clsgrid button:hover{transform:translateY(-3px);box-shadow:var(--shadow-h);border-color:transparent;border-top-color:var(--c)}
+.clsgrid button:active{transform:scale(.97)}
+.clsgrid button[aria-pressed="true"]{background:var(--surface);box-shadow:0 0 0 2.5px var(--c),var(--shadow-h)}
+.clsgrid button[aria-pressed="true"]::after,.subgrid button[aria-pressed="true"]::after{content:"✓";position:absolute;top:8px;right:10px;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:13px;font-weight:800;background:var(--c,var(--accent));color:#fff}
+
+/* subject cards */
+.subgrid{gap:10px}
+.subgrid button{position:relative;border:0;border-radius:12px;padding:12px 14px;padding-right:34px;background:var(--surface);box-shadow:var(--shadow)}
+.subgrid button:hover{transform:translateY(-2px);box-shadow:var(--shadow-h);border-color:transparent}
+.subgrid button:active{transform:scale(.97)}
+.subgrid button[aria-pressed="true"]{background:var(--accent-soft);box-shadow:0 0 0 2px var(--accent)}
+.subgrid button[aria-pressed="true"] b{color:var(--accent)}
+
+/* chapter list */
+.chlist{gap:8px}
+.chlist label{border:0;border-radius:12px;padding:11px 12px;background:var(--surface);box-shadow:var(--shadow)}
+.chlist label:hover{transform:translateX(2px)}
+.chlist label:has(input:checked){background:var(--accent-soft);box-shadow:inset 4px 0 0 var(--accent),var(--shadow)}
+.chlist input{width:20px;height:20px}
+
+/* question mix */
+.sec-row{border:0;border-radius:var(--r);background:var(--surface);box-shadow:var(--shadow);padding:12px}
+.sec-row .nm{font-size:15px}
+input[type=text],input[type=number],select,textarea{background:var(--surface);border:1.5px solid var(--line);border-radius:10px;padding:9px 11px}
+input[type=text]:focus,input[type=number]:focus,select:focus,textarea:focus{border-color:var(--accent);outline:0;box-shadow:0 0 0 3px var(--accent-soft)}
+.total{border-radius:var(--r);padding:13px 14px;font-size:16px;background:linear-gradient(135deg,var(--accent-soft),var(--surface))}
+.seg{border:0;background:var(--surface);box-shadow:var(--shadow);border-radius:12px}
+.seg button{border-radius:9px;font-weight:600}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.status{font-size:14px}
+.status:not(:empty){padding:9px 12px;border-radius:12px;background:var(--accent-soft);color:var(--accent);font-weight:600;animation:pop .25s ease}
+.status.err:not(:empty){background:var(--red-soft);color:var(--danger)}
+@keyframes pop{from{transform:translateY(4px);opacity:0}to{transform:none;opacity:1}}
+
+/* paper area */
+.desk{background:var(--desk)}
+.dbar{background:var(--desk)}
+.page{border-radius:4px}
+
+/* phones: tabs stay in reach, bigger touch targets */
+@media (max-width:999px){
+  .tabs{position:sticky;top:58px;z-index:15}
+  .panel{padding-bottom:20px}
+  .chlist label,.subgrid button{min-height:52px}
+  .desk{border-top:1px solid var(--line)}
+}
+
+/* first screen */
+.home{background:radial-gradient(1200px 500px at 50% -10%,var(--accent-soft),transparent 70%),var(--bg)}
+.home .logo{color:var(--accent);font-size:52px}
+.home .logo::after{content:"";display:inline-block;width:12px;height:12px;border-radius:50%;background:var(--red);margin-left:4px;vertical-align:super}
+.home .sub{font-size:19px;color:var(--fg);font-weight:600;margin-bottom:6px}
+.home .sub2{color:var(--muted);margin:0 0 26px;font-size:15px}
+.choice{border:0;border-radius:22px;padding:26px 24px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+.choice::before{content:"";position:absolute;inset:0 0 auto 0;height:6px;background:var(--cc)}
+.choice[data-go="check"]{--cc:var(--red);--cs:var(--red-soft)}
+.choice[data-go="create"]{--cc:var(--accent);--cs:var(--accent-soft)}
+.choice .ico{background:var(--cs);color:var(--cc);width:60px;height:60px;border-radius:18px}
+.choice .ico svg{width:32px;height:32px}
+.choice b{font-size:24px}
+.choice .en{font-size:15px;color:var(--muted);font-weight:600;margin-top:-6px}
+.choice .go{display:inline-flex;align-items:center;gap:6px;padding:9px 18px;border-radius:999px;background:var(--cc);color:#fff;font-weight:700}
+.choice:hover{transform:translateY(-4px);box-shadow:var(--shadow-h)}
+.choice:active{transform:scale(.98)}
+.choice:hover .go{gap:10px}
+.home .trust{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:22px}
+.home .trust span{font-size:13px;padding:5px 12px;border-radius:999px;background:var(--surface);box-shadow:var(--shadow);color:var(--muted)}
+.chkbar{box-shadow:0 1px 0 var(--line);border-bottom:0}
+.install{margin-top:20px;display:grid;justify-items:center;gap:6px}
+.install[hidden]{display:none}
+.install .hint{margin:0;max-width:340px}
+.mbar{display:none}
+@media (max-width:999px){
+  .mbar{display:grid;grid-template-columns:1fr 1fr 1.6fr 1fr;gap:6px;position:fixed;left:8px;right:8px;bottom:max(8px,env(safe-area-inset-bottom));z-index:40;
+    padding:6px;border-radius:20px;background:var(--surface);box-shadow:0 8px 28px rgba(16,40,26,.18),0 0 0 1px var(--line)}
+  .mb{display:grid;justify-items:center;border:0;background:none;border-radius:14px;padding:6px 2px;font:600 12.5px var(--f-ui);color:var(--muted);cursor:pointer;min-height:48px;align-content:center;transition:transform .12s,background-color .12s}
+  .mb span{font-size:15px;line-height:1.15;font-weight:700}
+  .mb:active{transform:scale(.94);background:var(--surface-2)}
+  .mb.on{color:var(--accent);background:var(--accent-soft)}
+  .mb.main{background:linear-gradient(135deg,var(--accent-2),var(--accent));color:var(--accent-ink);font-size:14.5px;font-weight:700;box-shadow:0 6px 16px rgba(10,122,75,.3)}
+  .desk{padding-bottom:110px}
+  .panel{padding-bottom:24px}
+  .choice{min-height:0;padding:22px 20px}
+  .choice b{font-size:22px}
+  .dbar .tip{display:none}
+  .dbar .btn{flex:1;min-height:44px}
+}
+/* brand colours */
+:root{--accent:#1CD5E5;--accent-2:#5BE6F1;--accent-ink:#0B1B4D;--accent-t:#06788A;--accent-soft:#DDF8FB;--red:#E5006E;--red-2:#FF2E8A;--red-soft:#FDE3EF;--glow:rgba(28,213,229,.38)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--accent:#1CD5E5;--accent-2:#5BE6F1;--accent-ink:#0B1B4D;--accent-t:#4FE3F0;--accent-soft:#11313a;--red:#FF3D93;--red-2:#FF6FAE;--red-soft:#3a1426;--glow:rgba(28,213,229,.25)}}
+:root[data-theme="dark"]{--accent:#1CD5E5;--accent-2:#5BE6F1;--accent-ink:#0B1B4D;--accent-t:#4FE3F0;--accent-soft:#11313a;--red:#FF3D93;--red-2:#FF6FAE;--red-soft:#3a1426;--glow:rgba(28,213,229,.25)}
+.btn.primary,.mb.main{box-shadow:0 6px 16px var(--glow)}
+.btn.primary:hover{box-shadow:0 10px 22px var(--glow)}
+.tabs button[aria-selected="true"]{box-shadow:0 4px 12px var(--glow)}
+.brand b,.home .logo,.linkbtn,.subgrid button[aria-pressed="true"] b,.mb.on,.chklink:hover,.status:not(:empty){color:var(--accent-t)}
+.brand b::after,.home .logo::after{background:var(--red)}
+.clsgrid button:nth-child(6n+1){--c:#06788A}.clsgrid button:nth-child(6n+2){--c:#E5006E}
+.clsgrid button[aria-pressed="true"]::after{color:#fff}
+.subgrid button[aria-pressed="true"]::after{background:var(--accent);color:var(--accent-ink)}
+.chlist label:has(input:checked){box-shadow:inset 4px 0 0 var(--accent),var(--shadow)}
+.choice[data-go="check"]{--cc:var(--red);--cs:var(--red-soft);--ct:#fff}
+.choice[data-go="create"]{--cc:var(--accent);--cs:var(--accent-soft);--ct:var(--accent-ink)}
+.choice .go{color:var(--ct)}
+.choice[data-go="create"] .ico{color:var(--accent-t)}
+.edit [contenteditable]:hover{background:rgba(28,213,229,.10);box-shadow:0 0 0 1px rgba(6,120,138,.35)}
+.edit [contenteditable]:focus{background:rgba(28,213,229,.12);box-shadow:0 0 0 1.5px #06788A}
+.qtools button{color:#06788A;border-color:#a9dfe6}
+.chkbar b{color:var(--red)}
+.choice .en,.choice .bn{display:none}
+.langsw{display:inline-flex;gap:2px;padding:3px;border-radius:999px;background:var(--surface);box-shadow:0 0 0 1.5px var(--line);flex:none}
+.langsw button{border:0;background:none;border-radius:999px;padding:5px 12px;font:700 13px var(--f-ui);color:var(--muted);cursor:pointer;min-width:44px;min-height:32px}
+.langsw button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.topbar .langsw{margin-left:auto}
+.chkbar .langsw{margin-left:auto}
+.homelang{position:absolute;top:max(14px,env(safe-area-inset-top));right:16px}
+.home{position:fixed}
+.chhead{display:grid;gap:10px;margin:2px 0 12px}
+.chhead h3{font-size:16px;font-weight:700;line-height:1.35}
+.chtools{display:flex;gap:8px;margin:0;flex-wrap:nowrap}
+.chbtn{flex:1;min-height:42px;border-radius:12px;font:700 14px var(--f-ui);cursor:pointer;white-space:nowrap;padding:8px 12px;border:0;background:var(--accent);color:var(--accent-ink);box-shadow:0 4px 12px var(--glow);transition:transform .14s}
+.chbtn.ghost{background:var(--surface);color:var(--fg);box-shadow:0 0 0 1.5px var(--line)}
+.chbtn:hover{transform:translateY(-1px)}.chbtn:active{transform:scale(.97)}
+/* class cards: one colour — plain text, cyan accent strip */
+.clsgrid button,.clsgrid button:nth-child(n){--c:var(--accent)}
+.clsgrid button b{color:var(--fg)}
+.clsgrid button[aria-pressed="true"]::after{background:var(--accent);color:var(--accent-ink)}
 </style>
 
 <section class="view home" id="homeView" aria-label="Choose what to do">
+  <div class="homelang"><div class="langsw" role="group" aria-label="ভাষা / Language" data-noi18n><button type="button" data-lang="bn">বাং</button><button type="button" data-lang="en">EN</button></div></div>
   <div class="in">
-    <h1 class="logo">প্রশ্ন</h1>
-    <p class="sub">What would you like to do?</p>
+    <h1 class="logo" data-noi18n>প্রশ্ন</h1>
+    <p class="sub">আপনি কী করতে চান?</p><p class="sub2">যেকোনো একটি বেছে নিয়ে শুরু করুন</p>
     <div class="choices">
       <button class="choice" type="button" data-go="check">
         <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="7" cy="7" r="2.5"/><circle cx="7" cy="17" r="2.5"/><path d="M12 7h8M12 17h8"/><path d="m5.6 17 1 1 2-2.2" /></svg></span>
-        <b>Take an MCQ Test</b><span class="bn">এমসিকিউ পরীক্ষা ও খাতা যাচাই</span>
-        <p>Print bubble answer sheets, then check them with your phone camera. Marks appear at once.</p>
-        <span class="go">Open →</span>
+        <b>এমসিকিউ পরীক্ষা</b><span class="en">Take an MCQ Test</span>
+        <p>বাবল উত্তরপত্র প্রিন্ট করুন, তারপর মোবাইল ক্যামেরা দিয়ে খাতা দেখুন — নম্বর সাথে সাথে।</p>
+        <span class="go">শুরু করুন →</span>
       </button>
       <button class="choice" type="button" data-go="create">
         <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3h7l5 5v12a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg></span>
-        <b>Create Questions</b><span class="bn">প্রশ্নপত্র তৈরি</span>
-        <p>Make a print-ready question paper (MCQ, short, সৃজনশীল) from the Class 3–8 question bank.</p>
-        <span class="go">Open →</span>
+        <b>প্রশ্নপত্র তৈরি</b><span class="en">Create Questions</span>
+        <p>৩য়–৮ম শ্রেণির প্রশ্নব্যাংক থেকে MCQ, সংক্ষিপ্ত ও সৃজনশীল প্রশ্নপত্র — প্রিন্টের জন্য প্রস্তুত।</p>
+        <span class="go">শুরু করুন →</span>
       </button>
     </div>
+    <div class="install" id="installBox" hidden><button class="btn primary" id="installBtn" type="button">📲 অ্যাপ হিসেবে ইনস্টল করুন</button><p class="hint" id="installHint"></p></div>
+    <div class="trust"><span>✓ বিনামূল্যে</span><span>✓ NCTB পাঠ্যবই অনুযায়ী</span><span>✓ মোবাইলেও চলে</span></div>
   </div>
 </section>
-<section class="view" id="checkView" hidden aria-label="MCQ test">
-  <div class="chkbar"><button class="btn" type="button" data-go="home">← Home</button><b>Take an MCQ Test</b></div>
+<section class="view" id="checkView" hidden aria-label="এমসিকিউ পরীক্ষা">
+  <div class="chkbar"><button class="btn" type="button" data-go="home">← Home</button><b>এমসিকিউ পরীক্ষা</b><div class="langsw" role="group" aria-label="ভাষা / Language" data-noi18n><button type="button" data-lang="bn">বাং</button><button type="button" data-lang="en">EN</button></div></div>
   <iframe class="chkframe" id="chkFrame" title="MCQ checker" allow="camera; fullscreen"></iframe>
 </section>
 
 <header class="topbar">
   <button class="btn chklink" id="homeBtn" type="button">← Home</button>
-  <div class="brand"><b>প্রশ্ন</b><span id="brandCls">Question bank</span></div>
+  <div class="brand"><b data-noi18n>প্রশ্ন</b><span id="brandCls">Question bank</span></div>
+  <div class="langsw" role="group" aria-label="ভাষা / Language" data-noi18n><button type="button" data-lang="bn">বাং</button><button type="button" data-lang="en">EN</button></div>
   <div class="flow" aria-label="Steps"><i>Choose chapters</i><i>Pick questions</i><i>Review</i><i>PDF</i></div>
 </header>
 
@@ -271,7 +466,7 @@ body.locked{overflow:hidden}
       <div class="stephead"><i>২</i>বিষয় নির্বাচন করুন</div>
       <div class="subgrid" id="subGrid" role="group" aria-label="Subjects"></div>
       <div class="stephead"><i>৩</i>অধ্যায় নির্বাচন করুন</div>
-      <div class="chhead"><h3 id="chTitle">Chapters</h3><span class="chtools"><button class="linkbtn" id="chAll">Select all</button><span class="hint">·</span><button class="linkbtn" id="chNone">Clear</button></span></div>
+      <div class="chhead"><h3 id="chTitle">Chapters</h3><span class="chtools"><button class="chbtn" id="chAll" type="button">✓ সব নির্বাচন</button><button class="chbtn ghost" id="chNone" type="button">✕ মুছে ফেলুন</button></span></div>
       <ul class="chlist" id="chList"></ul>
       <button class="btn block" id="toQ">Next: question mix</button>
       </div>
@@ -282,7 +477,7 @@ body.locked{overflow:hidden}
       <p class="lead">The app picks questions from the bank at random, following your mix.</p>
       <div class="row2">
         <div class="field"><label for="sExam">Exam type</label>
-          <select id="sExam"><option>ক্লাস টেস্ট</option><option>অর্ধবার্ষিক পরীক্ষা</option><option selected>মডেল টেস্ট</option><option>বার্ষিক পরীক্ষা</option></select></div>
+          <select id="sExam"><option value="ক্লাস টেস্ট">ক্লাস টেস্ট</option><option value="অর্ধবার্ষিক পরীক্ষা">অর্ধবার্ষিক পরীক্ষা</option><option value="মডেল টেস্ট" selected>মডেল টেস্ট</option><option value="বার্ষিক পরীক্ষা">বার্ষিক পরীক্ষা</option></select></div>
         <div class="field"><label for="sDiff">Difficulty</label>
           <select id="sDiff"><option value="easy">Mostly easy</option><option value="mixed" selected>Balanced</option><option value="hard">Mostly hard</option></select></div>
       </div>
@@ -341,6 +536,12 @@ body.locked{overflow:hidden}
     </section>
   </aside>
 
+  <nav class="mbar" id="mbar" aria-label="Quick actions">
+    <button type="button" class="mb" data-mb="ch"><span>১</span>শ্রেণি</button>
+    <button type="button" class="mb" data-mb="q"><span>২</span>প্রশ্ন</button>
+    <button type="button" class="mb main" data-mb="make">তৈরি করুন</button>
+    <button type="button" class="mb" data-mb="pdf"><span>⬇</span>PDF</button>
+  </nav>
   <main class="desk" id="desk">
     <div class="dbar">
       <span class="meta" id="meta"></span>
@@ -727,7 +928,7 @@ function renderChapters(){
   if(!BANK) return;
   $('#subGrid').innerHTML = BANK.subjects.map(x => { const r = x.chapters.filter(ready).length;
     return `<button data-sub="${x.key}" aria-pressed="${x.key === S.setup.subject}"><b>${esc(x.name)}</b><span>${num(x.chapters.length)} অধ্যায় · ${r ? `${num(r)}টির প্রশ্ন প্রস্তুত` : 'প্রশ্ন তৈরি হচ্ছে'}</span></button>`; }).join('');
-  $('#chTitle').textContent = `${subject().name} — chapters`;
+  $('#chTitle').textContent = subject().name;
   $('#chList').innerHTML = subject().chapters.map(c => {
     const ok = ready(c), cnt = ok ? [`${(c.mcq||[]).length} MCQ`, `${(c.short||[]).length} short`, (c.creative||[]).length ? `${(c.creative||[]).length} creative` : ''].filter(Boolean).join(' · ') : 'এখনও প্রশ্ন যোগ হয়নি';
     return `<li><label class="${ok ? '' : 'off'}"><input type="checkbox" value="${c.no}" ${S.setup.chapters.includes(c.no) ? 'checked' : ''}><span>${num(c.no)}. ${esc(c.title)}</span><span class="cnt">${cnt}</span></label></li>`;
@@ -806,6 +1007,7 @@ $('#genBtn').addEventListener('click', () => {
     if(wasEn){ S.header.timeText = 'সময়: ১ ঘণ্টা ৩০ মিনিট'; S.header.dateText = 'তারিখ- '; }
   }
   S.view = 0; save(); fillLook(); renderPreview();
+  if(!AUTO && matchMedia('(max-width:999px)').matches) setTimeout(() => $('#desk').scrollIntoView({behavior:'smooth', block:'start'}), 120);
   status(short.length && AUTO ? 'Sample paper from the first chapter. Choose your chapters, then press “Make question paper”.' : short.length ? `The bank only had ${short.join(', ')} for these chapters. Pick more chapters or lower the numbers.` : 'Paper ready. Hover any question to swap it for another one.', short.length > 0 && !AUTO);
 });
 function swapQuestion(si, qi){
@@ -971,6 +1173,29 @@ $('#fontSel').addEventListener('change', e => { S.font = {...(S.font || {}), k: 
 $('#fontCustom').addEventListener('input', e => { S.font = {...(S.font || {}), custom: e.target.value}; save(); applyFont(); rerenderSoon(); });
 applyFont();
 
+/* ---------------- phone bottom bar ---------------- */
+function markMbar(){ const t = document.querySelector('.tabs button[aria-selected="true"]')?.dataset.tab; document.querySelectorAll('.mb[data-mb]').forEach(b => b.classList.toggle('on', b.dataset.mb === t)); }
+$('#mbar').addEventListener('click', e => {
+  const b = e.target.closest('.mb'); if(!b) return; const k = b.dataset.mb;
+  if(k === 'ch' || k === 'q'){ showTab(k); markMbar(); $('.panel').scrollIntoView({behavior:'smooth', block:'start'}); }
+  else if(k === 'make'){ if(!BANK){ showTab('ch'); markMbar(); $('.panel').scrollIntoView({behavior:'smooth'}); return status('প্রথমে শ্রেণি নির্বাচন করুন।', true); } $('#genBtn').click(); }
+  else if(k === 'pdf'){ $('#pdfBtn').click(); }
+});
+document.querySelectorAll('.tabs button').forEach(b => b.addEventListener('click', markMbar));
+markMbar();
+
+/* ---------------- install as an app (PWA) ---------------- */
+(() => {
+  const standalone = matchMedia('(display-mode: standalone)').matches || navigator.standalone;
+  const ios = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  let evt = null;
+  if(!standalone && ios){ $('#installBox').hidden = false; $('#installBtn').hidden = true; $('#installHint').textContent = 'iPhone-এ ইনস্টল: Safari-র Share বোতাম চাপুন, তারপর “Add to Home Screen”।'; }
+  window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); evt = e; $('#installBox').hidden = false; $('#installBtn').hidden = false; $('#installHint').textContent = 'একবার ইনস্টল করলে হোম স্ক্রিন থেকে খুলবে, ইন্টারনেট ছাড়াও চলবে।'; });
+  $('#installBtn').addEventListener('click', async () => { if(!evt) return; evt.prompt(); const r = await evt.userChoice.catch(() => null); evt = null; if(r && r.outcome === 'accepted') $('#installBox').hidden = true; });
+  window.addEventListener('appinstalled', () => { $('#installBox').hidden = true; });
+  if('serviceWorker' in navigator && location.protocol === 'https:' && !window.claude) navigator.serviceWorker.register('sw.js').catch(() => {});
+})();
+
 /* ---------------- boot ---------------- */
 fillLook();
 if(S.setup.cls && CLASSES.some(c => c.key === S.setup.cls)){ BANK = CLASSES.find(c => c.key === S.setup.cls); renderClasses(); renderChapters(); renderSetup(); if(!S.sections.length){ AUTO = true; $('#genBtn').click(); AUTO = false; } else renderPreview(); }
@@ -979,6 +1204,173 @@ let fontT = null;
 const afterFonts = () => { clearTimeout(fontT); fontT = setTimeout(() => { sealKey = ''; if(BANK && !$('#pages').contains(document.activeElement)) renderPreview(); }, 120); };
 document.fonts.ready.then(afterFonts);
 document.fonts.addEventListener?.('loadingdone', afterFonts);
+/* ---------------- interface language: বাংলা / English ----------------
+   The interface text is translated in place (the question paper itself keeps the language of its subject).
+   PAIRS: exact [English, বাংলা]. PATS: [regex on the original text, english(...groups), bangla(...groups)].
+   Every node remembers its original text, so switching back and forth never compounds. */
+const I18N = (() => {
+  const BNd = '০১২৩৪৫৬৭৮৯';
+  const toBn = s => String(s).replace(/[0-9]/g, d => BNd[d]);
+  const toEn = s => String(s).replace(/[০-৯]/g, d => BNd.indexOf(d));
+  const en2bn = new Map(), bn2en = new Map();
+  const norm = t => t.replace(/\s+/g, ' ').trim();
+  function add(pairs){ pairs.forEach(([e, b]) => { en2bn.set(norm(e), b); bn2en.set(norm(b), e); }); }
+  const pats = [];
+  function addPats(list){ pats.push(...list); }
+  let lang = 'bn'; try{ lang = localStorage.getItem('proshno-ui-lang') || 'bn'; }catch(e){}
+  function tr(orig){
+    const t = norm(orig); if(!t) return orig;
+    const lead = orig.match(/^\s*/)[0], trail = orig.match(/\s*$/)[0];
+    let out = null;
+    if(lang === 'bn'){ if(en2bn.has(t)) out = en2bn.get(t); }
+    else { if(bn2en.has(t)) out = bn2en.get(t); }
+    if(out === null) for(const [re, fe, fb] of pats){ const m = t.match(re); if(m){ out = (lang === 'bn' ? fb : fe)(...m.slice(1)); break; } }
+    if(out === null && /^[\d০-৯\s+=×.,%°\-–:/]+$/.test(t)) out = lang === 'bn' ? toBn(t) : toEn(t);
+    return out === null ? orig : lead + out + trail;
+  }
+  const SKIP = 'script,style,iframe,textarea,.exporthost,#fontPrev,[data-noi18n]';
+  const seen = new WeakMap();   // text node -> {o: original, s: shown}
+  const aseen = new WeakMap();  // element -> {attr: {o, s}}
+  const ATTRS = ['placeholder', 'title', 'aria-label', 'label'];
+  function skip(el){ if(!el) return true; if(el.closest(SKIP)) return true; const pg = el.closest('.page'); return !!(pg && !el.closest('.qtools')); }
+  function doText(n){
+    if(skip(n.parentElement)) return;
+    let r = seen.get(n); const v = n.nodeValue;
+    if(!r || v !== r.s){ r = {o: v}; seen.set(n, r); }
+    const nv = tr(r.o); r.s = nv; if(nv !== v) n.nodeValue = nv;
+  }
+  function doEl(el){
+    if(skip(el)) return;
+    let rec = aseen.get(el); if(!rec){ rec = {}; aseen.set(el, rec); }
+    const list = ATTRS.slice(); if(el.tagName === 'INPUT' && el.disabled && el.type === 'text') list.push('value');
+    list.forEach(a => { const v = a === 'value' ? el.value : el.getAttribute(a); if(v == null || v === '') return;
+      let r = rec[a]; if(!r || v !== r.s) r = rec[a] = {o: v};
+      const nv = tr(r.o); r.s = nv; if(nv !== v){ if(a === 'value') el.value = nv; else el.setAttribute(a, nv); } });
+  }
+  function walk(root){
+    if(root.nodeType === 3) return doText(root);
+    if(root.nodeType !== 1) return;
+    doEl(root);
+    const w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT | NodeFilter.SHOW_ELEMENT, { acceptNode: n => n.nodeType === 1 && n.matches(SKIP) ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT });
+    let n; while((n = w.nextNode())) n.nodeType === 3 ? doText(n) : doEl(n);
+  }
+  let mo = null, pend = new Set(), raf = 0;
+  function flush(){ raf = 0; mo && mo.disconnect(); const list = [...pend]; pend.clear(); list.forEach(n => n.isConnected && walk(n)); observe(); }
+  function observe(){ mo.observe(document.body, {childList: true, subtree: true, characterData: true, attributes: true, attributeFilter: ATTRS}); }
+  const listeners = [];
+  function apply(){
+    document.documentElement.lang = lang;
+    document.documentElement.dataset.ui = lang;
+    mo && mo.disconnect(); walk(document.body); mo && observe();
+    document.querySelectorAll('.langsw button').forEach(b => b.setAttribute('aria-pressed', b.dataset.lang === lang));
+    listeners.forEach(f => f(lang));
+  }
+  function set(l){ lang = l === 'en' ? 'en' : 'bn'; try{ localStorage.setItem('proshno-ui-lang', lang); }catch(e){} apply(); }
+  function start(){
+    mo = new MutationObserver(ms => { ms.forEach(m => { if(m.type === 'characterData') pend.add(m.target); else if(m.type === 'attributes') pend.add(m.target); else m.addedNodes.forEach(n => pend.add(n)); }); flush(); });
+    apply();
+    document.addEventListener('click', e => { const b = e.target.closest('.langsw button'); if(b) set(b.dataset.lang); });
+  }
+  return { add, addPats, start, set, get lang(){ return lang; }, tr, toBn, toEn, onChange: f => listeners.push(f), apply };
+})();
+
+/* words for the first screen and the question maker: [English, বাংলা] */
+I18N.add([
+  ['What would you like to do?', 'আপনি কী করতে চান?'],
+  ['Pick one to get started', 'যেকোনো একটি বেছে নিয়ে শুরু করুন'],
+  ['MCQ Test', 'এমসিকিউ পরীক্ষা'],
+  ['Print bubble answer sheets, then check them with your phone camera — marks appear at once.', 'বাবল উত্তরপত্র প্রিন্ট করুন, তারপর মোবাইল ক্যামেরা দিয়ে খাতা দেখুন — নম্বর সাথে সাথে।'],
+  ['Create Questions', 'প্রশ্নপত্র তৈরি'],
+  ['Make a print-ready question paper (MCQ, short, creative) from the Class 3–8 question bank.', '৩য়–৮ম শ্রেণির প্রশ্নব্যাংক থেকে MCQ, সংক্ষিপ্ত ও সৃজনশীল প্রশ্নপত্র — প্রিন্টের জন্য প্রস্তুত।'],
+  ['Start →', 'শুরু করুন →'],
+  ['📲 Install as an app', '📲 অ্যাপ হিসেবে ইনস্টল করুন'],
+  ['On iPhone: tap Share in Safari, then “Add to Home Screen”.', 'iPhone-এ ইনস্টল: Safari-র Share বোতাম চাপুন, তারপর “Add to Home Screen”।'],
+  ['Once installed it opens from your home screen and works without internet.', 'একবার ইনস্টল করলে হোম স্ক্রিন থেকে খুলবে, ইন্টারনেট ছাড়াও চলবে।'],
+  ['✓ Free', '✓ বিনামূল্যে'], ['✓ Based on NCTB textbooks', '✓ NCTB পাঠ্যবই অনুযায়ী'], ['✓ Works on mobile', '✓ মোবাইলেও চলে'],
+  ['Choose what to do', 'কী করবেন বেছে নিন'], ['Quick actions', 'দ্রুত কাজ'], ['Subjects', 'বিষয়'], ['Language', 'ভাষা'],
+  ['← Home', '← হোম'], ['MCQ checker', 'এমসিকিউ চেকার'],
+  ['Question bank', 'প্রশ্নব্যাংক'],
+  ['Class', 'শ্রেণি'], ['Questions', 'প্রশ্ন'], ['Paper look', 'নকশা'], ['Make paper', 'তৈরি করুন'],
+  ['Class, subject and chapters', 'শ্রেণি, বিষয় ও অধ্যায় নির্বাচন'],
+  ['Questions come only from the checked question bank. No AI is used.', 'প্রশ্ন আসে শুধু যাচাই করা প্রশ্নব্যাংক থেকে। কোনো AI ব্যবহার হয় না।'],
+  ['Choose a class', 'শ্রেণি নির্বাচন করুন'], ['Choose a subject', 'বিষয় নির্বাচন করুন'], ['Choose chapters', 'অধ্যায় নির্বাচন করুন'],
+  ['Class 3', 'তৃতীয় শ্রেণি'], ['Class 4', 'চতুর্থ শ্রেণি'], ['Class 5', 'পঞ্চম শ্রেণি'], ['Class 6', 'ষষ্ঠ শ্রেণি'], ['Class 7', 'সপ্তম শ্রেণি'], ['Class 8', 'অষ্টম শ্রেণি'],
+  ['✓ Select all', '✓ সব নির্বাচন'], ['✕ Clear', '✕ মুছে ফেলুন'],
+  ['Chapters', 'অধ্যায়'], ['Next: question mix', 'পরের ধাপ: প্রশ্নের ধরন'],
+  ['Choose a class first', 'প্রথমে শ্রেণি নির্বাচন করুন'],
+  ['Choose the class you need questions for. Only that class\'s subjects, chapters and questions will be shown.', 'যে শ্রেণির প্রশ্ন দরকার সেটি বেছে নিন। শুধু সেই শ্রেণির বিষয়, অধ্যায় ও প্রশ্ন দেখানো হবে।'],
+  ['No class selected', 'কোনো শ্রেণি বাছাই হয়নি'],
+  ['Question mix', 'প্রশ্নের ধরন'],
+  ['The app picks questions from the bank at random, following your mix.', 'আপনার বেছে নেওয়া সংখ্যা অনুযায়ী প্রশ্নব্যাংক থেকে প্রশ্ন বাছাই হয়।'],
+  ['Exam type', 'পরীক্ষার ধরন'], ['Difficulty', 'কাঠিন্য'], ['Mostly easy', 'বেশিরভাগ সহজ'], ['Balanced', 'মাঝারি'], ['Mostly hard', 'বেশিরভাগ কঠিন'],
+  ['Class Test', 'ক্লাস টেস্ট'], ['Half-Yearly Exam', 'অর্ধবার্ষিক পরীক্ষা'], ['Model Test', 'মডেল টেস্ট'], ['Annual Exam', 'বার্ষিক পরীক্ষা'],
+  ['Question types', 'প্রশ্নের ধরন ও সংখ্যা'], ['MCQ', 'এমসিকিউ'], ['Multiple choice', 'বহুনির্বাচনী'],
+  ['Short questions', 'সংক্ষিপ্ত প্রশ্ন'], ['Short answer', 'সংক্ষিপ্ত'],
+  ['Creative questions', 'সৃজনশীল প্রশ্ন'], ['Stimulus + parts ক খ গ ঘ', 'সৃজনশীল · উদ্দীপক + ক খ গ ঘ'],
+  ['Marks each', 'প্রতিটির নম্বর'], ['Answer', 'উত্তর'], ['Answer any', 'যেকোনো উত্তর'], ['All', 'সবগুলো'],
+  ['Total marks', 'মোট নম্বর'],
+  ['Sets (for students sitting side by side)', 'সেট (পাশাপাশি বসা শিক্ষার্থীদের জন্য)'],
+  ['1 set', '১টি সেট'], ['2 sets (ক, খ)', '২টি সেট (ক, খ)'], ['3 sets (ক, খ, গ)', '৩টি সেট (ক, খ, গ)'], ['4 sets (ক–ঘ)', '৪টি সেট (ক–ঘ)'],
+  ['Avoid questions used in my last 3 papers when the bank has enough others', 'শেষ ৩টি প্রশ্নপত্রে আসা প্রশ্ন বাদ দাও (যথেষ্ট প্রশ্ন থাকলে)'],
+  ['Make question paper', 'প্রশ্নপত্র তৈরি করুন'],
+  ['Choose at least one chapter first.', 'অন্তত একটি অধ্যায় বেছে নিন।'],
+  ['Turn on at least one question type.', 'অন্তত এক ধরনের প্রশ্ন চালু করুন।'],
+  ['Choose a class first.', 'প্রথমে শ্রেণি নির্বাচন করুন।'],
+  ['Questions for these chapters are not in the bank yet. Once they are added you can make a paper here.', 'এই অধ্যায়গুলোর প্রশ্ন এখনও প্রশ্নব্যাংকে যোগ হয়নি। প্রশ্ন যোগ হলেই এখান থেকে প্রশ্নপত্র তৈরি করা যাবে।'],
+  ['Sample paper from the first chapter. Choose your chapters, then press “Make question paper”.', 'প্রথম অধ্যায় থেকে একটি নমুনা প্রশ্নপত্র। অধ্যায় বেছে নিয়ে “প্রশ্নপত্র তৈরি করুন” চাপুন।'],
+  ['Paper ready. Hover any question to swap it for another one.', 'প্রশ্নপত্র তৈরি! কোনো প্রশ্ন বদলাতে চাইলে প্রশ্নের উপর চাপুন।'],
+  ['No other questions of this type in the chosen chapters.', 'বাছাই করা অধ্যায়ে এই ধরনের আর কোনো প্রশ্ন নেই।'],
+  ['Header and watermark', 'শিরোনাম ও জলছাপ'],
+  ['Every name here can also be edited by clicking it on the paper.', 'এখানের সব নাম প্রশ্নপত্রে ক্লিক করেও বদলানো যায়।'],
+  ['Institution name', 'প্রতিষ্ঠানের নাম'], ['Exam name', 'পরীক্ষার নাম'], ['Class line', 'শ্রেণির লাইন'], ['Subject line', 'বিষয়ের লাইন'],
+  ['Date', 'তারিখ'], ['Time', 'সময়'], ['Full marks', 'পূর্ণমান'], ['Instructions (optional)', 'নির্দেশনা (ঐচ্ছিক)'],
+  ['Logo (optional)', 'লোগো (ঐচ্ছিক)'], ['Upload logo', 'লোগো আপলোড'], ['Remove', 'সরান'],
+  ['Paper font', 'প্রশ্নপত্রের ফন্ট'], ['Works everywhere', 'সব ডিভাইসে চলে'], ['Installed on this computer', 'এই কম্পিউটারে ইনস্টল করা'],
+  ['Noto Serif Bengali (default)', 'নোটো সেরিফ বাংলা (ডিফল্ট)'], ['Tiro Bangla — book style', 'তিরো বাংলা — বইয়ের মতো'], ['Hind Siliguri — clean', 'হিন্দ শিলিগুড়ি — পরিষ্কার'],
+  ['Noto Sans Bengali — plain', 'নোটো স্যান্স বাংলা — সাধারণ'], ['Anek Bangla — modern', 'অনেক বাংলা — আধুনিক'], ['Baloo Da 2 — rounded', 'বালু দা ২ — গোলাকার'],
+  ['Atma — friendly', 'আত্মা — বন্ধুসুলভ'], ['Galada — decorative', 'গালাদা — নকশাদার'], ['Vrinda (Windows)', 'বৃন্দা (Windows)'],
+  ['Times New Roman (English papers)', 'Times New Roman (ইংরেজি প্রশ্নপত্র)'], ['Another font on this computer…', 'কম্পিউটারের অন্য কোনো ফন্ট…'],
+  ['Type the font name exactly, e.g. Kalpurush', 'ফন্টের নাম হুবহু লিখুন, যেমন Kalpurush'],
+  ['Loads automatically — works on any computer or phone.', 'নিজে থেকে লোড হয় — যেকোনো কম্পিউটার বা মোবাইলে চলে।'],
+  ['Type the name of a Unicode font installed on this computer.', 'এই কম্পিউটারে ইনস্টল করা একটি ইউনিকোড ফন্টের নাম লিখুন।'],
+  ['Uses the font installed on this computer. Bijoy fonts (SutonnyMJ etc.) do not work — use a Unicode font.', 'এই কম্পিউটারে ইনস্টল করা ফন্ট ব্যবহার হবে। বিজয় ফন্ট (SutonnyMJ ইত্যাদি) চলবে না — ইউনিকোড ফন্ট ব্যবহার করুন।'],
+  ['Watermark', 'জলছাপ'], ['Seal', 'সিল'], ['Text', 'লেখা'], ['Image', 'ছবি'], ['None', 'নেই'],
+  ['Seal text (around the top)', 'সিলের লেখা (উপরে)'], ['Seal text (bottom)', 'সিলের লেখা (নিচে)'], ['Watermark text', 'জলছাপের লেখা'],
+  ['Upload seal or logo image', 'সিল বা লোগোর ছবি আপলোড'], ['PNG with a transparent background works best.', 'স্বচ্ছ ব্যাকগ্রাউন্ডের PNG সবচেয়ে ভালো।'],
+  ['Image loaded. Upload again to replace it.', 'ছবি যোগ হয়েছে। বদলাতে আবার আপলোড করুন।'],
+  ['Opacity', 'স্বচ্ছতা'], ['Size', 'আকার'], ['Rotation', 'ঘোরানো'],
+  ['Set', 'সেট'], ['Answer key PDF', 'উত্তরমালা PDF'], ['Download PDF', 'PDF ডাউনলোড'],
+  ['Click any text to edit · hover a question to swap it', 'যেকোনো লেখায় ক্লিক করে বদলান · প্রশ্নের উপর রাখলে বদলানোর বোতাম আসে'],
+  ['Sets খ–ঘ are shuffled copies of set ক. Edit set ক and the others follow.', 'সেট খ–ঘ হলো সেট ক-এর এলোমেলো রূপ। সেট ক বদলালে বাকিগুলোও বদলাবে।'],
+  ['Preparing the PDF…', 'PDF তৈরি হচ্ছে…'], ['Download cancelled.', 'ডাউনলোড বাতিল হয়েছে।'],
+  ['↻ Swap', '↻ বদলান'], ['+ Picture', '+ ছবি'], ['Remove picture', 'ছবি সরান'], ['Replace with another question from the bank', 'প্রশ্নব্যাংকের অন্য প্রশ্ন দিয়ে বদলান'],
+  ['Add a picture to the stimulus', 'উদ্দীপকে ছবি যোগ করুন'], ['Remove question', 'প্রশ্ন বাদ দিন'],
+  ['pages · A4 ·', 'পৃষ্ঠা · A4 ·'], ['page · A4 ·', 'পৃষ্ঠা · A4 ·'], ['questions ·', 'প্রশ্ন ·'], ['marks', 'নম্বর'],
+  ['Steps', 'ধাপ'], ['Choose chapters', 'অধ্যায় নির্বাচন করুন'],
+]);
+const WHAT = {Chapters: 'অধ্যায়', Subject: 'বিষয়', 'Question numbers': 'প্রশ্নের সংখ্যা'};
+const bnLack = x => I18N.toBn(x.replace(/(\d+) mcq \(asked (\d+)\)/g, '$1টি এমসিকিউ (চেয়েছেন $2)').replace(/(\d+) short questions \(asked (\d+)\)/g, '$1টি সংক্ষিপ্ত প্রশ্ন (চেয়েছেন $2)').replace(/(\d+) creative questions \(asked (\d+)\)/g, '$1টি সৃজনশীল প্রশ্ন (চেয়েছেন $2)'));
+I18N.addPats([
+  [/^Class (\d+) · ([০-৯\d]+) বিষয় · ([০-৯\d]+) প্রশ্ন$/, (c, a, b) => `${I18N.toEn(a)} subjects · ${I18N.toEn(b)} questions`, (c, a, b) => `${I18N.toBn(a)}টি বিষয় · ${I18N.toBn(b)}টি প্রশ্ন`],
+  [/^([০-৯\d]+) অধ্যায় · ([০-৯\d]+)টির প্রশ্ন প্রস্তুত$/, (a, b) => `${I18N.toEn(a)} chapters · ${I18N.toEn(b)} ready`, (a, b) => `${I18N.toBn(a)}টি অধ্যায় · ${I18N.toBn(b)}টির প্রশ্ন প্রস্তুত`],
+  [/^([০-৯\d]+) অধ্যায় · প্রশ্ন তৈরি হচ্ছে$/, a => `${I18N.toEn(a)} chapters · questions coming soon`, a => `${I18N.toBn(a)}টি অধ্যায় · প্রশ্ন তৈরি হচ্ছে`],
+  [/^(\d+) MCQ(?: · (\d+) short)?(?: · (\d+) creative)?$/, (m, s, c) => [`${m} MCQ`, s && `${s} short`, c && `${c} creative`].filter(Boolean).join(' · '), (m, s, c) => [`${I18N.toBn(m)} এমসিকিউ`, s && `${I18N.toBn(s)} সংক্ষিপ্ত`, c && `${I18N.toBn(c)} সৃজনশীল`].filter(Boolean).join(' · ')],
+  [/^এখনও প্রশ্ন যোগ হয়নি$/, () => 'No questions yet', () => 'এখনও প্রশ্ন যোগ হয়নি'],
+  [/^(\d+) in the bank for the chosen chapters( — fewer than you asked for)?$/, (n, f) => `${n} in the bank for the chosen chapters${f || ''}`, (n, f) => `বাছাই করা অধ্যায়ে আছে ${I18N.toBn(n)}টি${f ? ' — আপনি যত চেয়েছেন তার চেয়ে কম' : ''}`],
+  [/^Question bank · Class (\d+)$/, c => `Question bank · Class ${c}`, c => `প্রশ্নব্যাংক · ${({3:'৩য়',4:'৪র্থ',5:'৫ম',6:'৬ষ্ঠ',7:'৭ম',8:'৮ম'})[c] || I18N.toBn(c)} শ্রেণি`],
+  [/^The questions add up to (\d+) marks\.$/, n => `The questions add up to ${n} marks.`, n => `প্রশ্নগুলোর মোট নম্বর ${I18N.toBn(n)}।`],
+  [/^Matches the questions \((\d+) marks\)\.$/, n => `Matches the questions (${n} marks).`, n => `প্রশ্নের সাথে মিলেছে (${I18N.toBn(n)} নম্বর)।`],
+  [/^(Chapters|Subject|Question numbers) changed — press “Make question paper” to update the paper\.$/, w => `${w} changed — press “Make question paper” to update the paper.`, w => `${WHAT[w]} বদলেছে — নতুন প্রশ্নপত্রের জন্য “প্রশ্নপত্র তৈরি করুন” চাপুন।`],
+  [/^The bank only had (.+) for these chapters\. Pick more chapters or lower the numbers\.$/, x => `The bank only had ${x} for these chapters. Pick more chapters or lower the numbers.`, x => `এই অধ্যায়গুলোতে আছে মাত্র ${bnLack(x)}। আরও অধ্যায় বেছে নিন বা সংখ্যা কমান।`],
+  [/^Rendering page (\d+) of (\d+)…$/, (a, b) => `Rendering page ${a} of ${b}…`, (a, b) => `পৃষ্ঠা ${I18N.toBn(a)}/${I18N.toBn(b)} তৈরি হচ্ছে…`],
+  [/^Saved (.+)\.$/, n => `Saved ${n}.`, n => `${n} সংরক্ষিত হয়েছে।`],
+  [/^Could not create the PDF \((.*)\)\.$/, e => `Could not create the PDF (${e}).`, e => `PDF তৈরি করা যায়নি (${e})।`],
+  [/^"(.+)" is not installed on this computer, so the default font is shown\. Install it, or pick a font from the top of the list\.$/, f => `"${f}" is not installed on this computer, so the default font is shown. Install it, or pick a font from the top of the list.`, f => `"${f}" এই কম্পিউটারে ইনস্টল নেই, তাই ডিফল্ট ফন্ট দেখানো হচ্ছে। ফন্টটি ইনস্টল করুন, অথবা তালিকার উপরের কোনো ফন্ট বেছে নিন।`],
+]);
+
+I18N.onChange(l => { try{ $('#chkFrame').contentWindow?.postMessage({proshnoLang: l}, location.origin); }catch(e){} });
+$('#chkFrame').addEventListener('load', () => { try{ $('#chkFrame').contentWindow.postMessage({proshnoLang: I18N.lang}, location.origin); }catch(e){} });
+I18N.start();
 </script>
 
 </html>
