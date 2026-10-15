@@ -38,6 +38,7 @@ button,input,select,textarea{font:inherit;color:inherit}
 .brand{display:flex;align-items:baseline;gap:10px;min-width:0}
 .brand b{font-family:var(--f-paper);font-size:21px;font-weight:700;letter-spacing:.2px}
 .brand span{color:var(--muted);font-size:13px}
+.chklink{margin-left:auto;margin-right:12px;padding:6px 12px;font-size:13.5px;text-decoration:none;color:inherit;white-space:nowrap}
 .flow{margin-left:auto;display:flex;gap:6px;flex-wrap:wrap;font-size:13px;color:var(--muted)}
 .flow i{font-style:normal;padding:2px 8px;border-radius:999px;background:var(--surface-2);border:1px solid var(--line)}
 
@@ -200,10 +201,55 @@ input[type=range]{width:100%;accent-color:var(--accent)}
 .measure{position:fixed;left:-30000px;top:0;visibility:hidden}
 .exporthost{position:fixed;left:-30000px;top:0}
 @media (prefers-reduced-motion:no-preference){.btn,.tabs button{transition:background .15s,filter .15s}}
+.view{position:fixed;inset:0;z-index:60;background:var(--bg);display:flex;flex-direction:column}
+.view[hidden]{display:none}
+.home{overflow:auto;align-items:center;justify-content:center;padding:max(24px,env(safe-area-inset-top)) 16px 32px}
+.home .in{width:100%;max-width:760px;text-align:center}
+.home .logo{font-family:var(--f-paper);font-size:40px;font-weight:700;line-height:1.1;margin:0}
+.home .sub{color:var(--muted);margin:6px 0 28px;font-size:16px}
+.choices{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.choice{display:grid;gap:10px;justify-items:start;text-align:left;padding:24px 22px;border:1.5px solid var(--line);border-radius:18px;background:var(--surface);box-shadow:var(--shadow);cursor:pointer;min-height:200px}
+.choice:hover{border-color:var(--accent)}
+.choice .ico{width:52px;height:52px;border-radius:14px;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent)}
+.choice .ico svg{width:28px;height:28px}
+.choice b{font-size:22px;line-height:1.25}
+.choice .bn{font-size:16px;color:var(--muted);font-weight:600;margin-top:-6px}
+.choice p{margin:0;color:var(--muted);font-size:14.5px}
+.choice .go{margin-top:auto;color:var(--accent);font-weight:700}
+.chkbar{display:flex;align-items:center;gap:10px;padding:8px 12px;padding-top:max(8px,env(safe-area-inset-top));background:var(--surface);border-bottom:1px solid var(--line)}
+.chkbar b{font-size:15px}
+.chkframe{flex:1;width:100%;border:0;background:var(--bg)}
+body.locked{overflow:hidden}
 </style>
+
+<section class="view home" id="homeView" aria-label="Choose what to do">
+  <div class="in">
+    <h1 class="logo">প্রশ্ন</h1>
+    <p class="sub">What would you like to do?</p>
+    <div class="choices">
+      <button class="choice" type="button" data-go="check">
+        <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="7" cy="7" r="2.5"/><circle cx="7" cy="17" r="2.5"/><path d="M12 7h8M12 17h8"/><path d="m5.6 17 1 1 2-2.2" /></svg></span>
+        <b>Take an MCQ Test</b><span class="bn">এমসিকিউ পরীক্ষা ও খাতা যাচাই</span>
+        <p>Print bubble answer sheets, then check them with your phone camera. Marks appear at once.</p>
+        <span class="go">Open →</span>
+      </button>
+      <button class="choice" type="button" data-go="create">
+        <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3h7l5 5v12a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg></span>
+        <b>Create Questions</b><span class="bn">প্রশ্নপত্র তৈরি</span>
+        <p>Make a print-ready question paper (MCQ, short, সৃজনশীল) from the Class 3–8 question bank.</p>
+        <span class="go">Open →</span>
+      </button>
+    </div>
+  </div>
+</section>
+<section class="view" id="checkView" hidden aria-label="MCQ test">
+  <div class="chkbar"><button class="btn" type="button" data-go="home">← Home</button><b>Take an MCQ Test</b></div>
+  <iframe class="chkframe" id="chkFrame" title="MCQ checker" allow="camera; fullscreen"></iframe>
+</section>
 
 <header class="topbar">
   <div class="brand"><b>প্রশ্ন</b><span id="brandCls">Question bank</span></div>
+  <button class="btn chklink" id="homeBtn" type="button">← Home</button>
   <div class="flow" aria-label="Steps"><i>Choose chapters</i><i>Pick questions</i><i>Review</i><i>PDF</i></div>
 </header>
 
@@ -625,6 +671,22 @@ function pick(type, n, avoidIds){
   const out = chs.flatMap(c => pickByDifficulty(byCh[c], quota[c] || 0));
   return out.sort((a,b) => a.ch - b.ch || a.id.localeCompare(b.id));
 }
+
+/* ---------------- first screen: MCQ test or create questions (one page, one link) ---------------- */
+function showView(v, chkHash){
+  $('#homeView').hidden = v !== 'home'; $('#checkView').hidden = v !== 'check';
+  document.body.classList.toggle('locked', v !== 'create');
+  if(v === 'check'){ const f = $('#chkFrame'); if(chkHash) f.src = 'checker/index.html?t=' + Date.now() + chkHash; else if(!f.getAttribute('src')) f.src = 'checker/index.html'; }
+  const want = v === 'home' ? '' : '#' + v;
+  if(location.hash !== want) history.pushState(null, '', location.pathname + location.search + want);
+  window.scrollTo(0, 0);
+}
+const viewFromHash = () => ({'#create':'create', '#check':'check'})[location.hash] || 'home';
+document.addEventListener('click', e => { const b = e.target.closest('[data-go]'); if(b) showView(b.dataset.go); });
+window.addEventListener('popstate', () => { const v = viewFromHash(); $('#homeView').hidden = v !== 'home'; $('#checkView').hidden = v !== 'check'; document.body.classList.toggle('locked', v !== 'create'); if(v === 'check' && !$('#chkFrame').getAttribute('src')) $('#chkFrame').src = 'checker/index.html'; });
+window.addEventListener('message', e => { if(e.origin === location.origin && e.data === 'proshno:home') showView('home'); });
+$('#homeBtn').addEventListener('click', () => showView('home'));
+(() => { const v = viewFromHash(); $('#homeView').hidden = v !== 'home'; $('#checkView').hidden = v !== 'check'; document.body.classList.toggle('locked', v !== 'create'); if(v === 'check') $('#chkFrame').src = 'checker/index.html'; })();
 
 /* ---------------- step 0: class ---------------- */
 const clsCard = c => { const n = c.subjects.reduce((a, x) => a + x.chapters.reduce((b, ch) => b + (ch.mcq||[]).length + (ch.short||[]).length + (ch.creative||[]).length, 0), 0);

@@ -1,0 +1,1647 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
+<title>MCQ</title>
+<meta name="description" content="Check MCQ answer sheets with your phone camera.">
+<meta name="theme-color" content="#ABC2FD" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1C3597" media="(prefers-color-scheme: dark)">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="MCQ">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/favicon-32.png" type="image/png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<style>:root{
+  --top:#ABC2FD; --bot:#DCC6F2; --bg:#EDF1FB; --blob1:#8FB0FF; --blob2:#A6EAD8; --blob3:#FFC9DF; --blob4:#C9B8FF;
+  --glass:rgba(255,255,255,.56); --glass-2:rgba(255,255,255,.78); --glass-3:rgba(255,255,255,.34);
+  --stroke:rgba(255,255,255,.75); --stroke-2:rgba(20,30,70,.08);
+  --hi:inset 0 1px 0 rgba(255,255,255,.9), inset 0 -1px 0 rgba(255,255,255,.2);
+  --shadow:0 10px 30px -8px rgba(28,40,96,.22), 0 2px 6px rgba(28,40,96,.06);
+  --ink:#0B1222; --ink-2:#4A5470; --ink-3:#8790A8;
+  --primary:#2F5BFF; --primary-2:#6A87FF; --on-primary:#FFFFFF; --primary-soft:rgba(47,91,255,.12);
+  --ok:#14924A; --ok-soft:rgba(20,146,74,.14); --bad:#DC3B41; --bad-soft:rgba(220,59,65,.13);
+  --warn:#C26A00; --warn-soft:rgba(245,158,11,.2); --mute:#6B7590; --mute-soft:rgba(107,117,144,.14);
+  --f:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display","Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,"Roboto Mono",monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --top:#1C3597; --bot:#45246A; --bg:#060A14; --blob1:#1F3CA8; --blob2:#0D5C57; --blob3:#5B1D4A; --blob4:#3A2A8C;
+    --glass:rgba(28,36,58,.55); --glass-2:rgba(36,46,72,.8); --glass-3:rgba(28,36,58,.35);
+    --stroke:rgba(255,255,255,.13); --stroke-2:rgba(255,255,255,.07);
+    --hi:inset 0 1px 0 rgba(255,255,255,.14), inset 0 -1px 0 rgba(255,255,255,.03);
+    --shadow:0 12px 34px -8px rgba(0,0,0,.6), 0 2px 6px rgba(0,0,0,.3);
+    --ink:#EEF2FC; --ink-2:#A9B2CB; --ink-3:#6E7894;
+    --primary:#7194FF; --primary-2:#98B0FF; --on-primary:#06102A; --primary-soft:rgba(113,148,255,.18);
+    --ok:#4CD684; --ok-soft:rgba(76,214,132,.16); --bad:#FF7A7E; --bad-soft:rgba(255,122,126,.16);
+    --warn:#FFB547; --warn-soft:rgba(255,181,71,.18); --mute:#98A2BC; --mute-soft:rgba(152,162,188,.14);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --top:#1C3597; --bot:#45246A; --bg:#060A14; --blob1:#1F3CA8; --blob2:#0D5C57; --blob3:#5B1D4A; --blob4:#3A2A8C;
+  --glass:rgba(28,36,58,.55); --glass-2:rgba(36,46,72,.8); --glass-3:rgba(28,36,58,.35);
+  --stroke:rgba(255,255,255,.13); --stroke-2:rgba(255,255,255,.07);
+  --hi:inset 0 1px 0 rgba(255,255,255,.14), inset 0 -1px 0 rgba(255,255,255,.03);
+  --shadow:0 12px 34px -8px rgba(0,0,0,.6), 0 2px 6px rgba(0,0,0,.3);
+  --ink:#EEF2FC; --ink-2:#A9B2CB; --ink-3:#6E7894;
+  --primary:#7194FF; --primary-2:#98B0FF; --on-primary:#06102A; --primary-soft:rgba(113,148,255,.18);
+  --ok:#4CD684; --ok-soft:rgba(76,214,132,.16); --bad:#FF7A7E; --bad-soft:rgba(255,122,126,.16);
+  --warn:#FFB547; --warn-soft:rgba(255,181,71,.18); --mute:#98A2BC; --mute-soft:rgba(152,162,188,.14);
+  color-scheme:dark;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+/* the browser paints its own bars (status bar, Safari 26 toolbars, Android address bar) from the page colour
+   and theme-color: both are --top, the colour the backdrop starts from, so the page runs edge to edge */
+html,body{min-height:100%}
+html{background:var(--top)}
+body{margin:0;touch-action:manipulation;-webkit-text-size-adjust:100%;color:var(--ink);font:16px/1.45 var(--f);-webkit-font-smoothing:antialiased;overscroll-behavior-y:none}
+/* the liquid backdrop: soft colour fields that the glass refracts */
+.backdrop{position:fixed;left:0;right:0;top:0;height:100vh;height:100lvh;z-index:-1;overflow:hidden;background:linear-gradient(180deg,var(--top),var(--bg) 38%,var(--bg) 72%,var(--bot))}   /* lvh: full screen, behind the toolbars too */
+/* Safari 26 colours its top and bottom bars from fixed strips touching those edges: one per edge, in the
+   colour the backdrop fades to there, so each bar blends into the page */
+.edge{position:fixed;left:0;right:0;height:4px;z-index:-1;pointer-events:none}
+.edge.top{top:0;background:var(--top)}.edge.bot{bottom:0;background:var(--bot)}
+.backdrop i{position:absolute;border-radius:50%;filter:blur(60px);opacity:.75}
+.backdrop i:nth-child(1){width:70vmax;height:70vmax;left:-25vmax;top:-20vmax;background:var(--blob1)}
+.backdrop i:nth-child(2){width:55vmax;height:55vmax;right:-22vmax;top:18vh;background:var(--blob2)}
+.backdrop i:nth-child(3){width:50vmax;height:50vmax;left:-10vmax;bottom:-22vmax;background:var(--blob3)}
+.backdrop i:nth-child(4){width:40vmax;height:40vmax;right:-8vmax;bottom:-8vmax;background:var(--blob4);opacity:.55}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none;padding:0}
+:focus-visible{outline:2.5px solid var(--primary);outline-offset:2px;border-radius:12px}
+h1,h2,h3,p{margin:0}
+.num{font-variant-numeric:tabular-nums}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.ic{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.ic.sm{width:18px;height:18px}.ic.lg{width:30px;height:30px}
+.muted{color:var(--ink-2)}.faint{color:var(--ink-3)}
+
+/* phone column */
+.app{max-width:480px;margin:0 auto;padding-inline:16px;padding-top:calc(env(safe-area-inset-top,0px) + 8px);padding-bottom:calc(env(safe-area-inset-bottom,0px) + 120px);min-height:100vh}
+
+/* glass */
+.glass{background:var(--glass);border:1px solid var(--stroke);box-shadow:var(--hi),var(--shadow);border-radius:26px;-webkit-backdrop-filter:blur(22px) saturate(180%);backdrop-filter:blur(22px) saturate(180%)}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){.glass{background:var(--glass-2)}}
+.card{padding:18px}
+.stack{display:flex;flex-direction:column;gap:12px}
+.row{display:flex;align-items:center;gap:10px}
+.between{justify-content:space-between}
+.wrap{flex-wrap:wrap}
+
+/* top bar */
+.bar{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:52px;margin-bottom:4px}
+.iconbtn{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;color:var(--ink)}
+.iconbtn.glass{border-radius:50%}
+.title{font-size:34px;font-weight:750;letter-spacing:-.025em;line-height:1.1;margin:6px 4px 18px;text-wrap:balance}
+.title small{display:block;font-size:15px;font-weight:500;letter-spacing:0;color:var(--ink-2);margin-top:6px}
+.sub{font-size:13px;font-weight:650;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);margin:22px 6px 10px}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:50px;padding:0 20px;border-radius:999px;font-weight:650;font-size:16px;color:var(--ink);background:var(--glass);border:1px solid var(--stroke);box-shadow:var(--hi);-webkit-backdrop-filter:blur(16px) saturate(170%);backdrop-filter:blur(16px) saturate(170%);transition:transform .12s}
+.btn:active{transform:scale(.97)}
+.btn.primary{color:var(--on-primary);background:linear-gradient(180deg,var(--primary-2),var(--primary));border-color:transparent;box-shadow:inset 0 1px 0 rgba(255,255,255,.45),0 10px 24px -8px color-mix(in srgb,var(--primary) 70%,transparent)}
+.btn.danger{color:var(--bad)}
+.btn.block{width:100%}
+.btn.sm{min-height:38px;padding:0 14px;font-size:14.5px}
+.btn[disabled]{opacity:.45;pointer-events:none}
+.link{color:var(--primary);font-weight:650;font-size:15px;padding:8px 4px}
+.fab{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom,0px) + 18px);z-index:30;width:min(448px,calc(100% - 32px))}
+.fab .btn{width:100%;min-height:58px;font-size:17px}
+
+/* exam list */
+.exam{display:block;width:100%;text-align:left;padding:6px}
+.exam-main{display:block;width:100%;text-align:left;padding:12px 12px 8px;border-radius:22px}
+.exam-main:active{background:var(--glass-3)}
+.exam-main .ic{color:var(--ink-3);margin-top:3px}
+.exam-acts{display:flex;gap:8px;padding:4px 6px 6px}
+.exam-acts .btn{flex:1;min-height:46px;font-size:15px}
+.btn.soft{background:var(--primary-soft);color:var(--primary);border-color:transparent;box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none}
+.how{list-style:none;margin:18px 0 4px;padding:0;display:flex;flex-direction:column;gap:14px;text-align:left}
+.how li{display:flex;gap:14px;align-items:flex-start}
+.how .n{width:32px;height:32px;border-radius:50%;flex:none;display:grid;place-items:center;font-weight:750;color:var(--on-primary);background:var(--primary)}
+.how b{display:block;font-size:16px}
+.how li span:not(.n){font-size:14px;color:var(--ink-2)}
+.exam h3{font-size:18px;font-weight:700;letter-spacing:-.01em}
+.exam .meta{font-size:14px;color:var(--ink-2);margin-top:4px}
+.exam .foot{display:flex;align-items:center;justify-content:space-between;margin-top:12px;gap:8px}
+.big-num{font-size:26px;font-weight:750;letter-spacing:-.02em}
+.tag{font-size:11px;font-weight:750;letter-spacing:.07em;text-transform:uppercase;color:var(--primary);background:var(--primary-soft);padding:3px 8px;border-radius:999px}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:650;padding:5px 11px;border-radius:999px;background:var(--mute-soft);color:var(--mute);white-space:nowrap}
+.pill i{width:8px;height:8px;border-radius:50%;background:currentColor}
+.pill.ok{background:var(--ok-soft);color:var(--ok)}.pill.bad{background:var(--bad-soft);color:var(--bad)}.pill.warn{background:var(--warn-soft);color:var(--warn)}.pill.info{background:var(--primary-soft);color:var(--primary)}
+
+/* segmented */
+.seg{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;padding:4px;border-radius:999px;gap:4px;margin-bottom:16px;position:sticky;top:calc(env(safe-area-inset-top,0px) + 8px);z-index:20}
+.seg button{min-height:42px;border-radius:999px;font-weight:650;font-size:15px;color:var(--ink-2);display:flex;align-items:center;justify-content:center;gap:6px}
+.seg button[aria-selected="true"],.seg button[aria-pressed="true"]{background:var(--glass-2);color:var(--ink);box-shadow:var(--hi),0 2px 10px rgba(20,30,70,.12)}
+.seg .dot{min-width:20px;height:20px;border-radius:999px;background:var(--warn);color:#fff;font-size:12px;display:grid;place-items:center;padding:0 5px}
+
+/* scan hero */
+.hero{padding:26px 18px 22px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:10px}
+.shutter-big{position:relative;width:132px;height:132px;border-radius:50%;display:grid;place-items:center;color:var(--on-primary);background:radial-gradient(circle at 35% 30%,var(--primary-2),var(--primary) 70%);box-shadow:inset 0 2px 0 rgba(255,255,255,.4),0 18px 40px -10px color-mix(in srgb,var(--primary) 75%,transparent);margin:6px 0 8px}
+.shutter-big::before{content:"";position:absolute;inset:-10px;border-radius:50%;border:2px solid color-mix(in srgb,var(--primary) 45%,transparent);animation:pulse 2.4s ease-out infinite}
+.shutter-big .ic{width:48px;height:48px}
+@keyframes pulse{0%{transform:scale(.92);opacity:.9}100%{transform:scale(1.18);opacity:0}}
+.hero h2{font-size:22px;font-weight:750;letter-spacing:-.01em}
+.hero p{color:var(--ink-2);font-size:15px;max-width:30ch}
+
+/* lists */
+.list{display:flex;flex-direction:column;overflow:hidden;padding:4px}
+.li{display:flex;align-items:center;gap:12px;padding:12px;border-radius:20px;text-align:left;width:100%}
+.li+.li{border-top:1px solid var(--stroke-2);border-radius:0}
+.li:active{background:var(--glass-3)}
+.li .thumb{width:44px;height:56px;border-radius:10px;overflow:hidden;background:var(--glass-3);flex:none;display:grid;place-items:center;color:var(--ink-3)}
+.li .thumb img{width:100%;height:100%;object-fit:cover}
+.li .grow{flex:1;min-width:0}
+.li .t{font-weight:650;font-size:15.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.li .s{font-size:13.5px;color:var(--ink-2);margin-top:1px}
+.score-pill{min-width:62px;text-align:center;font-weight:750;font-size:15px;padding:7px 10px;border-radius:999px}
+.list.compact .li{padding:7px 10px;gap:10px}
+.list.compact .li .thumb{width:30px;height:38px;border-radius:7px}
+.list.compact .li .t{font-size:15px}
+.list.compact .li .s{font-size:13px;margin-top:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.list.compact .score-pill{min-width:54px;font-size:14px;padding:4px 8px}
+.bar-p{height:5px;border-radius:9px;background:var(--glass-3);overflow:hidden;margin-top:7px}
+.bar-p i{display:block;height:100%;background:var(--primary);border-radius:9px;transition:width .25s}
+.err{font-size:13.5px;color:var(--bad);margin-top:2px}
+
+/* key grid */
+.keys{display:flex;flex-direction:column;gap:2px;padding:8px}
+.krow{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:16px}
+.krow.flag{background:var(--warn-soft)}
+.krow .n{width:30px;text-align:right;font:600 14px var(--mono);color:var(--ink-2);margin-right:4px}
+.ob{flex:1;max-width:52px;aspect-ratio:1;border-radius:50%;border:1.8px solid color-mix(in srgb,var(--ink) 22%,transparent);font-weight:700;font-size:15px;color:var(--ink-2);display:grid;place-items:center;background:var(--glass-3)}
+.ob[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.krow.flag .ob.cand{border-color:var(--warn);color:var(--warn)}
+.key-sum{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;padding:12px}
+.ks{display:flex;align-items:center;justify-content:space-between;padding:6px 8px;border-radius:12px;background:var(--glass-3);font-size:13px}
+.ks b{width:24px;height:24px;border-radius:50%;background:var(--ink);color:var(--bg);display:grid;place-items:center;font-size:12.5px}
+.paste{display:flex;gap:8px;padding:12px}
+
+/* inputs */
+.field{display:flex;flex-direction:column;gap:6px;padding:12px 16px}
+.field+.field{border-top:1px solid var(--stroke-2)}
+.field label,.flabel{font-size:13.5px;font-weight:650;color:var(--ink-2)}
+.input{width:100%;min-height:48px;border-radius:14px;border:1px solid var(--stroke-2);background:var(--glass-3);padding:10px 14px;font-size:17px}
+.pwbox{position:relative}.pwbox .input{padding-right:52px}.pweye{position:absolute;right:4px;top:50%;transform:translateY(-50%);width:44px;height:44px;display:grid;place-items:center;border:0;background:none;color:var(--ink-2);border-radius:12px}.pweye .ic{width:22px;height:22px}
+.input:focus{outline:2px solid color-mix(in srgb,var(--primary) 55%,transparent)}
+.input.bad{border-color:var(--bad)}
+.hint{font-size:12.5px;color:var(--ink-3)}
+.errtxt{font-size:13px;color:var(--bad);font-weight:600}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{min-width:56px;height:46px;padding:0 14px;border-radius:999px;display:inline-flex;align-items:center;justify-content:center;gap:6px;font-weight:700;font-size:17px;background:var(--glass-2);border:1px solid var(--stroke);box-shadow:var(--hi);color:var(--ink);transition:background .15s,color .15s,transform .12s}
+.chip:active{transform:scale(.95)}
+.chip[aria-pressed="true"]{background:var(--primary);color:var(--on-primary);border-color:transparent}
+.chips+.stepper{margin-top:10px}
+.stepper input::-webkit-inner-spin-button,.stepper input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+.stepper input{-moz-appearance:textfield;appearance:textfield}
+.stepper{display:flex;align-items:center;gap:10px}
+.stepper button{width:46px;height:46px;border-radius:50%;background:var(--glass-2);box-shadow:var(--hi);font-size:24px;font-weight:500;display:grid;place-items:center}
+.stepper input{text-align:center;font-weight:700;font-size:20px;max-width:90px}
+.toggle{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 16px;font-weight:600}
+.toggle input{appearance:none;width:52px;height:32px;border-radius:99px;background:var(--mute-soft);position:relative;transition:background .2s;margin:0;flex:none}
+.toggle input::after{content:"";position:absolute;top:3px;left:3px;width:26px;height:26px;border-radius:50%;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.25);transition:transform .2s}
+.toggle input:checked{background:var(--ok)}
+.toggle input:checked::after{transform:translateX(20px)}
+
+/* paper */
+.score-hero{display:flex;align-items:center;gap:18px;padding:18px}
+.ring{width:108px;height:108px;flex:none}
+.counts{display:grid;grid-template-columns:1fr 1fr;gap:6px 14px;flex:1;font-size:14px;color:var(--ink-2)}
+.counts b{font-size:19px;color:var(--ink);margin-right:5px}
+.counts .c-ok b{color:var(--ok)}.counts .c-bad b{color:var(--bad)}.counts .c-warn b{color:var(--warn)}
+.imgwrap{padding:8px;border-radius:24px}
+.imgwrap canvas{display:block;width:100%;height:auto;border-radius:18px;background:#fff}
+.qgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:7px;padding:12px}
+.qc{display:flex;flex-direction:column;align-items:center;padding:7px 0 6px;border-radius:16px;font:600 11.5px var(--mono);background:var(--mute-soft);color:var(--mute);border:1.5px solid transparent}
+.qc b{font:750 17px var(--f)}
+.qc.correct{background:var(--ok-soft);color:var(--ok)}
+.qc.wrong{background:var(--bad-soft);color:var(--bad)}
+.qc.review{background:var(--warn-soft);color:var(--warn);border-color:var(--warn)}
+.qc.manual b::after{content:"•";font-size:12px;vertical-align:super;margin-left:1px}
+.seg.mini{position:static;margin:0;padding:3px}.seg.mini button{min-height:32px;padding:0 12px;font-size:13.5px}
+.atab{width:100%;border-collapse:collapse;font-size:15px}
+.atab th{font-size:12px;font-weight:650;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-3);text-align:left;padding:12px 12px 6px}
+.atab td{padding:8px 12px;border-top:1px solid var(--stroke-2)}
+.atab tr[data-act]{cursor:pointer}.atab tr[data-act]:active{background:var(--glass-3)}
+.atab td:first-child{font:600 14px var(--mono);color:var(--ink-2);width:3.5em}
+.atab .l{font-weight:750;width:4.5em}.atab .r{text-align:right}
+.atab tr.review{background:var(--warn-soft)}
+.fixbar{display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:22px;background:var(--warn-soft);border:1px solid color-mix(in srgb,var(--warn) 35%,transparent);margin-bottom:12px;color:var(--ink)}
+.fixbar .ic{color:var(--warn)}
+
+/* sheets & overlays */
+.scrim{position:fixed;inset:0;z-index:90;background:rgba(6,10,22,.38);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);animation:fade .18s}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:91;max-width:480px;margin:0 auto;border-radius:30px 30px 0 0;padding:10px 16px calc(env(safe-area-inset-bottom,0px) + 18px);max-height:92vh;overflow:auto;animation:up .24s cubic-bezier(.2,.8,.2,1);background:var(--glass-2);border:1px solid var(--stroke);box-shadow:var(--hi),0 -10px 40px rgba(0,0,0,.2);-webkit-backdrop-filter:blur(28px) saturate(180%);backdrop-filter:blur(28px) saturate(180%)}
+.sheet .grab{width:40px;height:5px;border-radius:9px;background:var(--ink-3);opacity:.5;margin:0 auto 12px}
+.sheet h2{font-size:21px;font-weight:750;letter-spacing:-.01em;margin:4px 4px 6px}
+.sheet .opts{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:16px 0 10px}
+.sheet .opt{aspect-ratio:1;border-radius:50%;font-size:22px;font-weight:750;background:var(--glass);border:2px solid var(--stroke-2);box-shadow:var(--hi)}
+.sheet .opt.cand{border-color:var(--bad);color:var(--bad)}
+.sheet .opt.on{background:var(--ink);color:var(--bg)}
+.menu{display:flex;flex-direction:column;padding:4px}
+.menu button{display:flex;align-items:center;gap:14px;padding:15px 12px;border-radius:16px;font-weight:600;font-size:16.5px;text-align:left}
+.menu button:active{background:var(--glass-3)}
+.menu .danger{color:var(--bad)}
+@keyframes up{from{transform:translateY(100%)}}
+@keyframes fade{from{opacity:0}}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:6px 16px;font-size:15px;margin:10px 4px}
+.kv dt{color:var(--ink-2)}.kv dd{margin:0;font-weight:650}
+
+.toasts{position:fixed;left:50%;transform:translateX(-50%);top:calc(env(safe-area-inset-top,0px) + 10px);z-index:200;display:flex;flex-direction:column;gap:8px;width:min(448px,calc(100% - 32px))}
+.login{min-height:calc(100vh - 140px);display:grid;place-items:center;padding:24px 0}
+.login .card{width:100%;max-width:400px;padding:26px 20px 20px}
+.note-bad,.note-warn{display:flex;gap:8px;align-items:flex-start;font-size:14px;font-weight:600;border-radius:14px;padding:10px 12px;margin-bottom:14px}
+.note-bad{color:var(--bad);background:var(--bad-soft)}.note-warn{color:var(--warn);background:var(--warn-soft)}
+.note-bad .ic,.note-warn .ic{flex:none;margin-top:1px}
+.toast{display:flex;align-items:center;gap:10px;padding:13px 16px;border-radius:20px;font-size:15px;font-weight:550;animation:fade .2s}
+.toast .grow{flex:1}
+.toast button{color:var(--primary);font-weight:750}
+
+.viewer{position:fixed;inset:0;z-index:120;background:#05070d;display:flex;flex-direction:column}
+.viewer .vb{display:flex;justify-content:flex-end;padding:calc(env(safe-area-inset-top,0px) + 10px) 12px 10px}
+.viewer .body{flex:1;overflow:auto;touch-action:pan-x pan-y}
+.viewer img{width:100%;height:auto;display:block}
+.viewer.zoom img{width:220%}
+.viewer .iconbtn{color:#fff;background:rgba(255,255,255,.14)}
+
+/* camera */
+[hidden]{display:none!important}   /* a display rule must never un-hide it: the camera's result layer covers the buttons */
+.cam{position:fixed;inset:0;z-index:150;background:#000;color:#fff;display:flex;flex-direction:column}
+.cam::after,.viewer::after{content:"";position:absolute;left:0;right:0;top:100%;height:50vh;background:inherit}   /* keep the black going behind Safari's bottom toolbar */
+.cam video,.cam canvas.ov{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+/* guide brackets while no sheet is found; the live outline takes over once one is */
+.cam .frame{position:absolute;left:50%;top:46%;width:min(80vw,calc(62vh * .707));aspect-ratio:1/1.414;transform:translate(-50%,-50%);transition:opacity .3s;pointer-events:none;animation:breathe 2.2s ease-in-out infinite}
+.cam .frame i{position:absolute;width:38px;height:38px;border:4px solid rgba(255,255,255,.92);filter:drop-shadow(0 1px 3px rgba(0,0,0,.35))}
+.cam .frame i:nth-child(1){left:0;top:0;border-right:0;border-bottom:0;border-top-left-radius:20px}
+.cam .frame i:nth-child(2){right:0;top:0;border-left:0;border-bottom:0;border-top-right-radius:20px}
+.cam .frame i:nth-child(3){right:0;bottom:0;border-left:0;border-top:0;border-bottom-right-radius:20px}
+.cam .frame i:nth-child(4){left:0;bottom:0;border-right:0;border-top:0;border-bottom-left-radius:20px}
+.cam .frame.found{opacity:0;animation:none}
+@keyframes breathe{50%{transform:translate(-50%,-50%) scale(.965)}}
+.cam .top{position:absolute;left:0;right:0;top:0;padding:calc(env(safe-area-inset-top,0px) + 12px) 14px 0;display:flex;justify-content:space-between;align-items:center}
+.cam .msg{position:absolute;left:50%;transform:translateX(-50%);top:calc(env(safe-area-inset-top,0px) + 70px);padding:10px 18px;border-radius:999px;font-weight:650;font-size:15px;white-space:nowrap;background:rgba(0,0,0,.45);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.2)}
+.cam .msg.good{background:rgba(20,146,74,.85)}
+.cam .msg{transition:opacity .2s,background .2s}
+.cam[data-phase="result"] .msg,.cam[data-phase="result"] .bottom,.cam[data-phase="reading"] .bottom{opacity:0;pointer-events:none}
+.cam .bottom{transition:opacity .2s}
+.cam .bottom{position:absolute;left:0;right:0;bottom:0;padding:18px 22px calc(env(safe-area-inset-bottom,0px) + 22px);display:flex;align-items:center;justify-content:space-between}
+.cam .cbtn{min-width:64px;height:44px;border-radius:999px;padding:0 14px;background:rgba(255,255,255,.16);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.22);color:#fff;font-weight:650;display:flex;align-items:center;justify-content:center;gap:6px}
+.cam .cbtn.on{background:#fff;color:#000}
+.cam .shutter{width:78px;height:78px;border-radius:50%;border:5px solid #fff;background:rgba(255,255,255,.25)}
+.cam .shutter:active{background:#fff}
+.cam .count{padding:8px 14px;border-radius:999px;background:rgba(0,0,0,.45);font-size:14px;font-weight:650;-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.2)}
+/* result pop-up */
+.cam .res{position:absolute;inset:0;z-index:5;display:grid;place-items:center;padding:20px;background:rgba(0,0,0,0);-webkit-backdrop-filter:blur(0);backdrop-filter:blur(0);transition:background .3s,backdrop-filter .3s,-webkit-backdrop-filter .3s}
+.cam .res.in{background:rgba(0,0,0,.42);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.cam .res .card{width:min(100%,360px);padding:22px 20px 16px;border-radius:32px;text-align:center;color:var(--ink);background:var(--glass-2);border:1px solid var(--stroke);box-shadow:var(--hi),0 30px 60px -12px rgba(0,0,0,.55);-webkit-backdrop-filter:blur(30px) saturate(180%);backdrop-filter:blur(30px) saturate(180%);transform:translateY(24px) scale(.86);opacity:0;transition:transform .5s cubic-bezier(.2,1.4,.4,1),opacity .25s}
+.cam .res.in .card{transform:none;opacity:1}
+.cam .res .who{font-size:19px;font-weight:750;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cam .res .sub2{font-size:14px;color:var(--ink-2);margin-top:2px}
+.cam .res .dial{position:relative;width:200px;height:200px;margin:14px auto 10px}
+.cam .res .dial svg{width:100%;height:100%;transform:rotate(-90deg)}
+.cam .res .dial circle{fill:none;stroke-width:14}
+.cam .res .dial .trk{stroke:var(--mute-soft)}
+.cam .res .dial .arc{stroke-linecap:round;transition:stroke-dashoffset 1.1s cubic-bezier(.25,.9,.3,1) .15s}
+.cam .res .mid{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.cam .res .mid b{font-size:64px;font-weight:800;letter-spacing:-.03em;line-height:1}
+.cam .res .mid i{width:84px;height:3px;border-radius:3px;background:var(--ink-3);opacity:.55;margin:8px 0 6px}
+.cam .res .mid span{font-size:17px;color:var(--ink-2);font-weight:650}
+.cam .res .tally{display:flex;justify-content:center;flex-wrap:wrap;gap:4px 14px;font-size:14px;color:var(--ink-2);margin-bottom:12px}
+.cam .res .tally b{font-size:18px;color:var(--ink);margin-right:4px}
+.cam .res .tally .ok b{color:var(--ok)}.cam .res .tally .bad b{color:var(--bad)}.cam .res .tally .warn b{color:var(--warn)}
+.cam .res .note{display:flex;align-items:center;gap:8px;justify-content:center;font-size:14px;font-weight:600;color:var(--warn);background:var(--warn-soft);border-radius:14px;padding:9px 12px;margin-bottom:12px;text-align:left}
+.cam .res .badge{width:72px;height:72px;border-radius:50%;display:grid;place-items:center;margin:6px auto 12px;background:var(--bad-soft);color:var(--bad)}
+.cam .res .badge .ic{width:36px;height:36px}
+.cam .res h3{font-size:21px;font-weight:750}
+.cam .res p{color:var(--ink-2);font-size:15px;margin:6px 0 16px}
+.cam .res .btn.primary{width:100%;min-height:58px;font-size:18px}
+.cam .res .link{display:block;margin:6px auto 0}
+.flash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none}
+.flash.go{animation:flash .35s}
+@keyframes flash{0%{opacity:.8}100%{opacity:0}}
+
+.spinner{width:18px;height:18px;border-radius:50%;border:2.5px solid var(--primary-soft);border-top-color:var(--primary);animation:spin .8s linear infinite;flex:none}
+@keyframes spin{to{transform:rotate(360deg)}}
+.empty{text-align:center;padding:36px 22px}
+.empty .art{width:84px;height:84px;margin:0 auto 14px;color:var(--primary)}
+.empty h2{font-size:22px;font-weight:750;margin-bottom:6px}
+.empty p{color:var(--ink-2)}
+.search{position:relative}
+.search .ic{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--ink-3)}
+.search input{padding-left:44px;border-radius:999px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.brand-mark{width:56px;height:28px;color:var(--primary);flex:none}
+.steps{margin:14px 6px 0;padding-left:22px;display:flex;flex-direction:column;gap:10px;font-size:15.5px}
+.steps li{padding-left:4px}
+.kbd{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:8px;background:var(--glass);vertical-align:middle;color:var(--primary)}
+</style>
+</head>
+<body>
+<div class="backdrop" aria-hidden="true"><i></i><i></i><i></i><i></i></div><div class="edge top" aria-hidden="true"></div><div class="edge bot" aria-hidden="true"></div>
+<main class="app" id="app"></main>
+<div id="layer"></div>
+<div class="toasts" id="toasts" aria-live="polite"></div>
+<input type="file" id="fileScan" accept="image/*" multiple hidden>
+<input type="file" id="camScan" accept="image/*" capture="environment" hidden>
+<input type="file" id="fileKey" accept="image/*" hidden>
+<input type="file" id="camKey" accept="image/*" capture="environment" hidden>
+<input type="file" id="fileLayout" accept="image/*" hidden>
+<script src="config.js"></script>
+<script src="omr.js"></script>
+<script defer src="vendor/jspdf.umd.min.js"></script>
+<script defer src="export.js"></script>
+<script>
+/* ============================================================
+   Utilities
+   ============================================================ */
+const $ = (s, r = document) => r.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const uid = (p = '') => p + Math.random().toString(36).slice(2, 8) + Date.now().toString(36).slice(-5);
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const LET = 'ABCDE';
+const tick = () => new Promise(r => setTimeout(r, 0));
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const clone = o => JSON.parse(JSON.stringify(o));
+const mean = a => a.length ? a.reduce((x, y) => x + y, 0) / a.length : 0;
+const r3 = v => Math.round(v * 1000) / 1000;
+function pctile(arr, p) { if (!arr.length) return 0; const a = Float64Array.from(arr).sort(); return a[clamp(Math.floor(p * (a.length - 1)), 0, a.length - 1)]; }
+const fmtPct = v => v == null || isNaN(v) ? '—' : (Math.round(v * 10) / 10).toString().replace(/\.0$/, '') + '%';
+const fmtNum = v => { const r = Math.round(v * 100) / 100; return String(r); };
+function ago(t) { const s = (Date.now() - t) / 1000; if (s < 60) return 'just now'; if (s < 3600) return Math.floor(s / 60) + ' min ago'; if (s < 86400) return Math.floor(s / 3600) + ' h ago'; return new Date(t).toLocaleDateString(undefined, {day:'numeric', month:'short'}); }
+const stamp = t => new Date(t).toLocaleString(undefined, {day:'numeric', month:'short', hour:'2-digit', minute:'2-digit'});
+function rng(seed) { return function () { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+const store = { get(k, d) { try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch { return d; } }, set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch { return false; } }, del(k) { try { localStorage.removeItem(k); } catch {} } };
+
+const ICON = {
+  home:'<path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',
+  exams:'<path d="M7 3h7l5 5v12a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M14 3v5h5M9 13h6M9 17h4"/>',
+  plus:'<path d="M12 5v14M5 12h14"/>',
+  scan:'<path d="M4 8V5a1 1 0 0 1 1-1h3M16 4h3a1 1 0 0 1 1 1v3M20 16v3a1 1 0 0 1-1 1h-3M8 20H5a1 1 0 0 1-1-1v-3M4 12h16"/>',
+  results:'<path d="M5 20V11M12 20V4M19 20v-6"/>',
+  key:'<circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M17 6l3 3M14.5 8.5l2 2"/>',
+  settings:'<path d="M4 6h9M17 6h3M4 12h3M11 12h9M4 18h11M19 18h1"/><circle cx="15" cy="6" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="17" cy="18" r="2"/>',
+  camera:'<path d="M4 8h3l2-3h6l2 3h3a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3.5"/>',
+  upload:'<path d="M12 15V4M7 9l5-5 5 5M4 15v5h16v-5"/>',
+  download:'<path d="M12 4v11M7 10l5 5 5-5M4 15v5h16v-5"/>',
+  trash:'<path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/>',
+  refresh:'<path d="M20 11a8 8 0 1 0-2.3 5.7M20 4v7h-7"/>',
+  search:'<circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/>',
+  check:'<path d="M5 12.5l4.5 4.5L19 7.5"/>',
+  alert:'<path d="M12 3.5l9.5 16.5h-19z"/><path d="M12 10v4.5M12 17.2v.3"/>',
+  more:'<circle cx="5" cy="12" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="19" cy="12" r="1.2"/>',
+  right:'<path d="M9 5l7 7-7 7"/>', left:'<path d="M15 5l-7 7 7 7"/>',
+  x:'<path d="M6 6l12 12M18 6L6 18"/>',
+  expand:'<path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/>',
+  info:'<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.8v.2"/>',
+  user:'<circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6"/>',
+  sheet:'<rect x="5" y="3" width="14" height="18" rx="1.5"/><circle cx="9.5" cy="9" r="1.5"/><circle cx="14.5" cy="9" r="1.5"/><circle cx="9.5" cy="14" r="1.5"/><circle cx="14.5" cy="14" r="1.5"/>',
+  wand:'<path d="M4 20L15 9M14 4v3M19 9h-3M17.5 5.5l-2 2M18 14v2M20 15h-2M9 4v2M10 5H8"/>',
+  undo:'<path d="M9 14L4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/>',
+  edit:'<path d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16z"/><path d="M13.5 6.5l4 4"/>',
+  eye:'<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
+  eyeoff:'<path d="M3 3l18 18"/><path d="M10.6 5.1A10.4 10.4 0 0 1 12 5c6.5 0 10 7 10 7a17 17 0 0 1-3.2 4.1"/><path d="M6.6 6.6A17 17 0 0 0 2 12s3.5 7 10 7a9.7 9.7 0 0 0 4.2-.9"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/>'
+};
+const ic = (n, cls = '') => `<svg class="ic ${cls}" viewBox="0 0 24 24" aria-hidden="true">${ICON[n] || ''}</svg>`;
+const BRAND = `<svg class="brand-mark" viewBox="0 0 64 32" role="img" aria-label="MCQ"><rect width="64" height="32" rx="8" fill="currentColor"/><text x="32" y="17" text-anchor="middle" dominant-baseline="central" fill="#fff" font-family="Arial Black, Helvetica Neue, Arial, sans-serif" font-weight="900" font-size="18">MCQ</text></svg>`;
+
+
+/* ============================================================
+   Synthetic "phone photos" for the sample exam and testing
+   ============================================================ */
+function pencil(g, x, y, r, alpha, rnd) {
+  g.save(); g.globalAlpha = alpha; g.fillStyle = '#1e2030'; g.beginPath();
+  const ox = (rnd() - .5) * 2.2, oy = (rnd() - .5) * 2.2;
+  for (let k = 0; k <= 26; k++) { const a = k / 26 * Math.PI * 2, rr = r * (0.87 + rnd() * 0.14), px = x + ox + Math.cos(a) * rr, py = y + oy + Math.sin(a) * rr; k ? g.lineTo(px, py) : g.moveTo(px, py); }
+  g.closePath(); g.fill(); g.restore();
+}
+// the ways students actually mark bubbles, for generated test photos
+function markStyle(g, x, y, r, kind, alpha, rnd) {
+  if (!kind || kind === 'full') return pencil(g, x, y, r, alpha ?? 0.92, rnd);
+  if (kind === 'light') return pencil(g, x, y, r, 0.38, rnd);
+  if (kind === 'erased') return pencil(g, x, y, r, 0.1, rnd);
+  if (kind === 'dot') return pencil(g, x, y, r * 0.45, 0.9, rnd);
+  g.save(); g.strokeStyle = '#1e2030'; g.fillStyle = '#1e2030'; g.lineCap = 'round'; g.globalAlpha = 0.9;
+  if (kind === 'half') { g.beginPath(); const a0 = rnd() * Math.PI * 2; g.arc(x, y, r * 0.92, a0, a0 + Math.PI); g.closePath(); g.fill(); }
+  else if (kind === 'tick') { g.lineWidth = r * 0.28; g.beginPath(); g.moveTo(x - r * .6, y); g.lineTo(x - r * .1, y + r * .55); g.lineTo(x + r * .75, y - r * .7); g.stroke(); }
+  else if (kind === 'cross') { g.lineWidth = r * 0.26; g.beginPath(); g.moveTo(x - r * .65, y - r * .65); g.lineTo(x + r * .65, y + r * .65); g.moveTo(x + r * .65, y - r * .65); g.lineTo(x - r * .65, y + r * .65); g.stroke(); }
+  else if (kind === 'scribble') { g.lineWidth = r * 0.22; g.beginPath(); for (let k = 0; k < 7; k++) { const yy = y - r * .6 + k * r * .2; g.lineTo(x + (k % 2 ? r * .6 : -r * .6), yy); } g.stroke(); }
+  g.restore();
+}
+async function synthPhoto(exam, spec) {
+  const rnd = rng(spec.seed || 7), SC = 1.3, sheet = spec.sheetCanvas || OMR.renderSheet(exam, SC), g = sheet.getContext('2d');
+  if (spec.sheetCanvas) { g.setTransform(1, 0, 0, 1, 0, 0); } else {
+  g.setTransform(SC, 0, 0, SC, 0, 0);
+  const L = OMR.layout(exam);
+  (spec.marks || []).forEach((m, i) => { if (!m || !L.qs[i]) return; m.o.forEach((o, k) => { const [x, y] = L.qs[i].opts[o]; markStyle(g, x, y, 10.6, (m.ks && m.ks[k]) || m.k, m.a, rnd); }); });
+  const hand = '"Bradley Hand","Segoe Print","Comic Sans MS",cursive';
+  if (spec.roll) [...spec.roll].forEach((ch, j) => { if (j >= L.id.length) return; const [x, y] = L.id[j][+ch]; pencil(g, x, y, 7.8, 0.93, rnd); g.save(); g.font = `24px ${hand}`; g.fillStyle = '#1d2a6b'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(ch, x, 148); g.restore(); });
+  if (spec.name) { g.save(); g.font = `italic 25px ${hand}`; g.fillStyle = '#1d2a6b'; g.textBaseline = 'alphabetic'; g.fillText(spec.name, 72, 156); g.restore(); }
+  }
+  const land = !!spec.landscape, PW = land ? 2000 : 1500, PH = land ? 1500 : 2000;
+  const P = document.createElement('canvas'); P.width = PW; P.height = PH; const p = P.getContext('2d');
+  const bg = p.createLinearGradient(0, 0, PW, PH); bg.addColorStop(0, spec.desk?.[0] || '#7c6652'); bg.addColorStop(1, spec.desk?.[1] || '#4d3e33'); p.fillStyle = bg; p.fillRect(0, 0, PW, PH);
+  p.globalAlpha = .07; for (let i = 0; i < 70; i++) { p.fillStyle = i % 2 ? '#000' : '#fff'; p.fillRect(0, rnd() * PH, PW, 1 + rnd() * 3); } p.globalAlpha = 1;
+  // true perspective: map the sheet's corners onto a rotated trapezoid and resample through the homography
+  const sw = sheet.width, sh = sheet.height, sc = (spec.size || 0.8) * (land ? PW : PH) / sh, k = spec.keystone || 0;
+  const cx0 = PW / 2 + (rnd() - .5) * 40, cy0 = PH / 2 + (rnd() - .5) * 40, th = (spec.rot || 0) * Math.PI / 180, ct = Math.cos(th), st = Math.sin(th);
+  const local = [[-sw * (1 - k) / 2, -sh / 2], [sw * (1 - k) / 2, -sh / 2], [sw / 2, sh / 2], [-sw / 2, sh / 2]];
+  const dst = local.map(([x, y]) => [cx0 + (x * ct - y * st) * sc, cy0 + (x * st + y * ct) * sc]);
+  if (spec.clutter) { p.fillStyle = '#1b1c20'; p.fillRect(0, PH * 0.55, PW * 0.42, PH * 0.3); p.fillStyle = '#f2f2ee'; p.fillRect(PW * 0.02, 0, PW * 0.3, PH * 0.45); p.fillStyle = '#d9d4c8'; p.fillRect(dst[1][0] - 20, dst[1][1] + 80, PW, 300); }
+  p.save(); p.shadowColor = 'rgba(0,0,0,.45)'; p.shadowBlur = 40; p.shadowOffsetY = 14; p.fillStyle = '#f4f4f4';
+  p.beginPath(); dst.forEach(([x, y], i) => i ? p.lineTo(x, y) : p.moveTo(x, y)); p.closePath(); p.fill(); p.restore();
+  const Hm = OMR.homog(dst, [[0, 0], [sw, 0], [sw, sh], [0, sh]]);
+  const bx0 = Math.max(0, Math.floor(Math.min(...dst.map(d => d[0])))), bx1 = Math.min(PW, Math.ceil(Math.max(...dst.map(d => d[0]))));
+  const by0 = Math.max(0, Math.floor(Math.min(...dst.map(d => d[1])))), by1 = Math.min(PH, Math.ceil(Math.max(...dst.map(d => d[1]))));
+  const sd = g.getImageData(0, 0, sw, sh).data, reg = p.getImageData(bx0, by0, bx1 - bx0, by1 - by0), rd = reg.data, rw = bx1 - bx0;
+  for (let y = by0; y < by1; y++) for (let x = bx0; x < bx1; x++) {
+    let [u, v] = OMR.applyH(Hm, x + .5, y + .5);
+    if (spec.bend) { v += spec.bend * Math.sin(Math.PI * u / sw); u += spec.bend * 0.4 * Math.sin(Math.PI * v / sh); }
+    if (u < 0 || v < 0 || u >= sw - 1 || v >= sh - 1) continue;
+    const x0 = u | 0, y0 = v | 0, fx = u - x0, fy = v - y0, i = (y0 * sw + x0) * 4, o = ((y - by0) * rw + (x - bx0)) * 4;
+    for (let ch = 0; ch < 3; ch++) rd[o + ch] = (sd[i + ch] * (1 - fx) + sd[i + 4 + ch] * fx) * (1 - fy) + (sd[i + sw * 4 + ch] * (1 - fx) + sd[i + sw * 4 + 4 + ch] * fx) * fy;
+  }
+  p.putImageData(reg, bx0, by0);
+  if (spec.shadow) { const gr = p.createLinearGradient(0, 0, PW * 0.75, PH * 0.55); gr.addColorStop(0, 'rgba(18,18,40,.58)'); gr.addColorStop(1, 'rgba(18,18,40,0)'); p.fillStyle = gr; p.fillRect(0, 0, PW, PH); }
+  const vg = p.createRadialGradient(PW / 2, PH / 2, PH * 0.25, PW / 2, PH / 2, PH * 0.85); vg.addColorStop(0, 'rgba(0,0,0,0)'); vg.addColorStop(1, 'rgba(0,0,0,.28)'); p.fillStyle = vg; p.fillRect(0, 0, PW, PH);
+  p.fillStyle = 'rgba(255,190,110,.06)'; p.fillRect(0, 0, PW, PH);
+  let out = P; const b = spec.blur || 1.5;
+  if (b > 1) { const t = document.createElement('canvas'); t.width = Math.round(PW / b); t.height = Math.round(PH / b); const tg = t.getContext('2d'); tg.imageSmoothingQuality = 'high'; tg.drawImage(P, 0, 0, t.width, t.height); const o = document.createElement('canvas'); o.width = PW; o.height = PH; const og = o.getContext('2d'); og.imageSmoothingQuality = 'high'; og.drawImage(t, 0, 0, PW, PH); out = o; }
+  const og = out.getContext('2d'), im = og.getImageData(0, 0, PW, PH), d = im.data;
+  for (let i = 0; i < d.length; i += 4) { const n = (rnd() - .5) * 16; d[i] += n; d[i + 1] += n; d[i + 2] += n; }
+  og.putImageData(im, 0, 0);
+  const blob = await new Promise(r => out.toBlob(r, 'image/jpeg', 0.86));
+  return new File([blob], spec.file || 'sample.jpg', { type: 'image/jpeg' });
+}
+function studentMarks(exam, key, rnd, p, extra = {}) {
+  return Array.from({ length: exam.numQ }, (_, i) => {
+    if (extra.double?.includes(i)) return { o: [key[i], (key[i] + 1) % exam.numOpts] };
+    if (extra.faint?.includes(i)) return { o: [key[i]], a: 0.3 };
+    if (extra.kind?.[i]) return { o: [key[i]], k: extra.kind[i] };
+    if (extra.fix?.includes(i)) { const w = (key[i] + 1) % exam.numOpts; return { o: [w, key[i]], ks: ['erased', 'full'] }; }
+    if (extra.unsure?.includes(i)) return { o: [key[i], (key[i] + 2) % exam.numOpts], ks: ['half', 'half'] };
+    if (extra.blank?.includes(i)) return null;
+    const right = rnd() < p; let o = key[i];
+    if (!right) { o = Math.floor(rnd() * exam.numOpts); if (o === key[i]) o = (o + 1) % exam.numOpts; }
+    return { o: [o] };
+  });
+}
+
+
+/* ============================================================
+   Bubblemark — mobile app layer
+   ============================================================ */
+Object.assign(ICON, {
+  gear: '<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>',
+  image: '<rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-8 9"/>',
+  share: '<path d="M12 15V3M7 8l5-5 5 5"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/>',
+  print: '<path d="M7 9V3h10v6M7 17H5a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2"/><rect x="7" y="14" width="10" height="7" rx="1"/>',
+  bolt: '<path d="M13 2L4 14h7l-1 8 9-12h-7z"/>',
+  type: '<rect x="2.5" y="6" width="19" height="12" rx="2.5"/><path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M7 14h10"/>',
+  install: '<path d="M12 3v12M7 10l5 5 5-5"/><rect x="4" y="17" width="16" height="4" rx="2"/>',
+  edit: '<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/>'
+});
+const DEF = { minConf: 0.85, fill: 0.5, partial: 0.15, minSharp: 0.5, order: 'columns' };
+const S = {
+  exams: {}, papers: {}, images: {},
+  route: { view: 'home' },
+  settings: Object.assign({}, DEF, store.get('bm.settings2', {})),
+  prefs: Object.assign({ hideSample: false }, store.get('bm.prefs', {})),
+  queue: [],
+  ui: { keyDraft: {}, create: null, errors: {}, q: '', sample: null, layoutBusy: false }
+};
+const examList = () => Object.values(S.exams).filter(e => !e.deletedAt && !(e.sample && (S.prefs.hideSample || !SAMPLE_EXAM))).sort((a, b) => b.updatedAt - a.updatedAt);
+const papersOf = id => Object.values(S.papers).filter(p => p.examId === id && !p.deletedAt).sort((a, b) => (a.student?.roll || '~').localeCompare(b.student?.roll || '~') || a.createdAt - b.createdAt);
+const audit = (o, text) => { (o.audit = o.audit || []).push({ t: Date.now(), text }); if (o.audit.length > 200) o.audit.shift(); };
+
+/* ---------- grading ---------- */
+function grade(p, e) {
+  const key = e.key?.answers || [], neg = e.negEnabled ? (+e.neg || 0) : 0, rows = [];
+  let correct = 0, wrong = 0, blank = 0, review = 0, score = 0, two = 0, unclear = 0;
+  for (let i = 0; i < e.numQ; i++) {
+    const a = p.det?.answers?.[i] || { st: 'blank', s: [], cand: [], c: 0, det: null };
+    const k = key[i] ?? null; let st = a.st, ans = a.st === 'answered' ? a.det : null, manual = false;
+    if (p.overrides && Object.prototype.hasOwnProperty.call(p.overrides, i)) { manual = true; const v = p.overrides[i]; ans = v < 0 ? null : v; st = ans == null ? 'blank' : 'answered'; }
+    let out, mk = 0;
+    if (st === 'answered') { if (ans === k) { out = 'correct'; mk = +e.marks; } else { out = 'wrong'; mk = -neg; } }
+    else { out = 'wrong'; mk = -neg; }
+    // every question needs exactly one clear answer: nothing marked, two marks or an unreadable mark all count as wrong
+    const twoMarks = st === 'multiple' || (st === 'uncertain' && (a.cand || []).length >= 2);
+    const reason = st === 'answered' ? '' : st === 'blank' ? 'Not answered' : twoMarks ? 'Two marks' : 'Unclear mark';
+    if (out === 'correct') correct++; else { wrong++; if (st === 'blank') blank++; else if (twoMarks) two++; else if (st !== 'answered') unclear++; }
+    score += mk;
+    rows.push({ i, q: i + 1, k, ans, st, out, mk, reason, conf: a.c, cand: a.cand || [], det: a.det, manual, partial: !!a.p && !manual, blurry: !!a.al && !manual, why: manual ? '' : a.why || '' });
+  }
+  const total = e.numQ * e.marks, pct = total ? score / total * 100 : 0;
+  const idOk = !e.idDigits || (!!p.student?.roll && !/\?/.test(p.student.roll)) || !!p.student?.name;
+  return { rows, correct, wrong, blank, two, unclear, review, score: Math.round(score * 100) / 100, total, pct, status: !idOk ? 'needs_id' : 'graded', idOk };
+}
+const wrongNote = g => [g.blank && g.blank + ' not answered', g.two && g.two + ' with two marks', g.unclear && g.unclear + ' unclear'].filter(Boolean).join(' · ');
+function who(p, e) { const r = p.student?.roll || ''; const n = p.student?.name || (r && e.roster?.[r]) || ''; return { roll: r, name: n, title: n || (r ? 'Roll ' + r : 'Unnamed paper') }; }
+const pctTone = v => v >= 80 ? 'ok' : v >= 50 ? 'info' : 'bad';
+const OUT = { correct: 'Correct', wrong: 'Wrong' };
+
+/* ============================================================
+   Storage — IndexedDB on the phone (works offline)
+   ============================================================ */
+const DB = {
+  db: null,
+  open() {
+    return new Promise(res => {
+      try {
+        const r = indexedDB.open('bubblemark', 1);
+        r.onupgradeneeded = () => { const d = r.result; ['exams', 'papers', 'images'].forEach(n => { if (!d.objectStoreNames.contains(n)) d.createObjectStore(n, { keyPath: 'id' }); }); };
+        r.onsuccess = () => { this.db = r.result; res(true); };
+        r.onerror = () => res(false);
+      } catch { res(false); }
+    });
+  },
+  all(st) { return new Promise(res => { if (!this.db) return res([]); try { const q = this.db.transaction(st).objectStore(st).getAll(); q.onsuccess = () => res(q.result || []); q.onerror = () => res([]); } catch { res([]); } }); },
+  get(st, id) { return new Promise(res => { if (!this.db) return res(null); try { const q = this.db.transaction(st).objectStore(st).get(id); q.onsuccess = () => res(q.result || null); q.onerror = () => res(null); } catch { res(null); } }); },
+  put(st, obj) { if (!this.db) return; try { this.db.transaction(st, 'readwrite').objectStore(st).put(JSON.parse(JSON.stringify(obj))); } catch (e) { console.warn(e); } },
+  del(st, id) { if (!this.db) return; try { this.db.transaction(st, 'readwrite').objectStore(st).delete(id); } catch {} }
+};
+const saveExam = e => { e.updatedAt = Date.now(); if (!e.sample) DB.put('exams', e); };
+const savePaper = p => { p.updatedAt = Date.now(); if (!p.sample) DB.put('papers', p); const e = S.exams[p.examId]; if (e) saveExam(e); };
+async function putImage(id, data, sample) { S.images[id] = data; if (!sample) DB.put('images', { id, ...data }); }
+async function getImage(id) { if (S.images[id]) return S.images[id]; const d = await DB.get('images', id); if (d) S.images[id] = d; return d; }
+function removePaper(p) { delete S.papers[p.id]; delete S.images[p.id]; DB.del('papers', p.id); DB.del('images', p.id); }
+
+
+/* ============================================================
+   Usage statistics — anonymous events sent to the owner's own tools
+   (configured in config.js; nothing is sent when it is left empty)
+   ============================================================ */
+const CFG = window.BUBBLEMARK_CONFIG || {};
+const AN = CFG.analytics || {};
+const Track = {
+  on: !window.claude && !!(AN.webhook || AN.ga4 || AN.umami?.websiteId),
+  device: store.get('bm.device', null) || (() => { const d = uid('d_'); store.set('bm.device', d); return d; })(),
+  session: uid('s_'),
+  q: store.get('bm.evq', []),
+  uq: store.get('bm.uq', []),   // Umami events recorded while offline, sent when the phone is back online
+  started: false,
+  platform() { const u = navigator.userAgent; return /android/i.test(u) ? 'android' : /iphone|ipad|ipod/i.test(u) ? 'ios' : /windows/i.test(u) ? 'windows' : /mac/i.test(u) ? 'mac' : 'other'; },
+  standalone() { return window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true; },
+  start() {
+    if (!this.on || this.started) return; this.started = true;
+    if (AN.ga4) { const s = document.createElement('script'); s.async = true; s.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(AN.ga4); document.head.appendChild(s); window.dataLayer = window.dataLayer || []; window.gtag = function () { dataLayer.push(arguments); }; gtag('js', new Date()); gtag('config', AN.ga4, { anonymize_ip: true }); }
+    if (AN.umami?.websiteId) { const s = document.createElement('script'); s.defer = true; s.src = AN.umami.src || 'https://cloud.umami.is/script.js'; s.dataset.websiteId = AN.umami.websiteId; s.onload = () => this.flush(); document.head.appendChild(s); }
+    window.addEventListener('online', () => this.flush());
+    document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') this.flush(true); });
+    setInterval(() => this.flush(), 20000);
+  },
+  ev(name, props = {}) {
+    if (!this.on) return;
+    const e = { event: name, t: new Date().toISOString(), device: this.device, session: this.session, platform: this.platform(), installed: this.standalone(), ...props };
+    try { window.gtag?.('event', name, props); } catch {}
+    if (AN.umami?.websiteId) {
+      if (navigator.onLine && window.umami?.track) { try { window.umami.track(name, props); } catch {} }
+      else { this.uq.push([name, { ...props, offline: true }]); if (this.uq.length > 300) this.uq.splice(0, this.uq.length - 300); store.set('bm.uq', this.uq); }
+    }
+    if (AN.webhook) { this.q.push(e); if (this.q.length > 500) this.q.splice(0, this.q.length - 500); store.set('bm.evq', this.q); if (this.q.length >= 8) this.flush(); }
+  },
+  flush(beacon) {
+    if (this.uq.length && navigator.onLine && window.umami?.track) { const b = this.uq.splice(0); store.set('bm.uq', this.uq); b.forEach(([n, p]) => { try { window.umami.track(n, p); } catch {} }); }
+    if (!AN.webhook || !this.q.length || !navigator.onLine) return;
+    const batch = this.q.splice(0, 100); store.set('bm.evq', this.q);
+    const body = JSON.stringify({ events: batch });
+    if (beacon && navigator.sendBeacon) { if (navigator.sendBeacon(AN.webhook, new Blob([body], { type: 'text/plain' }))) return; }
+    fetch(AN.webhook, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain' }, body, keepalive: true }).catch(() => { this.q.unshift(...batch); store.set('bm.evq', this.q); });
+  }
+};
+
+/* ---------- install prompt shown on the first visit from a link ---------- */
+function installSheet(auto) {
+  if (Track.standalone()) return;
+  const ios = /iphone|ipad|ipod/i.test(navigator.userAgent), android = /android/i.test(navigator.userAgent);
+  if (auto) { if (store.get('bm.installAsked', 0) > Date.now() - 3 * 864e5) return; store.set('bm.installAsked', Date.now()); }
+  Track.ev('install_prompt_shown', { auto: !!auto, can_prompt: !!S.installEvt });
+  const steps = ios ? `<ol class="steps"><li>Tap the <b>Share</b> button <span class="kbd">${ic('share', 'sm')}</span> at the bottom of Safari</li><li>Scroll and tap <b>Add to Home Screen</b></li><li>Tap <b>Add</b>. MCQ appears with your apps.</li></ol>`
+    : S.installEvt ? '' : android ? `<ol class="steps"><li>Tap the <b>⋮</b> menu in Chrome</li><li>Tap <b>Install app</b> or <b>Add to Home screen</b></li></ol>` : `<p class="muted" style="margin:6px 4px">Open this link on your phone to install it there.</p>`;
+  openSheet(`<div style="text-align:center;padding:6px 4px 2px">
+      <svg viewBox="0 0 84 84" style="width:76px;height:76px;margin:4px auto 10px;display:block" aria-hidden="true"><rect width="84" height="84" rx="20" fill="var(--primary)"/><text x="42" y="44" text-anchor="middle" dominant-baseline="central" fill="#fff" font-family="Arial Black, Helvetica Neue, Arial, sans-serif" font-weight="900" font-size="24">MCQ</text></svg>
+      <h2>Install MCQ</h2><p class="muted" style="margin:4px 8px 0">Opens from your home screen, full screen, and works without internet.</p></div>
+    ${steps}
+    ${S.installEvt ? `<button class="btn primary block" style="margin-top:16px" data-act="install">${ic('install')}Install app</button>` : ''}
+    <button class="btn block" style="margin-top:10px" data-act="installLater">Not now</button>`);
+}
+
+/* ============================================================
+   Views
+   ============================================================ */
+const app = () => $('#app');
+let lastScreen = '';
+function render() { const scr = S.route.view + (S.route.tab ? ':' + S.route.tab : ''); if (scr !== lastScreen) { lastScreen = scr; Track.ev('screen', { name: scr }); } const y = window.scrollY; app().innerHTML = view(); afterRender(); window.scrollTo(0, S._top ? 0 : y); S._top = false; }
+function go(r) { S.route = r; S._top = true; S.ui.rescan = null; closeSheet(); render(); }
+let rq = false;
+function scheduleRender() {
+  const a = document.activeElement;
+  if (a && app().contains(a) && /INPUT|SELECT/.test(a.tagName)) { S._pending = true; return; }
+  if (rq) return; rq = true; requestAnimationFrame(() => { rq = false; render(); });
+}
+document.addEventListener('focusout', () => { if (S._pending) { S._pending = false; setTimeout(scheduleRender, 60); } });
+function view() {
+  const r = S.route;
+  if (!S.auth) return '';
+  if (!S.auth.ok) return vLogin();
+  try {
+    if (r.view === 'new') return vNew();
+    if (r.view === 'exam' && S.exams[r.id]) return vExam(S.exams[r.id]);
+    if (r.view === 'paper' && S.papers[r.paperId] && S.exams[r.examId]) return vPaper(S.exams[r.examId], S.papers[r.paperId]);
+  } catch (err) { console.error(err); return `<div class="glass card" style="margin-top:40px"><h3>Something went wrong</h3><p class="muted">${esc(err.message)}</p></div>`; }
+  return vHome();
+}
+
+/* ---------- home ---------- */
+const SAMPLE_EXAM = false;   // the demo exam is switched off for now: not offered, not built, not listed
+function vHome() {
+  const exams = examList(), sp = S.ui.sample;
+  const card = e => {
+    const ps = papersOf(e.id), gs = ps.map(p => grade(p, e)), fix = gs.filter(g => g.status !== 'graded').length;
+    const avg = gs.length ? mean(gs.map(g => g.score)) : null, total = e.numQ * e.marks;
+    const status = !e.key?.confirmed || !ps.length ? '' : fix ? `<span class="pill warn"><i></i>${fix} to check</span>` : '<span class="pill ok"><i></i>All checked</span>';
+    const act = !e.key?.confirmed ? `<button class="btn soft" data-act="openTab" data-id="${e.id}" data-tab="key">${ic('key', 'sm')}Set answer key</button>`
+      : `<button class="btn soft" data-act="quickScan" data-id="${e.id}">${ic('camera', 'sm')}Scan papers</button>${ps.length ? `<button class="btn soft" data-act="openTab" data-id="${e.id}" data-tab="results">${ic('results', 'sm')}Results</button>` : ''}`;
+    return `<div class="glass exam">
+      <button class="exam-main" data-act="open" data-id="${e.id}">
+        <div class="row between" style="align-items:flex-start"><h3>${esc(e.name)}</h3>${ic('right', 'sm')}</div>
+        <p class="meta num">${e.numQ} questions · ${ps.length} paper${ps.length === 1 ? '' : 's'}${avg != null ? ` · avg ${fmtNum(Math.round(avg * 10) / 10)}/${fmtNum(total)}` : ''}</p>
+        ${status ? `<div style="margin-top:10px">${status}</div>` : ''}
+      </button>
+      <div class="exam-acts">${act}</div>
+    </div>`;
+  };
+  return `<header class="bar"><div class="row" style="gap:8px;font-weight:750;font-size:18px"><a class="iconbtn glass" href="../index.html" onclick="if(window.parent!==window){parent.postMessage('proshno:home',location.origin);return false}" aria-label="Back to home" title="Home">${ic('left')}</a>${BRAND}</div>
+    <div class="row" style="gap:8px">${S.installEvt ? `<button class="btn sm" data-act="install">${ic('install', 'sm')}Install</button>` : ''}<button class="iconbtn glass" data-act="settings" aria-label="Settings">${ic('gear')}</button></div></header>
+  <h1 class="title">Exams</h1>
+  ${false ? `<div class="note-warn">${ic('alert', 'sm')}<span>MCQ works on this phone until <b>${new Date(S.auth.exp).toLocaleDateString(undefined, { day: 'numeric', month: 'short' })}</b>. Open it with internet before then to renew your access.</span></div>` : ''}
+  ${sp?.busy ? `<div class="glass card row" style="margin-bottom:12px"><span class="spinner"></span><span class="muted">Preparing sample exam… ${sp.done}/${sp.total}</span></div>` : ''}
+  ${exams.length ? `<div class="stack">${exams.map(card).join('')}</div>` : `<div class="glass empty"><svg class="art" viewBox="0 0 84 84" aria-hidden="true"><circle cx="28" cy="42" r="18" fill="currentColor"/><circle cx="62" cy="42" r="13" fill="none" stroke="currentColor" stroke-width="4"/></svg><h2>Check MCQ papers with your camera</h2>
+    <ol class="how">${[['plus', 'Create an exam', 'Give it a name and the number of questions.'], ['key', 'Set the answer key', 'Scan one filled sheet, or type the answers.'], ['camera', 'Scan the papers', 'Point at each sheet — the marks show up at once.']].map(([i, t, d], n) => `<li><span class="n">${n + 1}</span><div><b>${t}</b><span>${d}</span></div></li>`).join('')}</ol></div>`}
+  <div class="fab"><button class="btn primary" data-act="new">${ic('plus')}${exams.length ? 'New exam' : 'Create your first exam'}</button></div>`;
+}
+
+/* ---------- new exam ---------- */
+// Photo set-up, subject, A–E options, marks and negative marking are hidden for now (planned for later).
+// New exams use 4 options (A–D), 1 mark per correct answer and no negative marking. Set to true to show them again.
+const NEW_EXAM_EXTRAS = false;
+const Q_PRESETS = [25, 30, 40, 50];
+function vNew() {
+  const f = S.ui.create || (S.ui.create = { name: '', subject: '', numQ: 25, numOpts: 4, marks: 1, negEnabled: false, neg: 0.25, idDigits: 6 });
+  const er = S.ui.errors, qCustom = !!f.qCustom || !Q_PRESETS.includes(+f.numQ);
+  const step = (k, min, max, st) => `<div class="stepper"><button type="button" data-act="step" data-k="${k}" data-d="${-st}" aria-label="Less">−</button><input class="input num ${er[k] ? 'bad' : ''}" id="f_${k}" data-on="cf" data-k="${k}" type="number" inputmode="decimal" min="${min}" max="${max}" step="${st}" value="${esc(f[k])}"><button type="button" data-act="step" data-k="${k}" data-d="${st}" aria-label="More">+</button></div>`;
+  return `<header class="bar"><button class="iconbtn glass" data-act="home" aria-label="Back">${ic('left')}</button><span></span></header>
+  <h1 class="title">New exam</h1>
+  ${NEW_EXAM_EXTRAS ? `<button class="glass card row" style="width:100%;text-align:left;margin-bottom:14px" data-act="pick" data-input="fileLayout" ${S.ui.layoutBusy ? 'disabled' : ''}>
+    <span class="iconbtn" style="background:var(--primary-soft);color:var(--primary)">${S.ui.layoutBusy ? '<span class="spinner"></span>' : ic('camera')}</span>
+    <span class="grow"><b>${S.ui.layoutBusy ? 'Reading your sheet…' : 'Set up from a photo'}</b><br><span class="muted" style="font-size:14px">Photograph a blank answer sheet and the questions, options and roll digits fill in.</span></span></button>` : ''}
+  <form id="newForm" novalidate class="stack">
+    <div class="glass" style="padding:4px 0">
+      <div class="field"><label for="f_name">Exam name</label><input class="input ${er.name ? 'bad' : ''}" id="f_name" data-on="cf" data-k="name" value="${esc(f.name)}" placeholder="Type your exam name" autocomplete="off" maxlength="80">${er.name ? `<span class="errtxt">${er.name}</span>` : ''}</div>
+      ${NEW_EXAM_EXTRAS ? `<div class="field"><label for="f_subject">Subject <span class="faint">(optional)</span></label><input class="input" id="f_subject" data-on="cf" data-k="subject" value="${esc(f.subject)}" autocomplete="off" maxlength="60"></div>` : ''}
+    </div>
+    <div class="glass" style="padding:4px 0">
+      <div class="field"><span class="flabel" id="qLbl">Questions</span><div class="chips" role="group" aria-labelledby="qLbl">${Q_PRESETS.map(n => `<button type="button" class="chip num" data-act="setQ" data-v="${n}" aria-pressed="${!qCustom && +f.numQ === n}">${n}</button>`).join('')}<button type="button" class="chip" data-act="qCustom" aria-pressed="${qCustom}" aria-label="Custom number of questions">${ic('edit', 'sm')}</button></div>${qCustom ? step('numQ', 1, 100, 1) : ''}${er.numQ ? `<span class="errtxt">${er.numQ}</span>` : ''}</div>
+      ${NEW_EXAM_EXTRAS ? `<div class="field"><span class="flabel">Options per question</span><div class="seg glass" style="position:static;margin:0">${[4, 5].map(n => `<button type="button" data-act="setF" data-k="numOpts" data-v="${n}" aria-pressed="${+f.numOpts === n}">A – ${LET[n - 1]}</button>`).join('')}</div></div>
+      <div class="field"><label for="f_marks">Marks per correct answer</label>${step('marks', 0.25, 100, 0.25)}${er.marks ? `<span class="errtxt">${er.marks}</span>` : ''}</div>
+      <label class="toggle">Negative marking<input type="checkbox" data-on="cf" data-k="negEnabled" ${f.negEnabled ? 'checked' : ''}></label>
+      ${f.negEnabled ? `<div class="field"><label for="f_neg">Minus per wrong answer</label>${step('neg', 0, 100, 0.25)}</div>` : ''}` : ''}
+      <div class="field"><label for="f_idDigits">Roll number bubbles on the sheet</label><select class="input" id="f_idDigits" data-on="cf" data-k="idDigits">${[0, 3, 4, 5, 6, 7, 8, 9, 10].map(n => `<option value="${n}" ${+f.idDigits === n ? 'selected' : ''}>${n ? n + ' digits' : 'None — I will type names'}</option>`).join('')}</select></div>
+    </div>
+    <div class="fab"><button class="btn primary" type="submit">Create exam</button></div>
+  </form>`;
+}
+
+/* ---------- exam ---------- */
+function vExam(e) {
+  const ps = papersOf(e.id), fix = ps.filter(p => grade(p, e).status !== 'graded').length;
+  const tab = S.route.tab || (e.key?.confirmed ? 'scan' : 'key'); S.route.tab = tab;
+  const body = tab === 'key' ? tKey(e) : tab === 'scan' ? tScan(e) : tResults(e);
+  return `<header class="bar"><button class="iconbtn glass" data-act="home" aria-label="Back">${ic('left')}</button><button class="iconbtn glass" data-act="examMenu" aria-label="More">${ic('more')}</button></header>
+  <h1 class="title">${esc(e.name)}<small>${e.numQ} questions · A–${LET[e.numOpts - 1]} · +${fmtNum(e.marks)}${e.negEnabled ? ' / −' + fmtNum(e.neg) : ''}${e.sample ? ' · <span class="tag">Sample</span>' : ''}</small></h1>
+  <nav class="seg glass" role="tablist">${[['key', 'Answer key'], ['scan', 'Scan'], ['results', 'Results']].map(([k, l]) => `<button role="tab" aria-selected="${tab === k}" data-act="tab" data-tab="${k}">${k === 'key' && e.key?.confirmed ? ic('check', 'sm') : ''}${l}${k === 'results' && fix ? `<span class="dot num">${fix}</span>` : ''}</button>`).join('')}</nav>
+  ${body}`;
+}
+function tKey(e) {
+  const d = S.ui.keyDraft[e.id];
+  if (e.key?.confirmed && !d) return `<div class="glass"><div class="row between" style="padding:16px 16px 0"><span class="pill ok"><i></i>Answer key confirmed</span><button class="btn sm" data-act="editKey">${ic('edit', 'sm')}Edit</button></div>
+    <div class="key-sum">${e.key.answers.map((a, i) => `<div class="ks"><span class="mono faint">${i + 1}</span><b>${LET[a]}</b></div>`).join('')}</div></div>
+    <div class="fab"><button class="btn primary" data-act="tab" data-tab="scan">${ic('camera')}Scan papers</button></div>`;
+  if (!d || (!d.typing && !d.img && !d.busy)) {
+    return `${d?.error ? `<div class="fixbar">${ic('alert')}<div class="grow"><b>${esc(d.error.title)}</b><br><span class="muted" style="font-size:14px">${esc(d.error.reason)}</span>${d.error.debug ? `<br><button class="link" data-act="keyDebug">See what was found</button>` : ''}</div></div>` : ''}
+    <div class="glass hero"><button class="shutter-big" data-act="keyCam" aria-label="Scan answer key">${ic('camera')}</button>
+      <h2>Scan the answer key</h2><p>Fill the correct bubbles on one blank sheet and point the camera at it.</p>
+      <div class="row wrap" style="justify-content:center;margin-top:6px"><button class="btn sm" data-act="pick" data-input="fileKey">${ic('image', 'sm')}From gallery</button><button class="btn sm" data-act="keyType">${ic('type', 'sm')}Type answers</button></div>
+      ${e.sample || !e.key ? `<button class="link" data-act="keySample">Try with a sample key photo</button>` : ''}
+    </div>
+    ${e.key?.confirmed ? `<div style="text-align:center;margin-top:10px"><button class="link" data-act="cancelKey">Keep the current key</button></div>` : ''}`;
+  }
+  if (d.busy) return `<div class="glass hero"><span class="spinner" style="width:42px;height:42px;border-width:4px"></span><h2>${esc(d.stage || 'Reading key…')}</h2><div class="bar-p" style="width:70%"><i style="width:${Math.round((d.progress || 0) * 100)}%"></i></div></div>`;
+  const filled = d.answers.filter(a => a != null).length, flags = Object.keys(d.flags).length;
+  return `${d.img ? `<div class="glass imgwrap" style="margin-bottom:12px" data-act="viewKey"><canvas id="keyCanvas" width="1000" height="1414"></canvas></div>` : ''}
+    ${flags ? `<div class="fixbar">${ic('alert')}<div class="grow"><b>${flags} question${flags > 1 ? 's' : ''} need your answer</b><br><span class="muted" style="font-size:14px">They're highlighted below. Tap the right option.</span></div></div>` : d.img ? `<div class="fixbar" style="background:var(--ok-soft);border-color:transparent">${ic('check')}<div class="grow"><b>All ${e.numQ} answers read.</b> <span class="muted" style="font-size:14px">Check a few, then confirm.</span></div></div>` : ''}
+    ${!d.img ? `<div class="glass paste"><input class="input mono" id="keyPaste" placeholder="Quick type: ACBDA…" autocomplete="off" autocapitalize="characters" spellcheck="false"><button class="btn sm" data-act="keyPaste">Fill</button></div><div style="height:12px"></div>` : ''}
+    <div class="glass keys">${d.answers.map((a, i) => { const fl = d.flags[i]; return `<div class="krow ${fl ? 'flag' : ''}" id="kr${i}"><span class="n">${i + 1}</span>${Array.from({ length: e.numOpts }, (_, o) => `<button class="ob ${fl?.cand?.includes(o) ? 'cand' : ''}" aria-pressed="${a === o}" aria-label="Q${i + 1} ${LET[o]}" data-act="keySet" data-q="${i}" data-o="${o}">${LET[o]}</button>`).join('')}</div>`; }).join('')}</div>
+    <div style="text-align:center;margin-top:10px"><button class="link" data-act="keyRestart">Start over</button></div>
+    <div class="fab"><button class="btn primary" data-act="confirmKey" ${filled === e.numQ && !flags ? '' : 'disabled'}>${ic('check')}Confirm key · ${filled}/${e.numQ}</button></div>`;
+}
+function tScan(e) {
+  if (!e.key?.confirmed) return `<div class="glass empty">${ic('key', 'lg')}<h2 style="margin-top:10px">Answer key first</h2><p>Papers are marked against the key.</p><button class="btn primary" style="margin-top:16px" data-act="tab" data-tab="key">Set answer key</button></div>`;
+  const q = S.queue.filter(j => j.examId === e.id && j.state !== 'error' && j.state !== 'dup').slice().reverse();
+  const done = new Set(q.map(j => j.paperId).filter(Boolean));
+  const older = papersOf(e.id).filter(p => !done.has(p.id)).sort((a, b) => b.createdAt - a.createdAt).slice(0, 30);
+  const item = j => {
+    const th = `<span class="thumb">${j.thumb ? `<img src="${j.thumb}" alt="">` : ic('sheet')}</span>`;
+    if (j.state === 'queued' || j.state === 'working') return `<div class="li">${th}<div class="grow"><div class="t">${esc(j.stage || 'Waiting…')}</div><div class="bar-p"><i style="width:${Math.round((j.progress || 0) * 100)}%"></i></div></div></div>`;
+    if (j.state === 'error' || j.state === 'dup') return '';   // only papers that were read are listed
+    const p = S.papers[j.paperId]; return p && !p.deletedAt ? paperRow(p, e, j.thumb) : '';
+  };
+  return `<div class="glass hero"><button class="shutter-big" data-act="scanCam" aria-label="Scan papers">${ic('camera')}</button>
+      <h2>Scan papers</h2><p>Point at a sheet and tap the button. You'll see the score right away — tap <b>Next paper</b> for the next one.</p>
+      <div class="row wrap" style="justify-content:center;margin-top:6px"><button class="btn sm" data-act="pick" data-input="fileScan">${ic('image', 'sm')}From gallery</button>${e.sample ? `<button class="btn sm" data-act="scanSamples">${ic('wand', 'sm')}Sample papers</button>` : ''}</div></div>
+    ${q.length || older.length ? `<p class="sub">Scanned</p><div class="glass list compact">${q.map(item).join('')}${older.map(p => paperRow(p, e)).join('')}</div>` : ''}`;
+}
+function paperRow(p, e, thumb) {
+  const g = grade(p, e), w = who(p, e);
+  const note = !g.idOk ? '<span style="color:var(--warn);font-weight:650">Add roll or name</span>' : `${g.correct} right · ${g.wrong} wrong`;
+  return `<button class="li" data-act="paper" data-id="${p.id}">${thumb !== undefined ? `<span class="thumb">${thumb ? `<img src="${thumb}" alt="">` : ic('sheet')}</span>` : ''}<div class="grow"><div class="t">${esc(w.title)}${p.sample ? ' <span class="tag">Sample</span>' : ''}</div><div class="s">${note}</div></div><span class="score-pill pill ${g.status === 'graded' ? pctTone(g.pct) : 'warn'} num">${fmtPct(g.pct)}</span></button>`;
+}
+function tResults(e) {
+  const ps = papersOf(e.id);
+  if (!ps.length) return `<div class="glass empty">${ic('results', 'lg')}<h2 style="margin-top:10px">No results yet</h2><p>Scanned papers show up here with their scores.</p><button class="btn primary" style="margin-top:16px" data-act="tab" data-tab="scan">${ic('camera')}Scan papers</button></div>`;
+  const gs = ps.map(p => grade(p, e)), pcts = gs.map(g => g.pct), fix = gs.filter(g => g.status !== 'graded').length;
+  const q = S.ui.q.trim().toLowerCase();
+  const rows = ps.filter(p => !q || (who(p, e).roll + ' ' + who(p, e).name).toLowerCase().includes(q)).sort((a, b) => { const ga = grade(a, e), gb = grade(b, e); return (ga.status === 'graded') - (gb.status === 'graded') || (a.student?.roll || '~').localeCompare(b.student?.roll || '~'); });
+  return `<div class="glass card" style="display:grid;grid-template-columns:repeat(3,1fr);text-align:center;gap:6px;margin-bottom:12px">
+      <div><div class="big-num num">${fmtPct(mean(pcts))}</div><div class="faint" style="font-size:13px">average</div></div>
+      <div><div class="big-num num">${ps.length}</div><div class="faint" style="font-size:13px">papers</div></div>
+      <div><div class="big-num num" style="color:${fix ? 'var(--warn)' : 'var(--ok)'}">${fix}</div><div class="faint" style="font-size:13px">need roll/name</div></div></div>
+    ${ps.length > 6 ? `<div class="search" style="margin-bottom:12px">${ic('search')}<input class="input glass" id="rq" type="search" placeholder="Search roll or name" value="${esc(S.ui.q)}" data-on="rq" autocomplete="off"></div>` : ''}
+    <div class="glass list" id="resList">${rows.map(p => paperRow(p, e)).join('') || '<p class="muted" style="padding:14px">No match.</p>'}</div>
+    <div class="fab"><button class="btn primary" data-act="exportMenu">${ic('share')}Share results</button></div>`;
+}
+
+/* ---------- paper ---------- */
+function vPaper(e, p) {
+  const g = grade(p, e), w = who(p, e), C = 2 * Math.PI * 44, frac = clamp(g.pct, 0, 100) / 100;
+  const tone = g.status !== 'graded' ? 'var(--warn)' : g.pct >= 80 ? 'var(--ok)' : g.pct >= 50 ? 'var(--primary)' : 'var(--bad)';
+  const wn = wrongNote(g);
+  const partial = g.rows.filter(r => r.partial).length, pv = store.get('bm.paperView', 'grid');
+  return `<header class="bar"><button class="iconbtn glass" data-act="back" aria-label="Back">${ic('left')}</button><button class="iconbtn glass" data-act="paperMenu" aria-label="More">${ic('more')}</button></header>
+  <h1 class="title">${esc(w.title)}<small>${w.roll ? 'Roll <span class="mono">' + esc(w.roll) + '</span> · ' : ''}${esc(e.name)}</small></h1>
+  <div class="row" style="margin:0 0 12px"><button class="btn soft" data-act="rescan">${ic('camera', 'sm')}Scan this paper again</button></div>
+  ${wn ? `<div class="note-warn">${ic('alert', 'sm')}<span>${wn} — counted as wrong. Tap a question to correct it if the scan was wrong.</span></div>` : ''}
+  ${!g.idOk || (e.idDigits && p.student?.state !== 'detected') ? `<div class="glass" style="padding:4px 0;margin-bottom:12px">
+    <div class="field"><label for="rollIn">Roll number${!g.idOk ? ' <span style="color:var(--warn)">· needed</span>' : ''}</label><input class="input mono" id="rollIn" value="${esc(p.student?.roll || '')}" data-on="roll" inputmode="numeric" placeholder="${p.student?.state === 'unclear' ? 'Unclear on sheet' : 'Type roll number'}" autocomplete="off"></div>
+    <div class="field"><label for="nameIn">Name</label><input class="input" id="nameIn" value="${esc(p.student?.name || '')}" data-on="name" placeholder="Optional" autocomplete="off"></div></div>` : ''}
+  <div class="glass score-hero">
+    <svg class="ring" viewBox="0 0 108 108" role="img" aria-label="${fmtPct(g.pct)}"><circle cx="54" cy="54" r="44" fill="none" stroke="var(--glass-3)" stroke-width="11"/><circle cx="54" cy="54" r="44" fill="none" stroke="${tone}" stroke-width="11" stroke-linecap="round" stroke-dasharray="${C * frac} ${C}" transform="rotate(-90 54 54)"/><text x="54" y="52" text-anchor="middle" font-size="22" font-weight="750" fill="var(--ink)">${fmtPct(g.pct)}</text><text x="54" y="72" text-anchor="middle" font-size="12.5" fill="var(--ink-2)">${fmtNum(g.score)} / ${fmtNum(g.total)}</text></svg>
+    <div class="counts"><div class="c-ok"><b class="num">${g.correct}</b>right</div><div class="c-bad"><b class="num">${g.wrong}</b>wrong</div></div>
+  </div>
+  ${p.det?.meta?.otherExam ? `<div class="note-warn">${ic('alert', 'sm')}<span>This sheet was printed for a different exam. Check that it belongs to “${esc(e.name)}”.</span></div>` : ''}
+  <div class="row between" style="margin:22px 6px 10px"><p class="sub" style="margin:0">Answers</p><div class="seg glass mini" role="group" aria-label="Show answers as">${[['grid', 'Grid'], ['list', 'Table']].map(([k, l]) => `<button data-act="paperView" data-v="${k}" aria-pressed="${pv === k}">${l}</button>`).join('')}</div></div>
+  <div class="glass">${pv === 'list' ? answerTable(g) : `<div class="qgrid">${g.rows.map(r => `<button class="qc ${r.out} ${r.manual ? 'manual' : ''}" data-act="q" data-q="${r.i}" aria-label="Question ${r.q} ${OUT[r.out]}">${r.q}<b>${r.ans != null ? LET[r.ans] : '–'}</b></button>`).join('')}</div>`}
+  ${partial ? `<p class="faint" style="font-size:13px;padding:0 16px 14px">${partial} answer${partial > 1 ? 's were' : ' was'} only partly filled and ${partial > 1 ? 'were' : 'was'} still read.</p>` : ''}</div>
+  <p class="sub">Scanned sheet</p>
+  <div class="glass imgwrap" data-act="viewPaper"><canvas id="paperCanvas" width="1000" height="1414" aria-label="Scanned sheet with marks"></canvas></div>`;
+}
+
+// Question | Student | Key | Result, with the reason for every wrong question
+function answerTable(g) {
+  const res = r => r.out === 'correct' ? `<span class="pill ok">${ic('check', 'sm')}Correct</span>` : `<span class="pill bad">${ic('x', 'sm')}Wrong${r.reason ? ' · ' + r.reason : ''}</span>`;
+  const stu = r => r.ans != null ? LET[r.ans] + (r.manual ? '•' : '') : r.st === 'blank' ? '—' : (r.cand.map(o => LET[o]).join(' / ') || '?');
+  return `<table class="atab"><thead><tr><th scope="col">Q</th><th scope="col">Student</th><th scope="col">Key</th><th scope="col" class="r">Result</th></tr></thead><tbody>${g.rows.map(r => `<tr class="${r.out}" data-act="q" data-q="${r.i}"><td>${r.q}</td><td class="l">${stu(r)}</td><td class="l">${r.k != null ? LET[r.k] : '–'}</td><td class="r">${res(r)}</td></tr>`).join('')}</tbody></table>`;
+}
+
+/* ---------- sheets (bottom panels) ---------- */
+function openSheet(html) { $('#layer').innerHTML = `<div class="scrim" data-act="closeSheet"></div><div class="sheet" role="dialog" aria-modal="true"><div class="grab"></div>${html}</div>`; }
+function closeSheet() { if (cam) stopCam(); $('#layer').innerHTML = ''; }
+function qSheet(e, p, i) {
+  const g = grade(p, e), r = g.rows[i], rev = r.st !== 'answered' && !r.manual;
+  const det = r.why === 'glare' && rev ? 'Glare on the photo at this row — check the paper' : r.why === 'grid' && rev ? 'Row position unsure — check the paper' : r.blurry && rev ? 'Photo unclear at this row — check the paper' : r.st === 'multiple' || (r.st === 'uncertain' && r.cand.length >= 2) ? r.cand.map(o => LET[o]).join(' and ') + ' (two marks)' : r.st === 'uncertain' ? (r.cand.length ? r.cand.map(o => LET[o]).join(' or ') + ' (unclear)' : 'unclear') : r.det != null && r.st === 'answered' ? LET[r.det] + (r.partial ? ' (partly filled)' : '') : 'Nothing marked';
+  openSheet(`<div class="row between"><h2>Question ${r.q}</h2><span class="pill ${r.out === 'correct' ? 'ok' : r.out === 'wrong' ? 'bad' : ''}"><i></i>${OUT[r.out]}${r.reason ? ' · ' + r.reason : ''}</span></div>
+    <dl class="kv"><dt>Correct answer</dt><dd>${r.k != null ? LET[r.k] : '–'}</dd><dt>On the sheet</dt><dd>${esc(det)}</dd><dt>Confidence</dt><dd class="num">${Math.round((r.conf || 0) * 100)}%</dd></dl>
+    <p class="muted" style="font-size:14px;margin:0 4px">${rev ? 'Pick what the student meant:' : 'Change the answer if it was read wrong:'}</p>
+    <div class="opts" style="grid-template-columns:repeat(${e.numOpts},1fr)">${Array.from({ length: e.numOpts }, (_, o) => `<button class="opt ${rev && r.cand.includes(o) ? 'cand' : ''} ${r.ans === o ? 'on' : ''}" data-act="setAns" data-q="${i}" data-o="${o}">${LET[o]}</button>`).join('')}</div>
+    <div class="row" style="gap:10px"><button class="btn block" data-act="setAns" data-q="${i}" data-o="-1">No answer</button>${r.manual ? `<button class="btn block" data-act="setAns" data-q="${i}" data-o="reset">${ic('undo', 'sm')}Undo</button>` : ''}</div>`);
+}
+// Mark strictness, question order and the sample-exam switch are hidden for now; the defaults apply. Set to true to show them.
+const SETTINGS_EXTRAS = false;
+function settingsSheet() {
+  const st = S.settings, strict = st.minConf >= 0.92 ? 'strict' : st.minConf <= 0.78 ? 'relaxed' : 'normal';
+  const ios = /iphone|ipad|ipod/i.test(navigator.userAgent) && !window.matchMedia('(display-mode: standalone)').matches;
+  openSheet(`<h2>Settings</h2>
+    ${SETTINGS_EXTRAS ? `<div class="glass" style="padding:4px 0;margin-top:12px">
+      <div class="field"><span class="flabel">When a mark is unclear</span><div class="seg glass" style="position:static;margin:0">${[['relaxed', 'Accept more'], ['normal', 'Balanced'], ['strict', 'Ask me']].map(([k, l]) => `<button data-act="strict" data-v="${k}" aria-pressed="${strict === k}">${l}</button>`).join('')}</div><span class="hint">"Ask me" sends more borderline marks to you for checking.</span></div>
+      <div class="field"><label for="ordSel">Question order on your own sheets</label><select class="input" id="ordSel" data-on="order"><option value="columns" ${st.order !== 'rows' ? 'selected' : ''}>Down each column</option><option value="rows" ${st.order === 'rows' ? 'selected' : ''}>Across each row</option></select></div>
+      <label class="toggle">Show sample exam<input type="checkbox" data-on="sample" ${S.prefs.hideSample ? '' : 'checked'}></label>
+    </div>` : ''}
+    ${S.installEvt ? `<button class="btn primary block" style="margin-top:14px" data-act="install">${ic('install')}Install app</button>` : ios ? `<p class="muted" style="font-size:14px;margin:14px 4px 0">To install on iPhone: tap the Share button in Safari, then <b>Add to Home Screen</b>.</p>` : ''}
+    ${!Track.standalone() ? `<button class="btn block" style="margin-top:12px" data-act="installHelp">${ic('install')}Install on this phone</button>` : ''}
+    <p class="faint" style="font-size:12.5px;margin:14px 4px 0">Everything is stored on this phone and works offline.</p>`);
+}
+function examMenu(e) {
+  openSheet(`<h2>${esc(e.name)}</h2><div class="menu">
+    ${e.key?.confirmed ? `<button data-act="editKey">${ic('key')}Edit answer key</button>` : ''}
+    <button data-act="exportMenu">${ic('share')}Share results</button>
+    <button class="danger" data-act="delExam">${ic('trash')}Delete exam</button></div>`);
+}
+function paperMenu() {
+  openSheet(`<h2>This paper</h2><div class="menu">
+    <button data-act="viewPaper">${ic('expand')}View full sheet</button>
+    <button data-act="rescan">${ic('camera')}Scan this paper again</button>
+    <button data-act="reprocess">${ic('refresh')}Read the photo again</button>
+    <button class="danger" data-act="delPaper">${ic('trash')}Delete paper</button></div>`);
+}
+function exportMenu() {
+  openSheet(`<h2>Share results</h2><p class="muted" style="margin:0 4px 8px;font-size:14px">Send to WhatsApp, email, Drive or save to your phone.</p><div class="menu">
+    <button data-act="export" data-fmt="pdf">${ic('exams')}PDF report</button>
+    <button data-act="export" data-fmt="xlsx">${ic('results')}Excel sheet</button>
+    <button data-act="export" data-fmt="csv">${ic('download')}CSV file</button></div>`);
+}
+function confirmSheet(title, body, okLabel, fn) {
+  openSheet(`<h2>${esc(title)}</h2><p class="muted" style="margin:6px 4px 18px">${body}</p><div class="row" style="gap:10px"><button class="btn block" data-act="closeSheet">Cancel</button><button class="btn block primary" id="okBtn" style="background:var(--bad)">${esc(okLabel)}</button></div>`);
+  $('#okBtn').onclick = () => { closeSheet(); fn(); };
+}
+function toast(msg, action, ms) {
+  const t = document.createElement('div'); t.className = 'toast glass';
+  t.innerHTML = `<span class="grow">${esc(msg)}</span>${action ? `<button>${esc(action.label)}</button>` : ''}`;
+  if (action) t.querySelector('button').onclick = () => { action.fn(); t.remove(); };
+  $('#toasts').appendChild(t); setTimeout(() => t.remove(), ms || (action ? 7000 : 3200));
+}
+function viewer(src) {
+  $('#layer').innerHTML = `<div class="viewer" id="vw"><div class="vb"><button class="iconbtn" data-act="closeSheet" aria-label="Close">${ic('x')}</button></div><div class="body" data-act="zoomImg"><img src="${src}" alt="Sheet"></div></div>`;
+}
+
+/* ---------- canvas overlays ---------- */
+function tokens() { const cs = getComputedStyle(document.documentElement); const g = n => cs.getPropertyValue(n).trim(); return { ok: g('--ok'), bad: g('--bad'), warn: g('--warn'), mute: g('--mute'), primary: g('--primary') }; }
+const imgCache = {};
+function loadImg(src) { if (imgCache[src]) return Promise.resolve(imgCache[src]); return new Promise((res, rej) => { const im = new Image(); im.onload = () => { imgCache[src] = im; res(im); }; im.onerror = rej; im.src = src; }); }
+function paperGeo(e, det) {
+  if (det?.geo) return det.geo;
+  const L = OMR.layout(e);
+  return { w: 1000, h: 1414, r: 11, qs: L.qs.map((q, i) => { const o = det?.answers?.[i]?.o || [0, 0]; return q.opts.map(([x, y]) => [x + o[0], y + o[1]]); }) };
+}
+function drawOverlay(cv, src, e, det, styleFor) {
+  return loadImg(src).then(im => {
+    if (!document.body.contains(cv)) return;
+    const G = paperGeo(e, det), R = G.r * 1.34;
+    cv.width = G.w; cv.height = G.h; const g = cv.getContext('2d'); g.drawImage(im, 0, 0, G.w, G.h);
+    const T = tokens(), lw = Math.max(3, G.w / 260);
+    G.qs.forEach((q, i) => {
+      if (i >= e.numQ) return;
+      const st = styleFor(i), color = T[st.col] || T.mute;
+      q.forEach(([X, Y], o) => {
+        if (st.o.includes(o)) { g.lineWidth = lw; g.strokeStyle = color; g.beginPath(); g.arc(X, Y, R, 0, 7); g.stroke(); }
+        if (st.key === o && !st.o.includes(o) && st.col === 'bad') { g.lineWidth = lw * 0.7; g.setLineDash([5, 4]); g.strokeStyle = T.ok; g.beginPath(); g.arc(X, Y, R, 0, 7); g.stroke(); g.setLineDash([]); }
+      });
+      // nothing was marked: tint the whole row red and strike through it, so it reads as "no answer", not as a skipped row
+      if (st.blank) { const x0 = q[0][0] - R - 6, x1 = q[q.length - 1][0] + R + 6, cy = mean(q.map(t => t[1])); g.fillStyle = T.bad; g.globalAlpha = .14; g.fillRect(x0, cy - R - 2, x1 - x0, 2 * R + 4); g.globalAlpha = .85; g.lineWidth = lw; g.strokeStyle = T.bad; g.beginPath(); g.moveTo(x0, cy); g.lineTo(x1, cy); g.stroke(); g.globalAlpha = 1; }
+      if (st.col === 'warn') { const x0 = q[0][0] - R - 6, x1 = q[q.length - 1][0] + R + 6, cy = mean(q.map(t => t[1])); g.fillStyle = T.warn; g.globalAlpha = .16; g.fillRect(x0, cy - R - 4, x1 - x0, 2 * R + 8); g.globalAlpha = 1; }
+    });
+  }).catch(() => {});
+}
+function afterRender() {
+  const r = S.route;
+  const kc = $('#keyCanvas');
+  if (kc) { const e = S.exams[r.id], d = S.ui.keyDraft[e.id]; drawOverlay(kc, d.img, e, d.det, i => { const a = d.answers[i]; return d.flags[i] ? { col: 'warn', o: d.flags[i].cand } : { col: a != null ? 'primary' : 'mute', o: a != null ? [a] : [] }; }); }
+  const pc = $('#paperCanvas');
+  if (pc) {
+    const e = S.exams[r.examId], p = S.papers[r.paperId];
+    getImage(p.id).then(img => { if (!img) return; const g = grade(p, e); drawOverlay(pc, img.proc, e, p.det, i => { const row = g.rows[i]; return { col: row.out === 'correct' ? 'ok' : 'bad', blank: row.out === 'wrong' && row.ans == null && row.st === 'blank', o: row.ans != null ? [row.ans] : row.cand, key: row.k }; }); });
+  }
+  if (r.view === 'exam' && r.tab === 'key') { const d = S.ui.keyDraft[r.id]; if (d?.scrollTo != null) { const el = $('#kr' + d.scrollTo); if (el) setTimeout(() => el.scrollIntoView({ block: 'center', behavior: 'smooth' }), 50); d.scrollTo = null; } }
+}
+
+/* ============================================================
+   Processing
+   ============================================================ */
+async function fileToCanvas(file, maxDim = 2000) {
+  let bmp;
+  try { bmp = await createImageBitmap(file, { imageOrientation: 'from-image' }); }
+  catch { bmp = await new Promise((res, rej) => { const im = new Image(); im.onload = () => res(im); im.onerror = rej; im.src = URL.createObjectURL(file); }); }
+  return OMR.scaleCanvas(bmp, maxDim);
+}
+async function hashFile(file) {
+  const buf = await file.arrayBuffer();
+  try { const h = await crypto.subtle.digest('SHA-256', buf); return [...new Uint8Array(h)].slice(0, 12).map(b => b.toString(16).padStart(2, '0')).join(''); }
+  catch { const a = new Uint8Array(buf); let h = 2166136261; for (let i = 0; i < a.length; i += 3) { h ^= a[i]; h = Math.imul(h, 16777619); } return 'f' + (h >>> 0).toString(16) + a.length.toString(16); }
+}
+const toJpeg = (cv, maxDim, q) => OMR.scaleCanvas(cv, maxDim).toDataURL('image/jpeg', q);
+/* The sheet reader runs in a Web Worker (omr-worker.js) so the screen and the camera preview stay smooth while a
+   sheet is read. Browsers without OffscreenCanvas in workers (older iPhones) read on the main thread instead. */
+const Reader = (() => {
+  let w = null, seq = 0; const pend = new Map();
+  const local = {
+    async read(input, exam, cfg, onStage, images = {}, onThumb) {
+      const t0 = performance.now();
+      let src; try { src = input instanceof HTMLCanvasElement ? input : await fileToCanvas(input); } catch { return { ok: false, code: 'decode', title: OMR.FAIL.decode[0], reason: OMR.FAIL.decode[1] }; }
+      const t1 = performance.now(), imgs = {};
+      if (images.thumb) { imgs.thumb = toJpeg(src, ...images.thumb); onThumb?.(imgs.thumb); }
+      const res = await OMR.process(src, exam, cfg, onStage), t2 = performance.now();
+      if (res.ok) {
+        if (images.orig) { imgs.orig = toJpeg(src, ...images.orig); if (images.origFallback && imgs.orig.length > 400000) imgs.orig = toJpeg(src, ...images.origFallback); }
+        if (images.proc) imgs.proc = toJpeg(OMR.toCanvas(res.N, res.w, res.h), ...images.proc);
+        delete res.N; res.meta.timing = { open: Math.round(t1 - t0), read: Math.round(t2 - t1), images: Math.round(performance.now() - t2), where: 'main' };
+      }
+      return { ...res, imgs };
+    },
+    async layout(input, cfg) { return OMR.detectLayout(await fileToCanvas(input), cfg); },
+    async check(frame, cfg) { return OMR.quickCheck(frame, cfg); },
+  };
+  const start = () => {
+    try {
+      if (typeof OffscreenCanvas !== 'undefined' && 'convertToBlob' in OffscreenCanvas.prototype && typeof Worker !== 'undefined' && !window.claude) {
+        w = new Worker('omr-worker.js');
+        w.onmessage = ({ data: m }) => {
+          const p = pend.get(m.id); if (!p) return;
+          if (m.stage) { p.onStage?.(m.stage, m.progress); return; }
+          if (m.thumb) { p.onThumb?.(m.thumb); return; }
+          pend.delete(m.id); m.ok ? p.res(m.result) : p.rej(new Error(m.error));
+        };
+        w.onerror = ev => { console.warn('reader worker failed, reading on the main thread', ev.message); w = null; pend.forEach(p => p.retry()); pend.clear(); };
+      }
+    } catch { w = null; }
+  };
+  start();
+  // A photo that keeps the reader busy far too long would hold up every sheet after it: give up on it, and start
+  // a fresh reader for the next one.
+  const call = (op, msg, extra, transfer = [], retry, ms = 0) => new Promise((res, rej) => {
+    if (!w) return retry().then(res, rej);
+    const id = ++seq; let timer = 0; const end = f => v => { clearTimeout(timer); f(v); };
+    pend.set(id, { res: end(res), rej: end(rej), ...extra, retry: () => retry().then(res, rej) });
+    if (ms) timer = setTimeout(() => {
+      if (!pend.has(id)) return; pend.delete(id);
+      rej(Object.assign(new Error('Reading took too long'), { code: 'timeout' }));
+      const old = w; w = null; old?.terminate(); pend.forEach(p => p.rej(new Error('Reader restarted'))); pend.clear(); start();
+    }, ms);
+    w.postMessage({ id, op, ...msg }, transfer);
+  });
+  const plain = o => JSON.parse(JSON.stringify(o));   // exams can hold UI-only fields; the worker only needs data
+  // files from the gallery: only pictures, and not so large that opening them could run the phone out of memory
+  const refuse = input => {
+    if (!(input instanceof Blob)) return null;
+    if (input.type && !/^image\//.test(input.type)) return { ok: false, code: 'decode', title: 'Not a photo', reason: 'Pick a JPG or PNG photo of the answer sheet.' };
+    if (input.size > 40e6) return { ok: false, code: 'decode', title: 'Photo is too large', reason: 'Use a photo under 40 MB — a normal phone photo is 2–6 MB.' };
+    return null;
+  };
+  return {
+    get inWorker() { return !!w; },
+    read: (input, exam, cfg, onStage, images, onThumb) => { const no = refuse(input); if (no) return Promise.resolve(no); return call('read', { input, exam: plain(exam), cfg: plain(cfg), images }, { onStage, onThumb }, input instanceof ImageBitmap ? [input] : [], () => local.read(input, exam, cfg, onStage, images, onThumb), 60000); },
+    layout: (input, cfg) => call('layout', { input, cfg: plain(cfg) }, {}, [], () => local.layout(input, cfg)),
+    // the camera sends a frame only when the previous one is finished, so checks never pile up
+    check: async (video, cfg) => {
+      if (!w) return local.check(video, cfg);
+      const bmp = await createImageBitmap(video, { resizeWidth: 640, resizeHeight: Math.round(640 * video.videoHeight / video.videoWidth), resizeQuality: 'medium' }).catch(() => null);
+      if (!bmp) return local.check(video, cfg);
+      return call('check', { input: bmp, cfg: plain(cfg) }, {}, [bmp], () => local.check(video, cfg));
+    },
+  };
+})();
+function paintQueue() { if (S.route.view === 'exam' && S.route.tab === 'scan') scheduleRender(); }
+let running = false;
+async function runQueue() {
+  if (running) return; running = true;
+  try { let j; while ((j = S.queue.find(x => x.state === 'queued'))) { j.state = 'working'; paintQueue(); try { await processJob(j); } catch (err) { console.error(err); j.state = 'error'; j.error = err?.code === 'timeout' ? { title: 'Reading took too long', reason: 'Try again with the sheet filling most of the photo, flat and in good light.' } : { title: 'Something went wrong', reason: String(err.message || err) }; } paintQueue(); if (j.onDone) j.onDone(j); else if (j.state === 'error' || j.state === 'dup') toast(j.state === 'dup' ? 'Already scanned — skipped that photo.' : `Couldn't read a photo: ${j.error.title}. Try again.`); } }
+  finally { running = false; }
+}
+async function processJob(j) {
+  const e = S.exams[j.examId], stage = (s, p) => { j.stage = s; j.progress = p; paintQueue(); };
+  stage('Opening photo', 0.05);
+  // gallery photos are checked against earlier scans of this exam; live camera frames are always new
+  if (j.file) { j.hash = await hashFile(j.file); const dup = !j.force && papersOf(e.id).find(p => p.hash === j.hash); if (dup) { j.state = 'dup'; j.dupOf = who(dup, e).title; return; } }
+  const input = j.file || j.bitmap; j.bitmap = null;
+  const res = await Reader.read(input, e, S.settings, stage, { thumb: [160, 0.6], orig: [1400, 0.72], origFallback: [1100, 0.62], proc: [900, 0.72] }, t => { j.thumb = t; paintQueue(); });
+  if (res.imgs?.thumb) j.thumb = res.imgs.thumb;
+  if (!res.ok && res.code === 'decode') { j.state = 'error'; j.error = { title: res.title, reason: res.reason }; return; }
+  if (!res.ok) { j.state = 'error'; j.error = { title: res.title, reason: res.reason }; j.debug = res.debug || null; if (!j.sample) Track.ev('paper_scan_failed', { reason: res.code || res.title, source: j.source || 'gallery' }); return; }
+  const orig = res.imgs.orig;
+  const p = {
+    id: uid('p_'), examId: e.id, createdAt: Date.now(), updatedAt: Date.now(), fileName: j.name, hash: j.hash || null, sample: !!(j.sample || e.sample),
+    student: { roll: res.id.roll, name: '', state: res.id.state === 'none' ? 'missing' : res.id.state },
+    det: { answers: res.answers, geo: res.geo || null, meta: { ...res.meta, keyVersion: e.key?.version } }, overrides: {}, audit: []
+  };
+  audit(p, `Scanned and marked with key v${e.key?.version}.`);
+  // a paper scanned again takes the place of the earlier one (its name and, if this scan could not read one, its roll carry over)
+  const old = j.replaces && S.papers[j.replaces];
+  if (old) { if (old.student?.name) p.student.name = old.student.name; if (!p.student.roll && old.student?.roll) { p.student.roll = old.student.roll; p.student.state = old.student.state; } audit(p, 'Scanned again; replaces the earlier scan.'); old.deletedAt = Date.now(); savePaper(old); if (S.ui.rescan?.paperId === old.id) S.ui.rescan = null; }
+  S.papers[p.id] = p; await putImage(p.id, { orig, proc: res.imgs.proc }, p.sample); savePaper(p);
+  j.paperId = p.id; j.state = 'done'; j.file = null; stage('Done', 1);
+  if (!p.sample) { const g = grade(p, e); Track.ev('paper_scanned', { source: j.source || 'gallery', capture: j.capture, other_exam: !!res.meta.otherExam, glare: res.meta.glare || 0, sheet: res.meta.mode, seconds: Math.round((Date.now() - (j.t0 || Date.now())) / 100) / 10, read_ms: res.meta.timing?.read, where: res.meta.timing?.where, questions: e.numQ, to_check: g.review, partial_marks: g.rows.filter(r => r.partial).length, roll_read: p.student.state === 'detected', sample: !!p.sample }); }
+}
+function enqueue(examId, files, extra = {}) {
+  const e = S.exams[examId]; if (!e?.key?.confirmed) { toast('Set the answer key first.'); return []; }
+  const jobs = [], rs = S.ui.rescan;   // stays set until a scan has replaced the paper, so a photo that cannot be read can be tried again
+  const replaces = rs && rs.examId === examId && !extra.sample && Date.now() - rs.t < 6e5 && S.papers[rs.paperId] ? rs.paperId : null;
+  [...files].forEach((f, k) => { const bmp = typeof ImageBitmap !== 'undefined' && f instanceof ImageBitmap; const j = { id: uid('j'), examId, file: bmp ? null : f, bitmap: bmp ? f : null, name: f.name || 'photo.jpg', state: 'queued', progress: 0, t0: Date.now(), ...extra }; if (replaces && !k) { j.replaces = replaces; j.force = true; } S.queue.push(j); jobs.push(j); });
+  paintQueue(); runQueue(); return jobs;
+}
+async function processKeyFile(e, file) {
+  const d = S.ui.keyDraft[e.id] = S.ui.keyDraft[e.id] || { answers: Array(e.numQ).fill(null), flags: {} };
+  d.busy = true; d.error = null; d.img = null; d.typing = false; render();
+  try {
+    const res = await Reader.read(file, e, S.settings, (s, p) => { d.stage = s; d.progress = p; scheduleRender(); }, { proc: [1000, 0.78] });
+    d.busy = false;
+    if (!res.ok) { d.error = { title: res.title, reason: res.reason, debug: res.debug || null }; Track.ev('key_scan_failed', { reason: res.code || res.title }); render(); return; }
+    Track.ev('key_scanned', { sheet: res.meta.mode, unclear: res.answers.filter(a => a.st !== 'answered').length });
+    d.img = res.imgs.proc; d.det = { answers: res.answers, geo: res.geo || null }; d.source = 'scan'; d.flags = {};
+    res.answers.forEach((a, i) => { if (a.st === 'answered') d.answers[i] = a.det; else { d.answers[i] = null; d.flags[i] = { cand: a.cand }; } });
+    const first = Object.keys(d.flags)[0]; if (first != null) d.scrollTo = +first;
+  } catch (err) { console.error(err); d.busy = false; d.error = { title: 'Something went wrong', reason: String(err.message || err) }; }
+  render();
+}
+async function detectFromPhoto(file) {
+  S.ui.layoutBusy = true; render();
+  try {
+    const L = await Reader.layout(file, S.settings);
+    if (!L) toast('No answer bubbles found. Photograph the whole sheet, flat and sharp.', null, 5000);
+    else { const f = S.ui.create; f.fromPhoto = true; f.numQ = L.numQ; if (L.numOpts === 4 || L.numOpts === 5) f.numOpts = L.numOpts; f.idDigits = L.idDigits; toast(`Found ${L.numQ} questions, A–${LET[L.numOpts - 1]}${L.idDigits ? `, ${L.idDigits}-digit roll` : ''}.`, null, 4500); }
+  } catch (err) { console.error(err); toast('Could not read that photo.'); }
+  S.ui.layoutBusy = false; render();
+}
+
+/* ============================================================
+   Camera — live preview, tap to capture, continuous scanning
+   ============================================================ */
+let cam = null;
+// one sheet per capture: find it → tap the shutter → scan animation → score pop-up → "Next paper"
+// Camera blocked for this site: say how to allow it, and offer the ways that still work (the phone's own camera
+// app through the file picker, or a photo from the gallery).
+function cameraBlocked(mode) {
+  const ios = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  openSheet(`<h2>Camera is blocked</h2><p class="muted" style="margin:6px 4px 12px">MCQ needs the camera to scan sheets. Photos are read on this phone and never uploaded.</p>
+    <ol class="steps" style="margin-top:0">${ios ? `<li>Open the <b>Settings</b> app → <b>Safari</b> (or the app you opened MCQ in) → <b>Camera</b></li><li>Choose <b>Allow</b>, then come back and tap Scan again</li>` : `<li>Tap the <b>lock</b> or <b>settings</b> icon beside the address bar</li><li>Set <b>Camera</b> to <b>Allow</b>, then tap Scan again</li>`}</ol>
+    <button class="btn primary block" style="margin-top:16px" data-act="pick" data-input="${mode === 'key' ? 'camKey' : 'camScan'}">${ic('camera')}Use the phone's camera app</button>
+    <button class="btn block" style="margin-top:10px" data-act="pick" data-input="${mode === 'key' ? 'fileKey' : 'fileScan'}">${ic('image')}Pick from gallery</button>`);
+}
+// After one photo from the phone's camera app or the gallery: the same score pop-up as the live camera had, with "Next paper"
+// (opens the camera app or gallery again) and "See answers". Shown while the sheet is read, then with the result.
+function scorePopup(j, e, inputId) {
+  const layer = $('#layer'); let gone = false;
+  const done = () => { gone = true; layer.innerHTML = ''; };
+  const shell = inner => { layer.innerHTML = `<div class="cam" data-phase="result" style="background:transparent"><div class="res in" id="cr" style="background:rgba(0,0,0,.5)"><div class="card" style="transform:none;opacity:1">${inner}</div></div></div>`; };
+  const reading = () => shell(`<h3>Reading answers…</h3><p id="cstage">${esc(j.stage || 'Opening the photo')}…</p>`);
+  reading();
+  const poll = setInterval(() => { if (gone || j.state === 'done' || j.state === 'error') return clearInterval(poll); const el = $('#cstage'); if (el && j.stage) el.textContent = j.stage + '…'; }, 250);
+  j.onDone = jb => {
+    clearInterval(poll); if (gone) return;
+    const next = () => { done(); $('#' + inputId).click(); };
+    if (jb.state === 'done' && S.papers[jb.paperId]) {
+      const p = S.papers[jb.paperId], gr = grade(p, e), w = who(p, e), C = 2 * Math.PI * 88, frac = clamp(gr.pct, 0, 100) / 100;
+      const tone = gr.status !== 'graded' ? 'var(--warn)' : gr.pct >= 80 ? 'var(--ok)' : gr.pct >= 50 ? 'var(--primary)' : 'var(--bad)';
+      shell(`<div class="who">${esc(w.title)}</div><div class="sub2">${w.name && w.roll ? `Roll <span class="mono">${esc(w.roll)}</span>` : !w.roll && e.idDigits ? 'Roll number not read' : esc(e.name)}</div>
+        <div class="dial"><svg viewBox="0 0 200 200" aria-hidden="true"><circle class="trk" cx="100" cy="100" r="88"/><circle class="arc" id="carc" cx="100" cy="100" r="88" stroke="${tone}" stroke-dasharray="${C}" stroke-dashoffset="${C}" data-to="${C * (1 - frac)}"/></svg>
+        <div class="mid"><b class="num" id="cpct" style="color:${tone}">0</b><i aria-hidden="true"></i><span class="num">${fmtNum(gr.total)} marks</span></div></div>
+        <div class="tally num"><span class="ok"><b>${gr.correct}</b>right</span><span class="bad"><b>${gr.wrong}</b>wrong</span></div>
+        ${p.det?.meta?.otherExam ? `<div class="note">${ic('alert', 'sm')}Printed for a different exam — make sure it belongs to “${esc(e.name)}”</div>` : ''}
+        ${wrongNote(gr) ? `<div class="note">${ic('alert', 'sm')}${wrongNote(gr)} — counted as wrong</div>` : ''}
+        <button class="btn primary" id="cnext">Next paper${ic('right', 'sm')}</button><button class="link" data-act="popPaper" data-id="${p.id}">See answers</button><button class="link" data-act="popClose">Done</button>`);
+      try { navigator.vibrate?.([30, 60, 30]); } catch {}
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        const arc = $('#carc'); if (!arc) return; arc.style.strokeDashoffset = arc.dataset.to;
+        const el = $('#cpct'), to = gr.score, t0 = performance.now(), dur = 1100;
+        const step = t => { const f = Math.min(1, (t - t0 - 150) / dur), ez = 1 - (1 - Math.max(0, f)) ** 3; if (el) el.textContent = fmtNum(f >= 1 ? to : Math.round(to * ez)); if (f < 1 && !gone) requestAnimationFrame(step); };
+        requestAnimationFrame(step);
+      }));
+    } else {
+      shell(`<div class="badge">${ic('alert')}</div><h3>${esc(jb.error?.title || 'Could not read this sheet')}</h3><p>${esc(jb.error?.reason || 'Put the whole sheet in view and take the photo again.')}</p><button class="btn primary" id="cnext">${ic('camera', 'sm')}Take photo again</button><button class="link" data-act="popClose">Done</button>`);
+      try { navigator.vibrate?.(120); } catch {}
+    }
+    $('#cnext').onclick = next;
+  };
+  if (j.state === 'done' || j.state === 'error') j.onDone(j);
+}
+async function openCamera(mode, e) {
+  const fallback = mode === 'key' ? 'camKey' : 'camScan';
+  let stream = null, err = null;
+  // the phone's own camera app is the default (same on http and https); the in-page live camera is opt-in:
+  // open the site with ?livecam=1 once (remembered), or ?livecam=0 to switch it off again
+  const q = new URLSearchParams(location.search).get('livecam'); if (q) store.set('bm.liveCam', q === '1');
+  if (!store.get('bm.liveCam', false)) { Track.ev('camera_opened', { mode, live: false, native: true }); $('#' + fallback).click(); return; }
+  if (navigator.mediaDevices?.getUserMedia) {
+    const gum = video => navigator.mediaDevices.getUserMedia({ video, audio: false });
+    try { stream = await gum({ facingMode: { ideal: 'environment' }, width: { ideal: 2560 }, height: { ideal: 1920 }, aspectRatio: { ideal: 4 / 3 } }); }
+    catch (x) { err = x; if (!['NotAllowedError', 'SecurityError'].includes(x?.name)) { try { stream = await gum(true); err = null; } catch (y) { err = y; } } }   // some cameras refuse the size hints
+  }
+  Track.ev('camera_opened', { mode, live: !!stream, error: err?.name });
+  if (!stream) {
+    if (['NotAllowedError', 'SecurityError'].includes(err?.name)) { cameraBlocked(mode); return; }
+    if (err?.name === 'NotReadableError') toast('The camera is busy in another app. Close it, or take the photo with the camera app.', null, 6000);
+    $('#' + fallback).click(); return;   // no live camera here (old browser, not HTTPS): the phone's camera app still works
+  }
+  const track = stream.getVideoTracks()[0]; let caps = {}; try { caps = track.getCapabilities ? track.getCapabilities() : {}; } catch {}
+  // keep focus, exposure and colour adjusting as the paper moves
+  for (const [k, v] of [['focusMode', 'continuous'], ['exposureMode', 'continuous'], ['whiteBalanceMode', 'continuous']]) { try { if (caps[k]?.includes(v)) await track.applyConstraints({ advanced: [{ [k]: v }] }); } catch {} }
+  $('#layer').innerHTML = `<div class="cam" id="camv" data-phase="find"><video id="cv" playsinline muted autoplay></video><canvas class="ov" id="co"></canvas><div class="frame" id="cf"><i></i><i></i><i></i><i></i></div><div class="flash" id="cfl"></div>
+    <div class="top"><button class="cbtn" data-act="closeSheet">${ic('x', 'sm')}Done</button>${mode === 'scan' ? `<div class="count num" id="cc" hidden></div>` : ''}${caps.torch ? `<button class="cbtn" id="torch">${ic('bolt', 'sm')}</button>` : '<span style="min-width:64px"></span>'}</div>
+    <div class="msg" id="cm" role="status" aria-live="polite">Starting camera…</div>
+    <div class="bottom"><button class="cbtn" id="auto" aria-pressed="false" aria-label="Automatic capture">Auto</button><button class="shutter" id="shot" aria-label="Take photo"></button><button class="cbtn" data-act="camGallery" data-mode="${mode}" aria-label="Pick from gallery">${ic('image', 'sm')}</button></div>
+    <div class="res" id="cr" hidden></div></div>`;
+  const v = $('#cv'); v.srcObject = stream; await v.play().catch(() => {});
+  if (!v.isConnected) { stream.getTracks().forEach(t => t.stop()); return; }   // closed while the camera was starting
+  try { await navigator.wakeLock?.request('screen').then(l => { cam && (cam.lock = l); }); } catch {}
+  // auto: the photo is taken by itself once a readable sheet has been held still (OMR.captureGate); the shutter
+  // button always works too. The choice is remembered.
+  cam = { stream, track, busy: false, n: 0, timer: null, raf: 0, mode, examId: e.id, phase: 'find', quad: null, shown: null, alpha: 0, t0: 0, hold: 0, holdShown: 0, auto: store.get('bm.autoCap', true), gate: OMR.captureGate(), last: null };
+  const autoBtn = $('#auto'), showAuto = () => { autoBtn.classList.toggle('on', cam.auto); autoBtn.setAttribute('aria-pressed', String(cam.auto)); };
+  showAuto(); autoBtn.onclick = () => { cam.auto = !cam.auto; store.set('bm.autoCap', cam.auto); showAuto(); Track.ev('auto_capture', { on: cam.auto }); };
+  // the light starts on (unless it was switched off last time) and is switched back on after each photo:
+  // taking a photo or pausing the preview turns it off on some phones while the button still shows it on
+  const setTorch = async on => { if (!caps.torch || !cam) return; cam.torch = on; try { await track.applyConstraints({ advanced: [{ torch: on }] }); } catch { cam.torch = false; } $('#torch')?.classList.toggle('on', cam.torch); };
+  if (caps.torch) { $('#torch').onclick = () => { setTorch(!cam.torch); store.set('bm.torch', cam.torch); }; setTorch(store.get('bm.torch', true)); }
+  const msg = (t, good) => { const m = $('#cm'); if (m && m.textContent !== t) m.textContent = t; if (m) m.className = 'msg' + (good ? ' good' : ''); };
+  const setPhase = ph => { cam.phase = ph; $('#camv')?.setAttribute('data-phase', ph); };
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // --- live overlay: the found sheet's outline glides with the paper and turns green once it can be read,
+  //     then a light beam sweeps over the frozen sheet while it is read
+  const o = $('#co'), g = o.getContext('2d');
+  const path = P => { g.beginPath(); P.forEach(([x, y], i) => i ? g.lineTo(x, y) : g.moveTo(x, y)); g.closePath(); };
+  const frameQuad = () => { const r = $('#cf').getBoundingClientRect(), b = o.getBoundingClientRect(), x = r.left - b.left, y = r.top - b.top; return [[x, y], [x + r.width, y], [x + r.width, y + r.height], [x, y + r.height]]; };
+  const draw = t => {
+    if (!cam) return;
+    const ow = o.clientWidth, oh = o.clientHeight, dpr = Math.min(2, devicePixelRatio || 1);
+    if (o.width !== Math.round(ow * dpr) || o.height !== Math.round(oh * dpr)) { o.width = Math.round(ow * dpr); o.height = Math.round(oh * dpr); }
+    g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, ow, oh);
+    const tg = cam.quad, k = reduce ? 1 : 0.28;
+    if (tg) { if (!cam.shown || cam.alpha < 0.05) cam.shown = tg.pts.map(p => [...p]); else cam.shown.forEach((p, i) => { p[0] += (tg.pts[i][0] - p[0]) * k; p[1] += (tg.pts[i][1] - p[1]) * k; }); }
+    cam.alpha += ((tg ? 1 : 0) - cam.alpha) * 0.2;
+    const P = cam.shown && cam.alpha > 0.03 ? cam.shown : cam.phase === 'reading' ? frameQuad() : null, a = cam.shown ? cam.alpha : 1;
+    if (P) {
+      const green = cam.phase !== 'find' || tg?.ok, rgb = green ? '76,214,132' : '255,255,255';
+      // dim everything outside the sheet so it stands out
+      g.save(); g.fillStyle = `rgba(0,0,0,${0.32 * a})`; g.beginPath(); g.rect(0, 0, ow, oh); P.slice().reverse().forEach(([x, y], i) => i ? g.lineTo(x, y) : g.moveTo(x, y)); g.closePath(); g.fill('evenodd'); g.restore();
+      path(P); g.fillStyle = `rgba(${rgb},${0.1 * a})`; g.fill();
+      g.lineJoin = 'round'; g.lineWidth = 2; g.strokeStyle = `rgba(${rgb},${0.75 * a})`; g.stroke();
+      // hold-still progress: a thick green line runs round the sheet's edge; when it closes, the photo is taken
+      cam.holdShown += ((cam.phase === 'find' ? cam.hold : 0) - (cam.holdShown || 0)) * (reduce ? 1 : 0.25);
+      if (cam.holdShown > 0.01) {
+        const seg = P.map((p, i) => Math.hypot(P[(i + 1) % 4][0] - p[0], P[(i + 1) % 4][1] - p[1])); let left = seg.reduce((s, x) => s + x, 0) * Math.min(1, cam.holdShown);
+        g.beginPath(); g.moveTo(...P[0]);
+        for (let i = 0; i < 4 && left > 0; i++) { const f = Math.min(1, left / seg[i]), b = P[(i + 1) % 4]; g.lineTo(P[i][0] + (b[0] - P[i][0]) * f, P[i][1] + (b[1] - P[i][1]) * f); left -= seg[i]; }
+        g.lineWidth = 6; g.lineCap = 'round'; g.strokeStyle = `rgba(76,214,132,${a})`; g.stroke();
+      }
+      if (cam.phase === 'reading') {   // the scan beam, back and forth over the sheet
+        const ys = P.map(p => p[1]), xs = P.map(p => p[0]), y0 = Math.min(...ys), y1 = Math.max(...ys), x0 = Math.min(...xs), x1 = Math.max(...xs);
+        const u = ((t - cam.t0) % 2400) / 1200, down = u < 1, e2 = x => x < .5 ? 2 * x * x : 1 - (-2 * x + 2) ** 2 / 2, y = y0 + (y1 - y0) * e2(down ? u : 2 - u), tail = Math.min(140, (y1 - y0) * 0.35);
+        g.save(); path(P); g.clip();
+        const gr = g.createLinearGradient(0, down ? y - tail : y + tail, 0, y); gr.addColorStop(0, 'rgba(76,214,132,0)'); gr.addColorStop(1, 'rgba(76,214,132,.45)');
+        g.fillStyle = gr; g.fillRect(x0, down ? y - tail : y, x1 - x0, tail);
+        g.fillStyle = '#B9FFD4'; g.shadowColor = '#4CD684'; g.shadowBlur = 18; g.fillRect(x0, y - 1.5, x1 - x0, 3); g.restore();
+      }
+      P.forEach(([x, y]) => { g.beginPath(); g.arc(x, y, 7, 0, 7); g.fillStyle = `rgba(255,255,255,${a})`; g.fill(); g.lineWidth = 3; g.strokeStyle = `rgba(${green ? '76,214,132' : '47,91,255'},${a})`; g.stroke(); });
+    }
+    $('#cf')?.classList.toggle('found', !!P);
+    cam.raf = requestAnimationFrame(draw);
+  };
+  cam.raf = requestAnimationFrame(draw);
+
+  const result = jb => {
+    const box = $('#cr'); if (!box) return; setPhase('result'); cam.quad = null;
+    let html, ok = jb.state === 'done';
+    // the same sheet still in view after "Next paper": drop the copy instead of counting it twice
+    const fresh = ok && S.papers[jb.paperId], sig = fresh && JSON.stringify([fresh.student?.roll, fresh.det.answers.map(a => a.st === 'answered' ? a.det : a.st)]);
+    if (ok && sig === cam.lastSig) { removePaper(fresh); paintQueue(); ok = false; jb = { error: { title: 'Already scanned', reason: 'This is the sheet you just scanned. Put the next one in view.' }, same: true }; }
+    if (ok) {
+      cam.lastSig = sig;
+      const p = S.papers[jb.paperId], gr = grade(p, e), w = who(p, e), C = 2 * Math.PI * 88, frac = clamp(gr.pct, 0, 100) / 100;
+      const tone = gr.status !== 'graded' ? 'var(--warn)' : gr.pct >= 80 ? 'var(--ok)' : gr.pct >= 50 ? 'var(--primary)' : 'var(--bad)';
+      cam.n++; const cc = $('#cc'); if (cc) { cc.hidden = false; cc.textContent = `${cam.n} scanned`; }
+      html = `<div class="card" role="dialog" aria-label="Score"><div class="who">${esc(w.title)}</div><div class="sub2">${w.name && w.roll ? `Roll <span class="mono">${esc(w.roll)}</span>` : !w.roll && e.idDigits ? 'Roll number not read' : esc(e.name)}</div>
+        <div class="dial"><svg viewBox="0 0 200 200" aria-hidden="true"><circle class="trk" cx="100" cy="100" r="88"/><circle class="arc" id="carc" cx="100" cy="100" r="88" stroke="${tone}" stroke-dasharray="${C}" stroke-dashoffset="${C}" data-to="${C * (1 - frac)}"/></svg>
+        <div class="mid"><b class="num" id="cpct" style="color:${tone}">0</b><i aria-hidden="true"></i><span class="num">${fmtNum(gr.total)} marks</span></div></div>
+        <div class="tally num"><span class="ok"><b>${gr.correct}</b>right</span><span class="bad"><b>${gr.wrong}</b>wrong</span></div>
+        ${p.det?.meta?.otherExam ? `<div class="note">${ic('alert', 'sm')}Printed for a different exam — make sure it belongs to “${esc(e.name)}”</div>` : ''}
+        ${wrongNote(gr) ? `<div class="note">${ic('alert', 'sm')}${wrongNote(gr)} — counted as wrong</div>` : ''}
+        <button class="btn primary" id="cnext">Next paper${ic('right', 'sm')}</button><button class="link" data-act="paper" data-id="${p.id}">See answers</button></div>`;
+      box._to = gr.score; try { navigator.vibrate?.([30, 60, 30]); } catch {}
+    } else {
+      html = `<div class="card" role="alertdialog"><div class="badge"${jb.same ? ' style="background:var(--primary-soft);color:var(--primary)"' : ''}>${ic(jb.same ? 'check' : 'alert')}</div><h3>${esc(jb.error?.title || 'Could not read this sheet')}</h3><p>${esc(jb.error?.reason || 'Put the whole sheet in view and tap the button to capture again.')}</p><button class="btn primary" id="cnext">${ic('camera', 'sm')}${jb.same ? 'Scan next sheet' : 'Capture again'}</button></div>`;
+      try { navigator.vibrate?.(120); } catch {}
+    }
+    box.innerHTML = html; box.hidden = false; $('#cnext').onclick = () => next(ok || !!jb.same);
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      box.classList.add('in');
+      const arc = $('#carc'); if (!arc) return; arc.style.strokeDashoffset = arc.dataset.to;
+      const el = $('#cpct'), to = box._to, t0 = performance.now(), dur = reduce ? 0 : 1100;
+      const step = t => { const f = dur ? Math.min(1, (t - t0 - 150) / dur) : 1, ez = 1 - (1 - Math.max(0, f)) ** 3; if (el) el.textContent = fmtNum(f >= 1 ? to : Math.round(to * ez)); if (f < 1 && cam) requestAnimationFrame(step); };
+      requestAnimationFrame(step);
+    }));
+  };
+  const next = scored => {
+    if (!cam) return; const box = $('#cr'); box.classList.remove('in'); setTimeout(() => { if (box && !box.classList.contains('in')) box.hidden = true; }, 300);
+    cam.quad = null; cam.shown = null; cam.busy = false; cam.hold = 0;
+    // after a good read wait for the next sheet; after a failed one the same sheet may be taken again at once
+    if (!scored) cam.gate = OMR.captureGate();
+    v.play().catch(() => {}).then(() => cam?.torch && setTorch(true)); setPhase('find');
+    msg(scored ? 'Show the next sheet' : cam.auto ? 'Hold the sheet steady to capture again' : 'Tap the button to capture again');
+  };
+  const capture = async how => {
+    if (!cam || cam.busy || !v.videoWidth) return; cam.busy = true; cam.hold = 0;
+    cam.gate.disarm(cam.last);   // a tap and an automatic capture both count as "this sheet is taken"
+    $('#cfl').classList.remove('go'); void $('#cfl').offsetWidth; $('#cfl').classList.add('go'); try { navigator.vibrate?.(40); } catch {}
+    msg('Taking photo…', true);
+    let frame = await grabBest(v, track);
+    if (!frame) { const c = document.createElement('canvas'); c.width = v.videoWidth; c.height = v.videoHeight; c.getContext('2d').drawImage(v, 0, 0); frame = await new Promise(r => c.toBlob(r, 'image/jpeg', 0.92)); }
+    if (!cam) { frame?.close?.(); return; }
+    if (cam.torch) setTorch(true);
+    if (mode === 'key') { closeSheet(); processKeyFile(S.exams[cam?.examId || e.id], frame); return; }
+    v.pause(); setPhase('reading'); cam.t0 = performance.now(); msg('Reading answers…', true);
+    const [j] = enqueue(e.id, [frame], { source: 'live_camera', force: true, capture: how === 'auto' ? 'auto' : 'tap' });
+    if (!j) { next(false); return; }
+    cam.job = j;   // its stage ("Correcting perspective", "Reading bubbles" …) is shown while it is read
+    const shown = Date.now();   // let the scan animation play at least once, so the step is visible
+    j.onDone = jb => { if (cam) setTimeout(() => cam && result(jb), Math.max(0, (reduce ? 0 : 900) - (Date.now() - shown))); };
+  };
+  $('#shot').onclick = () => capture('tap');
+  const loop = async () => {
+    if (!cam) return;
+    if (cam.phase === 'reading' && cam.job?.stage && cam.job.state === 'working') msg(cam.job.stage + '…', true);
+    if (v.videoWidth && !cam.busy) {
+      let r; try { r = await Reader.check(v, S.settings); } catch { r = null; }
+      const ow = o.clientWidth, oh = o.clientHeight;
+      if (!cam) return;
+      if (r && !cam.busy) {
+        if (r.pts) { const s = Math.max(ow / r.w, oh / r.h), dx = (ow - r.w * s) / 2, dy = (oh - r.h * s) / 2; cam.quad = { pts: r.pts.map(p => [p.cx * s + dx, p.cy * s + dy]), ok: r.ok }; }
+        else cam.quad = null;
+        if (r.pts) cam.last = r;
+        const gs = cam.auto ? cam.gate.update(r, performance.now()) : { state: !r.pts ? 'search' : !r.ok ? 'adjust' : 'hold', progress: 0 };
+        cam.hold = gs.state === 'hold' || gs.fire ? gs.progress : 0;
+        msg(gs.state === 'search' ? 'Point at the answer sheet' : gs.state === 'adjust' ? r.msg : gs.state === 'wait' ? 'Show the next sheet'
+          : cam.auto ? (gs.fire ? 'Capturing…' : 'Hold steady…') : 'Tap the button to scan', r.ok && gs.state !== 'wait');
+        if (gs.fire && cam.auto) { capture('auto'); cam.timer = setTimeout(loop, 250); return; }
+      }
+    }
+    cam.timer = setTimeout(loop, 250);
+  };
+  loop();
+}
+// The best picture the camera can give: a real still photo where the browser can take one (full sensor size, the
+// camera's own focus and processing), otherwise the sharpest of a few video frames (hand-held phones shake, and
+// one frame in three is often clearly crisper). Returns an ImageBitmap or a Blob, or null.
+async function grabBest(v, track) {
+  if (typeof ImageCapture !== 'undefined' && track?.readyState === 'live') {
+    try {
+      const blob = await Promise.race([new ImageCapture(track).takePhoto(), new Promise(r => setTimeout(r, 2500, null))]);
+      if (blob?.size > 60000) return blob;
+    } catch {}
+  }
+  let best = null, bestS = -1;
+  for (let k = 0; k < 3; k++) {
+    if (k) await new Promise(r => setTimeout(r, 90));
+    const f = await createImageBitmap(v).catch(() => null); if (!f) continue;
+    const s = frameSharpness(f);
+    if (s > bestS) { best?.close(); best = f; bestS = s; } else f.close();
+  }
+  return best;
+}
+// edge strength of the middle of a frame, at low resolution: enough to rank frames of the same scene
+function frameSharpness(bmp) {
+  const w = 320, h = Math.max(1, Math.round(320 * bmp.height / bmp.width)), c = document.createElement('canvas'); c.width = w; c.height = h;
+  const g = c.getContext('2d', { willReadFrequently: true }); g.drawImage(bmp, 0, 0, w, h);
+  const d = g.getImageData(0, 0, w, h).data, L = i => d[i * 4] * 0.3 + d[i * 4 + 1] * 0.59 + d[i * 4 + 2] * 0.11;
+  let s = 0;
+  for (let y = Math.round(h * 0.2); y < h * 0.8; y++) for (let x = Math.round(w * 0.2); x < w * 0.8; x++) { const i = y * w + x, lap = 4 * L(i) - L(i - 1) - L(i + 1) - L(i - w) - L(i + w); s += lap * lap; }
+  return s;
+}
+function stopCam() { if (!cam) return; clearTimeout(cam.timer); cancelAnimationFrame(cam.raf); try { cam.lock?.release(); } catch {} cam.stream.getTracks().forEach(t => t.stop()); cam = null; }
+
+/* ============================================================
+   Sample exam
+   ============================================================ */
+async function buildSample() {
+  if (S.exams['sample-physics'] || S.ui.sample?.busy) return;
+  const rnd = rng(20260927), numQ = 40, key = Array.from({ length: numQ }, () => Math.floor(rnd() * 4));
+  const e = { id: 'sample-physics', sample: true, name: 'Physics class test', subject: 'Physics', numQ, numOpts: 4, marks: 1, negEnabled: true, neg: 0.25, multiRule: 'review', idDigits: 6, createdAt: Date.now(), updatedAt: Date.now(),
+    roster: { '230101': 'Ayesha Rahman', '230102': 'Tanvir Hasan', '230103': 'Nusrat Jahan', '230104': 'Rafiul Islam', '230105': 'Sadia Akter' },
+    key: { answers: key, confirmed: true, version: 1, source: 'typed', confirmedAt: Date.now() }, audit: [] };
+  const specs = [
+    { file: 'IMG_2041.jpg', roll: '230101', name: 'Ayesha Rahman', p: 0.9, rot: -4, keystone: 0.05, extra: { kind: { 2: 'half', 9: 'tick', 15: 'light', 27: 'cross' } } },
+    { file: 'IMG_2042.jpg', roll: '230102', name: 'Tanvir Hasan', p: 0.7, rot: 176, shadow: true, extra: { kind: { 5: 'scribble', 12: 'half', 30: 'dot' }, fix: [20] } },
+    { file: 'IMG_2043.jpg', roll: '230103', name: 'Nusrat Jahan', p: 0.85, rot: 7, keystone: -0.06, extra: { unsure: [17], kind: { 3: 'tick', 8: 'half', 25: 'light' } } },
+    { file: 'IMG_2044.jpg', roll: '230104', name: 'Rafiul Islam', p: 0.62, rot: 91, landscape: true, extra: { double: [8], blank: [33, 34] } },
+    { file: 'IMG_2045.jpg', roll: '', name: 'Sadia Akter', p: 0.95, rot: -9, desk: ['#5d6b78', '#34404a'], extra: { kind: { 1: 'half', 11: 'cross' } } }
+  ];
+  S.ui.sample = { busy: true, done: 0, total: specs.length }; S.exams[e.id] = e; scheduleRender();
+  for (const [i, sp] of specs.entries()) {
+    const file = await synthPhoto(e, { ...sp, marks: studentMarks(e, key, rng(100 + i), sp.p, sp.extra), seed: 500 + i });
+    await new Promise(res => { const [j] = enqueue(e.id, [file], { sample: true }); j.onDone = res; });
+    S.ui.sample.done = i + 1; scheduleRender();
+  }
+  S.ui.sample.busy = false; scheduleRender();
+}
+async function samplePapers(e) {
+  const base = Math.floor(Math.random() * 1e6), kinds = ['half', 'tick', 'light', 'cross', 'scribble'];
+  for (let i = 0; i < 3; i++) {
+    const r = rng(base + i), roll = e.idDigits ? Array.from({ length: e.idDigits }, () => Math.floor(r() * 10)).join('') : '';
+    const kind = {}; for (let k = 0; k < 5; k++) kind[Math.floor(r() * e.numQ)] = kinds[k];
+    enqueue(e.id, [await synthPhoto(e, { file: `sample-${i + 1}.jpg`, roll, marks: studentMarks(e, e.key.answers, r, 0.55 + r() * 0.4, { kind }), rot: (r() - .5) * 16 + (i === 2 ? 180 : 0), keystone: (r() - .5) * 0.1, seed: base + i })], { sample: true });
+  }
+}
+
+/* ============================================================
+   Export / share / print
+   ============================================================ */
+const slug = s => (s || 'exam').replace(/[^\p{L}\p{N}_\- ]+/gu, '').trim().replace(/\s+/g, '-').slice(0, 40) || 'exam';
+let dlCap;
+async function saveFile(filename, data, type) {
+  const blob = data instanceof Blob ? data : new Blob([data], { type: type || 'application/octet-stream' });
+  try { const file = new File([blob], filename, { type: blob.type || type }); if (navigator.canShare?.({ files: [file] })) { await navigator.share({ files: [file], title: filename }); return; } } catch (err) { if (err?.name === 'AbortError') return; }
+  try { if (dlCap === undefined) dlCap = window.claude?.use ? await window.claude.use('downloads') : null; if (dlCap) { await dlCap.save({ filename, data: blob }); return; } } catch (err) { if (err?.code === 'declined') return; }
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = filename; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+}
+async function exportResults(e, fmt) {
+  const papers = papersOf(e.id).map(p => {
+    const g = grade(p, e), w = who(p, e);
+    return { roll: w.roll, name: w.name, scanned: p.createdAt, score: g.score, total: g.total, pct: g.pct, correct: g.correct, wrong: g.wrong, blank: g.blank, two: g.two, unclear: g.unclear,
+      status: g.status === 'graded' ? 'Marked' : 'Roll/name missing',
+      answers: g.rows.map(r => ({ a: r.ans != null ? LET[r.ans] : r.st === 'blank' ? '' : (r.cand.map(o => LET[o]).join('/') || '?'), k: LET[r.k] || '', ok: r.out === 'correct', mk: r.mk, why: r.reason })) };
+  });
+  if (!papers.length) { toast('No results yet.'); return; }
+  // one model for all three formats (export.js): same columns, same order, same numbers
+  const m = Export.build({ exam: { name: e.name, subject: e.subject, numQ: e.numQ, numOpts: e.numOpts, marks: +e.marks, negEnabled: e.negEnabled, neg: +e.neg || 0, key: e.key.answers.map(a => LET[a] || '') }, papers });
+  const base = `${slug(e.name)}-results-${Export.stamp(Date.now()).slice(0, 10)}`;
+  if (fmt === 'csv') return saveFile(base + '.csv', Export.csv(m), 'text/csv;charset=utf-8');
+  if (fmt === 'xlsx') return saveFile(base + '.xlsx', new Blob([await Export.xlsx(m)], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }));
+  if (!window.jspdf) { toast('PDF export is still loading, try again.'); return; }
+  toast('Preparing the PDF…'); await new Promise(r => setTimeout(r, 50));   // let the message show before the page is busy
+  return saveFile(base + '.pdf', new Blob([Export.pdf(window.jspdf.jsPDF, m)], { type: 'application/pdf' }));
+}
+/* ============================================================
+   Actions
+   ============================================================ */
+const curE = () => S.exams[S.route.id || S.route.examId];
+const curP = () => S.papers[S.route.paperId];
+function setAns(e, p, i, v) {
+  const r = grade(p, e).rows[i], was = r.ans != null ? LET[r.ans] : r.st === 'blank' ? 'blank' : 'unclear';
+  p.overrides = p.overrides || {};
+  if (v === 'reset') { delete p.overrides[i]; audit(p, `Q${i + 1}: back to detected mark.`); } else { p.overrides[i] = v; audit(p, `Q${i + 1}: ${was} → ${v < 0 ? 'blank' : LET[v]}.`); }
+  savePaper(p);
+}
+const A = {
+  home() { go({ view: 'home' }); },
+  back() { const p = curP(); go({ view: 'exam', id: p.examId, tab: S.route.from || 'results' }); },
+  new() { S.ui.errors = {}; go({ view: 'new' }); },
+  open(el) { go({ view: 'exam', id: el.dataset.id }); },
+  openTab(el) { go({ view: 'exam', id: el.dataset.id, tab: el.dataset.tab }); },
+  quickScan(el) { go({ view: 'exam', id: el.dataset.id, tab: 'scan' }); openCamera('scan', S.exams[el.dataset.id]); },
+  tab(el) { closeSheet(); S.route.tab = el.dataset.tab; S._top = true; render(); },
+  paper(el) { const p = S.papers[el.dataset.id]; go({ view: 'paper', examId: p.examId, paperId: p.id, from: S.route.tab }); },
+  settings() { settingsSheet(); },
+  signOut() { confirmSheet('Sign out?', 'You will need your email, password and internet to sign in again. Your exams stay on this phone.', 'Sign out', () => { store.set('bm.lastEmail', S.auth.email); Track.ev('signed_out'); lockApp(''); }); },
+  closeSheet() { S.ui.rescan = null; closeSheet(); },
+  togglePw(el) { const i = $('#liPw'); if (!i) return; const show = i.type === 'password'; i.type = show ? 'text' : 'password'; el.innerHTML = ic(show ? 'eyeoff' : 'eye'); el.setAttribute('aria-pressed', String(show)); el.setAttribute('aria-label', show ? 'Hide password' : 'Show password'); i.focus(); },
+  popClose() { $('#layer').innerHTML = ''; },
+  popPaper(el) { $('#layer').innerHTML = ''; A.paper(el); },
+  rescan() { const p = curP(), e = curE(); go({ view: 'exam', id: e.id, tab: 'scan' }); S.ui.rescan = { examId: e.id, paperId: p.id, t: Date.now() }; toast('Scan the sheet again. It will replace this paper.'); openCamera('scan', e); },
+  loadSample() { Track.ev('sample_opened'); S.prefs.hideSample = false; store.set('bm.prefs', S.prefs); buildSample(); render(); },
+  async install() { if (!S.installEvt) return; S.installEvt.prompt(); let out = 'unknown'; try { out = (await S.installEvt.userChoice).outcome; } catch {} Track.ev('install_prompt_answer', { outcome: out }); S.installEvt = null; closeSheet(); render(); },
+  strict(el) { S.settings.minConf = { relaxed: 0.75, normal: 0.85, strict: 0.93 }[el.dataset.v]; store.set('bm.settings2', S.settings); settingsSheet(); },
+  pick(el) { $('#' + el.dataset.input).click(); },
+  step(el) { const f = S.ui.create, k = el.dataset.k, d = +el.dataset.d, lim = { numQ: [1, 100], marks: [0.25, 100], neg: [0, 100] }[k]; f[k] = clamp(Math.round(((+f[k] || 0) + d) * 100) / 100, lim[0], lim[1]); delete S.ui.errors[k]; render(); },
+  setQ(el) { const f = S.ui.create; f.numQ = +el.dataset.v; f.qCustom = false; delete S.ui.errors.numQ; render(); },
+  qCustom() { S.ui.create.qCustom = true; render(); requestAnimationFrame(() => { const i = $('#f_numQ'); i?.focus(); i?.select(); }); },
+  setF(el) { S.ui.create[el.dataset.k] = +el.dataset.v; render(); },
+  examMenu() { examMenu(curE()); },
+  paperMenu() { paperMenu(); },
+  exportMenu() { exportMenu(); },
+  export(el) { closeSheet(); Track.ev('results_shared', { format: el.dataset.fmt, papers: papersOf(curE().id).length }); exportResults(curE(), el.dataset.fmt); },
+  installHelp() { installSheet(false); },
+  installLater() { Track.ev('install_later'); closeSheet(); },
+  delExam() { const e = curE(); confirmSheet('Delete this exam?', `“${esc(e.name)}” and its ${papersOf(e.id).length} papers will be removed from this phone.`, 'Delete', () => {
+    if (e.sample) { S.prefs.hideSample = true; store.set('bm.prefs', S.prefs); go({ view: 'home' }); return; }
+    papersOf(e.id).forEach(removePaper); delete S.exams[e.id]; DB.del('exams', e.id); go({ view: 'home' }); toast('Exam deleted.'); }); },
+  delPaper() { const p = curP(), e = curE(); confirmSheet('Delete this paper?', `${esc(who(p, e).title)} will be removed from the results.`, 'Delete', () => { p.deletedAt = Date.now(); savePaper(p); go({ view: 'exam', id: e.id, tab: 'results' }); toast('Paper deleted.', { label: 'Undo', fn: () => { delete p.deletedAt; savePaper(p); render(); } }); }); },
+  async reprocess() {
+    closeSheet(); const p = curP(), e = curE(), img = await getImage(p.id);
+    if (!img?.orig) { toast('Original photo not available.'); return; }
+    toast('Reading again…');
+    const res = await Reader.read(await (await fetch(img.orig)).blob(), e, S.settings, undefined, { proc: [900, 0.72] });
+    if (!res.ok) { toast(res.title); return; }
+    p.det = { answers: res.answers, geo: res.geo || null, meta: { ...res.meta, keyVersion: e.key?.version } };
+    if (p.student?.state !== 'manual') p.student = { ...p.student, roll: res.id.roll, state: res.id.state === 'none' ? 'missing' : res.id.state };
+    await putImage(p.id, { orig: img.orig, proc: res.imgs.proc }, p.sample);
+    audit(p, 'Read again from the original photo.'); savePaper(p); render(); toast('Done.');
+  },
+  viewPaper() { const c = $('#paperCanvas'); if (c) viewer(c.toDataURL('image/jpeg', 0.92)); },
+  viewKey() { const c = $('#keyCanvas'); if (c) viewer(c.toDataURL('image/jpeg', 0.92)); },
+  zoomImg() { $('#vw')?.classList.toggle('zoom'); },
+  q(el) { qSheet(curE(), curP(), +el.dataset.q); },
+  paperView(el) { store.set('bm.paperView', el.dataset.v); render(); },
+  setAns(el) {
+    const e = curE(), p = curP(), i = +el.dataset.q, v = el.dataset.o === 'reset' ? 'reset' : +el.dataset.o;
+    setAns(e, p, i, v); Track.ev('answer_changed', { was_unclear: ['multiple', 'uncertain'].includes(p.det?.answers?.[i]?.st) }); const g = grade(p, e);
+    render(); closeSheet();
+  },
+  keyCam() { const e = curE(); S.ui.keyDraft[e.id] = S.ui.keyDraft[e.id] || { answers: Array(e.numQ).fill(null), flags: {} }; openCamera('key', e); },
+  keyType() { const e = curE(); S.ui.keyDraft[e.id] = { answers: e.key?.answers?.slice() || Array(e.numQ).fill(null), flags: {}, typing: true, source: 'typed' }; render(); },
+  async keySample() { const e = curE(); const key = e.sample ? e.key.answers : Array.from({ length: e.numQ }, () => Math.floor(Math.random() * e.numOpts)); processKeyFile(e, await synthPhoto(e, { file: 'key.jpg', marks: key.map((o, i) => ({ o: [o], k: i === 6 ? 'half' : i === 11 ? 'tick' : undefined })), rot: -6, keystone: 0.04, seed: 99 })); },
+  keySet(el) { const d = S.ui.keyDraft[curE().id], q = +el.dataset.q, o = +el.dataset.o; d.answers[q] = d.answers[q] === o ? null : o; delete d.flags[q]; render(); },
+  keyPaste() { const e = curE(), d = S.ui.keyDraft[e.id], v = ($('#keyPaste').value || '').toUpperCase().replace(/[^A-E]/g, ''); if (!v) return; [...v].slice(0, e.numQ).forEach((c, i) => { const o = LET.indexOf(c); if (o < e.numOpts) { d.answers[i] = o; delete d.flags[i]; } }); render(); },
+  keyRestart() { const e = curE(); delete S.ui.keyDraft[e.id]; if (!e.key?.confirmed) S.ui.keyDraft[e.id] = null; render(); },
+  editKey() { closeSheet(); const e = curE(); S.ui.keyDraft[e.id] = { answers: Array(e.numQ).fill(null), flags: {} }; S.route.tab = 'key'; render(); },
+  cancelKey() { delete S.ui.keyDraft[curE().id]; render(); },
+  confirmKey() {
+    const e = curE(), d = S.ui.keyDraft[e.id]; if (d.answers.some(a => a == null)) return;
+    const prev = e.key; e.key = { answers: d.answers.slice(), confirmed: true, version: (prev?.version || 0) + 1, source: d.source || 'typed', confirmedAt: Date.now() };
+    audit(e, `Answer key v${e.key.version} confirmed.`); Track.ev('key_confirmed', { method: d.source || 'typed', version: e.key.version, questions: e.numQ }); delete S.ui.keyDraft[e.id]; saveExam(e);
+    const n = papersOf(e.id).length; toast(n ? `Key updated. ${n} papers re-marked.` : 'Answer key saved. Start scanning.');
+    S.route.tab = 'scan'; S._top = true; render();
+  },
+  scanCam() { openCamera('scan', curE()); },
+  camGallery(el) { const mode = el.dataset.mode; closeSheet(); $('#' + (mode === 'key' ? 'fileKey' : 'fileScan')).click(); },
+  scanSamples() { samplePapers(curE()); },
+  keyDebug() { const d = S.ui.keyDraft[curE().id]; if (d?.error?.debug) viewer(d.error.debug); },
+};
+// iPhone Safari ignores the viewport limit for pinches; a pinched page stayed zoomed in and had to be pinched back
+['gesturestart', 'gesturechange'].forEach(t => document.addEventListener(t, ev => ev.preventDefault(), { passive: false }));
+document.addEventListener('click', ev => { const el = ev.target.closest('[data-act]'); if (!el || el.disabled) return; const f = A[el.dataset.act]; if (f) { ev.preventDefault(); f(el, ev); } });
+document.addEventListener('keydown', ev => { if (ev.key === 'Escape' && $('#layer').innerHTML) closeSheet(); });
+document.addEventListener('input', ev => {
+  const el = ev.target, on = el.dataset?.on; if (!on) return;
+  if (on === 'cf') { const f = S.ui.create; f[el.dataset.k] = el.type === 'checkbox' ? el.checked : el.value; if (S.ui.errors[el.dataset.k]) { delete S.ui.errors[el.dataset.k]; el.classList.remove('bad'); } if (el.type === 'checkbox' || el.tagName === 'SELECT') render(); }
+  else if (on === 'rq') { S.ui.q = el.value; const e = curE(); const q = el.value.trim().toLowerCase(); $('#resList').innerHTML = papersOf(e.id).filter(p => !q || (who(p, e).roll + ' ' + who(p, e).name).toLowerCase().includes(q)).map(p => paperRow(p, e)).join('') || '<p class="muted" style="padding:14px">No match.</p>'; }
+});
+document.addEventListener('change', ev => {
+  const el = ev.target, on = el.dataset?.on;
+  if (on === 'order') { S.settings.order = el.value; store.set('bm.settings2', S.settings); }
+  else if (on === 'sample') { S.prefs.hideSample = !el.checked; store.set('bm.prefs', S.prefs); if (el.checked) buildSample(); render(); }
+  else if (on === 'roll' || on === 'name') {
+    const e = curE(), p = curP(); p.student = p.student || {};
+    if (on === 'roll') { const v = el.value.replace(/\s/g, ''); if (v === (p.student.roll || '')) return; audit(p, `Roll set to ${v || '(empty)'}.`); p.student.roll = v; p.student.state = 'manual'; }
+    else { if (el.value.trim() === (p.student.name || '')) return; p.student.name = el.value.trim(); audit(p, `Name set to ${p.student.name}.`); }
+    savePaper(p); render();
+  }
+  else if (el.id === 'fileScan' || el.id === 'camScan') { const e = curE(); if (e && el.files.length) { const js = enqueue(e.id, el.files, { source: el.id === 'camScan' ? 'phone_camera' : 'gallery' }); if (js.length === 1) scorePopup(js[0], e, el.id); } el.value = ''; }
+  else if (el.id === 'fileKey' || el.id === 'camKey') { const e = curE(); if (e && el.files[0]) processKeyFile(e, el.files[0]); el.value = ''; }
+  else if (el.id === 'fileLayout') { const f = el.files[0]; el.value = ''; if (f) detectFromPhoto(f); }
+});
+document.addEventListener('submit', ev => {
+  if (ev.target.id !== 'newForm') return; ev.preventDefault();
+  const f = S.ui.create, er = {};
+  if (!NEW_EXAM_EXTRAS) Object.assign(f, { subject: '', numOpts: 4, marks: 1, negEnabled: false, neg: 0 });   // the hidden fields keep their defaults
+  if (!f.name.trim()) er.name = 'Give the exam a name.';
+  if (!Number.isInteger(+f.numQ) || +f.numQ < 1 || +f.numQ > 100) er.numQ = 'Between 1 and 100.';
+  if (!(+f.marks > 0)) er.marks = 'More than 0.';
+  S.ui.errors = er; if (Object.keys(er).length) { render(); return; }
+  const e = { id: uid('ex_'), name: f.name.trim(), subject: f.subject.trim(), numQ: +f.numQ, numOpts: +f.numOpts, marks: +f.marks, negEnabled: !!f.negEnabled, neg: f.negEnabled ? +f.neg || 0 : 0, multiRule: 'review', idDigits: +f.idDigits, createdAt: Date.now(), updatedAt: Date.now(), key: null, roster: {}, audit: [] };
+  S.exams[e.id] = e; saveExam(e); Track.ev('exam_created', { questions: e.numQ, options: e.numOpts, roll_digits: e.idDigits, negative: e.negEnabled, from_photo: !!f.fromPhoto }); S.ui.create = null; go({ view: 'exam', id: e.id, tab: 'key' });
+});
+document.addEventListener('paste', ev => {
+  if (S.route.view !== 'exam') return; const files = [...(ev.clipboardData?.files || [])].filter(f => f.type.startsWith('image/')); if (!files.length) return;
+  const e = curE(); if (S.route.tab === 'key') processKeyFile(e, files[0]); else enqueue(e.id, files);
+});
+window.addEventListener('beforeinstallprompt', ev => { ev.preventDefault(); S.installEvt = ev; if (S.route.view === 'home') render(); setTimeout(() => { if (S.auth?.ok && !$('#layer').innerHTML) installSheet(true); }, 1500); });
+window.addEventListener('appinstalled', () => { Track.ev('app_installed'); toast('Installed. Open MCQ from your home screen.'); });
+window.addEventListener('popstate', () => { if ($('#layer').innerHTML) { closeSheet(); history.pushState(null, ''); return; } if (S.route.view === 'paper') A.back(); else if (S.route.view !== 'home') go({ view: 'home' }); else if (window.parent !== window) { parent.postMessage('proshno:home', location.origin); return; } history.pushState(null, ''); });
+
+/* ============================================================
+   Sign-in — the server gives each paying user a signed pass; the app checks it here, offline, and
+   stops working when it runs out (at most 30 days without going online, or when the paid time ends).
+   Every time the app is online the pass is renewed, or withdrawn if the account was switched off.
+   ============================================================ */
+const Auth = {
+  key: null,
+  get() { return store.get('bm.auth', null); },
+  device() { let d = store.get('bm.device', ''); if (!d) { d = crypto.randomUUID ? crypto.randomUUID() : uid('d') + uid(); store.set('bm.device', d); } return d; },
+  bytes(s) { const b = atob(s.replace(/-/g, '+').replace(/_/g, '/') + '==='.slice((s.length + 3) % 4)); return Uint8Array.from(b, c => c.charCodeAt(0)); },
+  // the pass, if it is genuine, unexpired and was given to this phone
+  async check() {
+    const a = this.get(), cfg = window.MCQ_AUTH;
+    if (!a?.token || !cfg?.key || !crypto.subtle) return null;
+    try {
+      const [body, sig] = a.token.split('.');
+      this.key = this.key || await crypto.subtle.importKey('jwk', cfg.key, { name: 'ECDSA', namedCurve: 'P-256' }, false, ['verify']);
+      if (!await crypto.subtle.verify({ name: 'ECDSA', hash: 'SHA-256' }, this.key, this.bytes(sig), new TextEncoder().encode(body))) return null;
+      const p = JSON.parse(new TextDecoder().decode(this.bytes(body)));
+      return p.exp > Date.now() && p.d === this.device() ? p : null;
+    } catch { return null; }
+  },
+  async post(url, body) {
+    const r = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body), cache: 'no-store' });
+    const d = await r.json().catch(() => ({}));
+    return { ...d, ok: r.ok, status: r.status };
+  },
+  save(d) { store.set('bm.auth', { token: d.token, email: d.email, exp: d.exp }); store.set('bm.authAt', Date.now()); S.auth = { ok: true, email: d.email, exp: d.exp }; },
+  async signIn(email, password) {
+    const d = await this.post('api/login', { email, password, device: this.device(), deviceName: /iphone/i.test(navigator.userAgent) ? 'iPhone' : /ipad/i.test(navigator.userAgent) ? 'iPad' : /android/i.test(navigator.userAgent) ? 'Android phone' : 'Computer' });
+    if (d.ok) this.save(d);
+    return d;
+  },
+  // renew while online; a refusal from the server (switched off, paid time over, signed out) locks the app now
+  async renew(force) {
+    if (!S.auth?.ok || navigator.onLine === false) return;
+    if (!force && Date.now() - store.get('bm.authAt', 0) < 6 * 36e5) return;
+    try { const d = await this.post('api/refresh', { token: this.get()?.token }); if (d.ok) this.save(d); else if (d.status === 401) lockApp(d.message); } catch {}
+  },
+};
+function lockApp(msg) {
+  store.del('bm.auth'); S.auth = { ok: false, msg: msg || '' };
+  if (cam) stopCam(); $('#layer').innerHTML = ''; S.route = { view: 'home' }; render();
+}
+// while the app stays open: lock it the moment the pass runs out, renew it now and then
+async function authTick() {
+  return;   // open mode
+  if (!S.auth?.ok) return;
+  if (!await Auth.check()) return lockApp('Your sign-in has run out. Connect to the internet and sign in again.');
+  Auth.renew();
+}
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') authTick(); });
+setInterval(authTick, 10 * 6e4);
+
+document.addEventListener('submit', async ev => {
+  if (ev.target.id !== 'loginForm') return;
+  ev.preventDefault();
+  const email = $('#liEmail').value.trim(), password = $('#liPw').value;
+  if (!email || !password) { S.auth.msg = 'Enter your email and password.'; render(); return; }
+  if (navigator.onLine === false) { S.auth.msg = 'You are offline. Connect to the internet to sign in.'; render(); return; }
+  S.auth.busy = true; S.auth.msg = ''; S.auth.email = email; render();
+  let d; try { d = await Auth.signIn(email, password); } catch { d = { message: 'Could not reach the server. Check your internet and try again.' }; }
+  if (d.ok) { Track.ev('signed_in'); render(); return; }
+  Track.ev('sign_in_failed', { reason: d.error || 'network' });
+  S.auth = { ok: false, busy: false, email, msg: d.message || 'Could not sign in.' }; render();
+  setTimeout(() => $('#liPw')?.focus(), 50);
+});
+function vLogin() {
+  const a = S.auth;
+  return `<div class="login"><div class="glass card">
+    <div style="text-align:center">${BRAND.replace('class="brand-mark"', 'class="brand-mark" style="width:84px;height:42px;margin:4px auto 12px;display:block"')}
+    <h1 style="font-size:26px;font-weight:750">Sign in</h1><p class="muted" style="margin:4px 0 18px">Use the email and password you were given.</p></div>
+    <form id="loginForm" novalidate>
+      <div class="field" style="padding:0 0 12px"><label for="liEmail">Email</label><input class="input" id="liEmail" type="email" inputmode="email" autocomplete="username" autocapitalize="off" spellcheck="false" value="${esc(a.email || store.get('bm.lastEmail', ''))}"></div>
+      <div class="field" style="padding:0 0 16px;border-top:0"><label for="liPw">Password</label><div class="pwbox"><input class="input" id="liPw" type="password" autocomplete="current-password"><button type="button" class="pweye" data-act="togglePw" aria-label="Show password" aria-pressed="false">${ic('eye')}</button></div></div>
+      ${a.msg ? `<div class="note-bad">${ic('alert', 'sm')}<span>${esc(a.msg)}</span></div>` : ''}
+      <button class="btn primary block" ${a.busy ? 'disabled' : ''}>${a.busy ? '<span class="spinner"></span>Signing in…' : 'Sign in'}</button>
+    </form>
+    <p class="faint" style="font-size:12.5px;margin:14px 2px 0;text-align:center">Needs internet to sign in. After that MCQ works offline for up to ${window.MCQ_AUTH?.offlineDays || 30} days.</p>
+  </div></div>`;
+}
+
+
+/* ============================================================
+   Answer keys sent from the question paper maker (../index.html)
+   #import=<base64url of {name, subject, marks, sets:[{label, key:[0..3,...]}]}>
+   One exam per set; opening the same link twice does not make copies.
+   ============================================================ */
+function importFromPaper() {
+  const m = location.hash.match(/^#import=([A-Za-z0-9_-]+)/); if (!m) return null;
+  history.replaceState(null, '', location.pathname + location.search);
+  let d; try { d = JSON.parse(new TextDecoder().decode(Auth.bytes(m[1]))); } catch { toast('Could not read the answer key from the question paper.'); return null; }
+  if (!d || !Array.isArray(d.sets) || !d.sets.length) return null;
+  let first = null, made = 0;
+  d.sets.forEach(st => {
+    const key = (st.key || []).map(Number).filter(n => n >= 0 && n < 4).slice(0, 100); if (!key.length) return;
+    const name = String(d.name || 'Question paper').slice(0, 70) + (d.sets.length > 1 ? ` — Set ${st.label}` : '');
+    let h = 0; const sig = name + '|' + key.join(''); for (let i = 0; i < sig.length; i++) h = (h * 31 + sig.charCodeAt(i)) >>> 0;
+    const id = 'qp_' + h.toString(36);
+    if (!S.exams[id] || S.exams[id].deletedAt) {
+      const now = Date.now();
+      const e = { id, name, subject: String(d.subject || '').slice(0, 60), numQ: key.length, numOpts: 4, marks: +d.marks > 0 ? +d.marks : 1, negEnabled: false, neg: 0, multiRule: 'review', idDigits: 6,
+        createdAt: now, updatedAt: now, roster: {}, audit: [], fromPaper: true,
+        key: { answers: key, confirmed: true, version: 1, source: 'paper', confirmedAt: now } };
+      S.exams[id] = e; saveExam(e); made++;
+      Track.ev('exam_created', { questions: e.numQ, options: 4, roll_digits: 6, negative: false, from_paper: true });
+    }
+    first = first || id;
+  });
+  if (first) toast(made ? `Answer key added from your question paper${d.sets.length > 1 ? ` (${d.sets.length} sets)` : ''}. Print the answer sheets, then scan.` : 'This question paper is already here.');
+  return d.sets.length === 1 ? first : null;
+}
+
+/* ============================================================
+   Boot
+   ============================================================ */
+(async function boot() {
+  Track.start(); Track.ev('app_open', { screen_w: screen.width, lang: navigator.language });
+  const pass = { e: '', exp: Infinity };   // open mode inside the question paper app: no sign-in
+  S.auth = pass ? { ok: true, email: pass.e, exp: pass.exp } : { ok: false, msg: Auth.get() ? 'Your sign-in has run out. Connect to the internet and sign in again.' : '' };
+  if (!pass) store.del('bm.auth');
+  render();
+  if (await DB.open()) {
+    const [ex, ps] = await Promise.all([DB.all('exams'), DB.all('papers')]);
+    ex.forEach(e => { S.exams[e.id] = e; }); ps.forEach(p => { S.papers[p.id] = p; });
+    try { navigator.storage?.persist?.(); } catch {}
+  }
+  const fromPaper = importFromPaper(); if (fromPaper) S.route = { view: 'exam', id: fromPaper };
+  history.pushState(null, '');
+  render();
+  // the demo exam is built once, on the very first visit; after that it only comes back from Settings
+  if (!fromPaper && SAMPLE_EXAM && !S.prefs.hideSample && !store.get('bm.sampleShown', false) && !examList().some(e => !e.sample)) { store.set('bm.sampleShown', true); buildSample(); }
+  if (!window.claude && /iphone|ipad|ipod/i.test(navigator.userAgent) && !Track.standalone()) setTimeout(() => { if (S.auth.ok && !$('#layer').innerHTML) installSheet(true); }, 2500);
+  if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost') && !window.claude) {
+    // when a new version takes over, reload once (not while the camera is open) so the page and its code match
+    const had = !!navigator.serviceWorker.controller; let reloaded = false;
+    navigator.serviceWorker.addEventListener('controllerchange', () => { if (had && !reloaded && !cam) { reloaded = true; location.reload(); } });
+    navigator.serviceWorker.register('sw.js').then(r => r.update()).catch(() => {});
+  }
+})();
+
+</script>
+</body>
+</html>

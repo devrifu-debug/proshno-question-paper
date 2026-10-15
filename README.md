@@ -6,6 +6,7 @@ A no-AI tool for Bangladeshi teachers: pick a class and subject, tick chapters, 
 - Every listed subject has questions for every chapter
 - Editable school name, exam name, watermark and all text
 - Print or download as PDF
+- **Take an MCQ Test** (`checker/`, opened from the first screen): print bubble answer sheets and check them with a phone camera.
 
 Notes on textbook problems and question corrections are in `docs/`.
 
