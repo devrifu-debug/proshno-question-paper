@@ -1,10 +1,13 @@
-# Proshno — Class 8 Question Paper Generator
+# Proshno — Question Paper Generator (Class 3–8)
 
-A no-AI tool for Bangladeshi teachers: pick a subject, tick chapters, and generate a print-ready exam paper (MCQ, short questions, সৃজনশীল) from a question bank written from the NCTB Class 8 textbooks.
+A no-AI tool for Bangladeshi teachers: pick a class and subject, tick chapters, and generate a print-ready exam paper (MCQ, short questions, সৃজনশীল) from a question bank based on the NCTB textbooks.
 
-- 18 subjects, every chapter has questions
+- Classes 3, 4, 5, 6, 7 and 8
+- Every listed subject has questions for every chapter
 - Editable school name, exam name, watermark and all text
 - Print or download as PDF
+
+Notes on textbook problems and question corrections are in `docs/`.
 
 ## Run locally
 ```
