@@ -38,7 +38,7 @@ button,input,select,textarea{font:inherit;color:inherit}
 .brand{display:flex;align-items:baseline;gap:10px;min-width:0}
 .brand b{font-family:var(--f-paper);font-size:21px;font-weight:700;letter-spacing:.2px}
 .brand span{color:var(--muted);font-size:13px}
-.chklink{margin-left:auto;margin-right:12px;padding:6px 12px;font-size:13.5px;text-decoration:none;color:inherit;white-space:nowrap}
+.chklink{padding:6px 12px;font-size:13.5px;text-decoration:none;color:inherit;white-space:nowrap}
 .flow{margin-left:auto;display:flex;gap:6px;flex-wrap:wrap;font-size:13px;color:var(--muted)}
 .flow i{font-style:normal;padding:2px 8px;border-radius:999px;background:var(--surface-2);border:1px solid var(--line)}
 
@@ -56,6 +56,7 @@ button,input,select,textarea{font:inherit;color:inherit}
 .step h2{font-size:17px;font-weight:600;margin:0 0 2px;text-wrap:balance}
 .step .lead{color:var(--muted);font-size:13.5px;margin:0 0 14px}
 .field{display:grid;gap:4px;margin-bottom:12px;min-width:0}
+.fontprev{font-size:17px;line-height:1.5;padding:8px 10px;border:1px solid var(--line);border-radius:9px;background:var(--paper);color:var(--ink);font-family:var(--f-q,var(--f-paper))}
 .field label,.lbl{font-size:12.5px;font-weight:600;color:var(--muted);letter-spacing:.2px}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 input[type=text],input[type=number],select,textarea{width:100%;background:var(--surface-2);border:1px solid var(--line);border-radius:8px;padding:7px 10px;min-width:0}
@@ -115,7 +116,7 @@ input[type=range]{width:100%;accent-color:var(--accent)}
 
 /* ===== The printed page (A4 at 96 dpi: 794 × 1123 px) ===== */
 .page{width:794px;height:1123px;position:relative;background:var(--paper);color:var(--ink);padding:36px 42px 30px;overflow:hidden;
-  font-family:var(--f-paper);font-size:13.6px;line-height:1.42;box-shadow:var(--shadow)}
+  font-family:var(--f-q,var(--f-paper));font-size:13.6px;line-height:1.42;box-shadow:var(--shadow)}
 .page *{color:var(--ink)}
 .wm{position:absolute;left:50%;top:52%;transform:translate(-50%,-50%);pointer-events:none;z-index:3;display:grid;place-items:center}
 .wm img{display:block;max-width:none}
@@ -162,7 +163,7 @@ input[type=range]{width:100%;accent-color:var(--accent)}
 .clsgrid button[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft);box-shadow:inset 0 0 0 1px var(--accent)}
 .clsgrid button:hover{border-color:var(--muted)}
 .stephead{font-size:13px;font-weight:600;color:var(--muted);letter-spacing:.2px;margin:0 0 8px;display:flex;gap:8px;align-items:center}
-.stephead i{font-style:normal;display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;background:var(--accent);color:var(--accent-ink);font-size:11.5px}
+.stephead i{font-style:normal;display:inline-grid;place-items:center;flex:none;width:26px;height:26px;border-radius:50%;background:var(--accent);color:var(--accent-ink);font-family:var(--f-ui);font-size:19px;font-weight:700;line-height:1;padding-bottom:3px}
 .needcls[hidden]{display:none}
 .emptypick{max-width:520px;margin:60px auto;text-align:center;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:32px 24px;box-shadow:var(--shadow)}
 .emptypick h3{margin:0 0 6px;font-size:20px}
@@ -248,15 +249,15 @@ body.locked{overflow:hidden}
 </section>
 
 <header class="topbar">
-  <div class="brand"><b>প্রশ্ন</b><span id="brandCls">Question bank</span></div>
   <button class="btn chklink" id="homeBtn" type="button">← Home</button>
+  <div class="brand"><b>প্রশ্ন</b><span id="brandCls">Question bank</span></div>
   <div class="flow" aria-label="Steps"><i>Choose chapters</i><i>Pick questions</i><i>Review</i><i>PDF</i></div>
 </header>
 
 <div class="app">
   <aside class="panel">
     <div class="tabs" role="tablist">
-      <button role="tab" id="tab-ch" aria-selected="true" data-tab="ch"><span class="n">1</span>Chapters</button>
+      <button role="tab" id="tab-ch" aria-selected="true" data-tab="ch"><span class="n">1</span>Class</button>
       <button role="tab" id="tab-q" aria-selected="false" data-tab="q"><span class="n">2</span>Questions</button>
       <button role="tab" id="tab-look" aria-selected="false" data-tab="look"><span class="n">3</span>Paper look</button>
     </div>
@@ -313,6 +314,13 @@ body.locked{overflow:hidden}
       <div class="field"><span class="lbl">Logo (optional)</span>
         <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" id="logoBtn">Upload logo</button><button class="btn" id="logoClear" hidden>Remove</button></div>
         <input type="file" id="logoIn" accept="image/*" hidden></div>
+
+      <div class="divider"></div>
+      <div class="field"><label for="fontSel">Paper font</label>
+        <select id="fontSel"></select>
+        <input type="text" id="fontCustom" placeholder="Type the font name exactly, e.g. Kalpurush" hidden>
+        <div class="fontprev" id="fontPrev">প্রশ্ন: বাংলাদেশের জাতীয় ফুলের নাম কী? ক) শাপলা খ) গোলাপ — Q1. What is your name?</div>
+        <span class="hint" id="fontHint"></span></div>
 
       <div class="divider"></div>
       <div class="field"><span class="lbl">Watermark</span>
@@ -450,22 +458,22 @@ function drawSeal(){
   x.font = `700 44px 'Noto Serif Bengali','Noto Serif',serif`; x.textAlign = 'center'; x.textBaseline = 'middle';
   const r = R-48;
   const arc = (text, bottom) => {
-    const words = text.trim().split(/\s+/).filter(Boolean); if(!words.length) return;
-    const space = x.measureText(' ').width * 1.2;
-    const widths = words.map(t => x.measureText(t).width);
-    let total = widths.reduce((a,b)=>a+b,0) + space*(words.length-1);
-    const maxA = bottom ? Math.PI*0.62 : Math.PI*1.05;
-    let scale = Math.min(1, (maxA*r)/total);
-    x.font = `700 ${Math.round(44*scale)}px 'Noto Serif Bengali','Noto Serif',serif`;
-    const w2 = words.map(t => x.measureText(t).width), sp = space*scale;
-    total = w2.reduce((a,b)=>a+b,0) + sp*(words.length-1);
-    let a = (bottom ? Math.PI/2 : -Math.PI/2) + (bottom ? 1 : -1) * (total/r)/2;
-    words.forEach((t,i) => {
-      const half = (w2[i]/r)/2;
-      a += (bottom ? -1 : 1) * half;
-      x.save(); x.translate(R + r*Math.cos(a), R + r*Math.sin(a)); x.rotate(bottom ? a - Math.PI/2 : a + Math.PI/2);
-      x.fillText(t, 0, 0); x.restore();
-      a += (bottom ? -1 : 1) * (half + sp/r);
+    text = text.trim().replace(/\s+/g, ' '); if(!text) return;
+    // grapheme clusters keep a consonant with its vowel signs and conjuncts (কি, স্থা, ক্ষ) together
+    const seg = (typeof Intl !== 'undefined' && Intl.Segmenter) ? [...new Intl.Segmenter('bn', {granularity:'grapheme'}).segment(text)].map(g => g.segment) : Array.from(text);
+    // join a cluster that starts with a joining mark (hasanta or a vowel sign) to the one before it
+    const cl = []; seg.forEach(g => { if(cl.length && /^[\u0981-\u0983\u09BC\u09BE-\u09CD\u09D7\u200C\u200D]/.test(g)) cl[cl.length-1] += g; else cl.push(g); });
+    const maxA = bottom ? Math.PI*0.55 : Math.PI*1.12;
+    let fs = 50;
+    const measure = () => { x.font = `700 ${fs}px 'Noto Serif Bengali','Noto Serif',serif`; return cl.map(g => g === ' ' ? fs*0.42 : x.measureText(g).width + fs*0.04); };
+    let widths = measure(), total = widths.reduce((a,b)=>a+b,0);
+    if(total > maxA*r){ fs = Math.max(22, Math.floor(fs * maxA*r/total)); widths = measure(); total = widths.reduce((a,b)=>a+b,0); }
+    const dir = bottom ? -1 : 1;
+    let a = (bottom ? Math.PI/2 : -Math.PI/2) - dir * (total/r)/2;
+    cl.forEach((g, i) => {
+      const half = widths[i]/r/2; a += dir*half;
+      if(g !== ' '){ x.save(); x.translate(R + r*Math.cos(a), R + r*Math.sin(a)); x.rotate(bottom ? a - Math.PI/2 : a + Math.PI/2); x.fillText(g, 0, 0); x.restore(); }
+      a += dir*half;
     });
   };
   arc(w.sealTop, false); arc(w.sealBottom, true);
@@ -915,6 +923,53 @@ $('#pdfBtn').addEventListener('click', async () => {
   if(ok){ const ids = S.sections.flatMap(s => s.questions.map(q => q.id)); S.recent = [ids, ...S.recent].slice(0, 3); save(); }
 });
 $('#keyBtn').addEventListener('click', () => { if(S.sections.length) exportPDF(keyPagesHTML(), `answer-key-${today()}.pdf`, $('#keyBtn')); });
+
+/* ---------------- paper font ---------------- */
+// web: loaded from Google Fonts when picked (works on every device)
+// local: Unicode fonts many Bangladeshi computers already have — used only if installed on this computer
+const FONTS = [
+  {k:'noto-serif', n:'Noto Serif Bengali (default)', f:'Noto Serif Bengali', web:'Noto+Serif+Bengali:wght@400;600;700'},
+  {k:'tiro', n:'Tiro Bangla — book style', f:'Tiro Bangla', web:'Tiro+Bangla'},
+  {k:'hind', n:'Hind Siliguri — clean', f:'Hind Siliguri', web:'Hind+Siliguri:wght@400;600;700'},
+  {k:'noto-sans', n:'Noto Sans Bengali — plain', f:'Noto Sans Bengali', web:'Noto+Sans+Bengali:wght@400;600;700'},
+  {k:'anek', n:'Anek Bangla — modern', f:'Anek Bangla', web:'Anek+Bangla:wght@400;600;700'},
+  {k:'baloo', n:'Baloo Da 2 — rounded', f:'Baloo Da 2', web:'Baloo+Da+2:wght@400;600;700'},
+  {k:'mina', n:'Mina', f:'Mina', web:'Mina:wght@400;700'},
+  {k:'atma', n:'Atma — friendly', f:'Atma', web:'Atma:wght@400;600;700'},
+  {k:'galada', n:'Galada — decorative', f:'Galada', web:'Galada'},
+  {k:'solaiman', n:'SolaimanLipi', f:'SolaimanLipi', local:true},
+  {k:'kalpurush', n:'Kalpurush', f:'Kalpurush', local:true},
+  {k:'nikosh', n:'Nikosh', f:'Nikosh', local:true},
+  {k:'siyam', n:'Siyam Rupali', f:'Siyam Rupali', local:true},
+  {k:'vrinda', n:'Vrinda (Windows)', f:'Vrinda', local:true},
+  {k:'times', n:'Times New Roman (English papers)', f:'Times New Roman', local:true},
+  {k:'custom', n:'Another font on this computer…', custom:true},
+];
+const webLoaded = new Set(['Noto Serif Bengali','Hind Siliguri']);
+function fontInstalled(name){
+  try{ const c = document.createElement('canvas').getContext('2d'), t = 'বাংলা ক্ষ্ম Abg 123';
+    return ['monospace','serif','sans-serif'].some(b => { c.font = `20px ${b}`; const w0 = c.measureText(t).width; c.font = `20px "${name}", ${b}`; return c.measureText(t).width !== w0; }); }catch(e){ return true; }
+}
+function applyFont(){
+  const ft = S.font || (S.font = {k:'noto-serif', custom:''}), d = FONTS.find(x => x.k === ft.k) || FONTS[0];
+  const fam = d.custom ? (ft.custom || '').trim() : d.f;
+  if(d.web && !webLoaded.has(d.f)){ webLoaded.add(d.f); const l = document.createElement('link'); l.rel = 'stylesheet'; l.href = `https://fonts.googleapis.com/css2?family=${d.web}&display=swap`; l.onload = () => document.fonts.ready.then(afterFonts); document.head.append(l); }
+  document.documentElement.style.setProperty('--f-q', fam ? `"${fam.replace(/"/g,'')}",'Noto Serif Bengali','Noto Serif',serif` : '');
+  $('#fontCustom').hidden = !d.custom;
+  const missing = (d.local || d.custom) && fam && !fontInstalled(fam);
+  $('#fontHint').textContent = d.custom && !fam ? 'Type the name of a Unicode font installed on this computer.'
+    : missing ? `"${fam}" is not installed on this computer, so the default font is shown. Install it, or pick a font from the top of the list.`
+    : d.local || d.custom ? 'Uses the font installed on this computer. Bijoy fonts (SutonnyMJ etc.) do not work — use a Unicode font.'
+    : 'Loads automatically — works on any computer or phone.';
+  $('#fontHint').style.color = missing ? 'var(--warn)' : '';
+}
+$('#fontSel').innerHTML = `<optgroup label="Works everywhere">${FONTS.filter(x => x.web).map(x => `<option value="${x.k}">${x.n}</option>`).join('')}</optgroup>`
+  + `<optgroup label="Installed on this computer">${FONTS.filter(x => !x.web).map(x => `<option value="${x.k}">${x.n}</option>`).join('')}</optgroup>`;
+$('#fontSel').value = (S.font && S.font.k) || 'noto-serif';
+$('#fontCustom').value = (S.font && S.font.custom) || '';
+$('#fontSel').addEventListener('change', e => { S.font = {...(S.font || {}), k: e.target.value}; save(); applyFont(); rerenderSoon(); });
+$('#fontCustom').addEventListener('input', e => { S.font = {...(S.font || {}), custom: e.target.value}; save(); applyFont(); rerenderSoon(); });
+applyFont();
 
 /* ---------------- boot ---------------- */
 fillLook();
