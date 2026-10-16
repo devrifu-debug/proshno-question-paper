@@ -12,41 +12,61 @@
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.5 'Hind Siliguri',system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
 button,input,select{font:inherit;color:inherit}
-.wrap{max-width:860px;margin:0 auto;padding:16px 16px 60px}
+.wrap{max-width:900px;margin:0 auto;padding:16px 16px 60px}
 header{display:flex;align-items:center;gap:10px;justify-content:space-between;padding:6px 0 14px}
 h1{font-size:20px;margin:0}
 h1 b{color:var(--accent)}
 .card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px}
-.btn{border:1px solid var(--line);background:var(--surface-2);border-radius:10px;padding:8px 12px;cursor:pointer;font-weight:600;font-size:14px;white-space:nowrap}
+.btn{border:1px solid var(--line);background:var(--surface-2);border-radius:10px;padding:7px 12px;cursor:pointer;font-weight:600;font-size:14px;white-space:nowrap}
 .btn:hover{border-color:var(--accent)}
 .btn.pri{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
 .btn.bad{color:var(--red)}
+.btn.sm{padding:5px 10px;font-size:13px}
 .btn:disabled{opacity:.5;cursor:default}
-input,select{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:9px 11px;width:100%}
+input,select{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:8px 11px;width:100%}
 input:focus,select:focus{outline:2px solid var(--accent);outline-offset:-1px}
+input[type=datetime-local]{width:auto;min-width:220px;color-scheme:dark}
 label{font-size:13px;color:var(--muted);display:block;margin:0 0 4px}
 .tabs{display:flex;gap:6px;overflow-x:auto;padding:2px 0 12px}
 .tab{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 12px;cursor:pointer;white-space:nowrap;font-size:14px}
 .tab[aria-pressed=true]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);font-weight:700}
 .tab i{font-style:normal;opacity:.75;margin-left:4px}
 .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-.user{margin:10px 0}
+.user{margin:12px 0}
 .top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
-.nm{font-weight:700;font-size:16px}
+.nm{font-weight:700;font-size:17px}
 .sub{color:var(--muted);font-size:13.5px;word-break:break-all}
 .sub a{color:var(--accent);text-decoration:none}
 .chip{font-size:12.5px;font-weight:700;border-radius:999px;padding:3px 10px;white-space:nowrap}
-.s-waiting{background:rgba(255,61,147,.16);color:var(--red)}
+.s-waiting,.s-expired{background:rgba(255,61,147,.16);color:var(--red)}
 .s-trial{background:rgba(240,179,90,.16);color:var(--warn)}
 .s-approved{background:rgba(76,214,132,.15);color:var(--ok)}
-.s-expired{background:rgba(255,61,147,.16);color:var(--red)}
 .s-off{background:var(--surface-2);color:var(--muted)}
-.when{font-size:13.5px;margin:8px 0 10px}
+/* access box */
+.acc{background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:14px;margin:12px 0}
+.acc-top{display:flex;justify-content:space-between;align-items:flex-end;gap:10px;flex-wrap:wrap}
+.acc-k{font-size:12.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;font-weight:700}
+.acc-end{font-size:17px;font-weight:700}
+.acc-left{font-size:22px;font-weight:800;line-height:1.1;text-align:right}
+.acc-left small{display:block;font-size:12.5px;font-weight:600;color:var(--muted)}
+.c-ok{color:var(--ok)}.c-warn{color:var(--warn)}.c-bad{color:var(--red)}.c-mute{color:var(--muted)}
+.bar{height:6px;border-radius:99px;background:var(--surface-2);margin:10px 0 12px;overflow:hidden}
+.bar i{display:block;height:100%;border-radius:99px;background:var(--accent)}
+.edit{border-top:1px dashed var(--line);padding-top:12px}
+.edit .row+.row{margin-top:8px}
+.edit .lbl{font-size:13px;color:var(--muted);min-width:78px}
+/* details */
+.det{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:8px 16px;margin:4px 0 12px}
+.det div{font-size:14px}
+.det span{display:block;font-size:12px;color:var(--muted)}
+.phones{margin:0 0 12px;font-size:14px}
+.phones li{margin:2px 0}
+.phones ul{margin:4px 0 0;padding-left:18px}
 .acts{display:flex;gap:6px;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:10px}
-.acts .lbl{font-size:13px;color:var(--muted);align-self:center;margin-right:2px}
 .msg{padding:10px 12px;border-radius:10px;margin:10px 0;font-size:14px}
 .msg.bad{background:rgba(255,61,147,.14);color:var(--red)}
 .msg.ok{background:rgba(76,214,132,.12);color:var(--ok)}
+#flash{position:sticky;top:8px;z-index:5}
 .empty{color:var(--muted);text-align:center;padding:30px 10px}
 details summary{cursor:pointer;font-weight:700}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-top:12px}
@@ -79,67 +99,125 @@ details summary{cursor:pointer;font-weight:700}
 const $ = s => document.querySelector(s);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 let PW = ''; try { PW = sessionStorage.getItem('proshno-admin') || ''; } catch {}
-let USERS = [], TAB = 'waiting';
-const TABS = [['waiting', 'Waiting for approval'], ['trial', 'On free time'], ['approved', 'Approved'], ['expired', 'Access ended'], ['off', 'Switched off'], ['all', 'All']];
+let USERS = [], TAB = 'all';
+const TABS = [['all', 'All'], ['waiting', 'Waiting for approval'], ['trial', 'On free time'], ['approved', 'Approved'], ['expired', 'Access ended'], ['off', 'Switched off']];
+const H = 36e5, D = 864e5;
 async function call(method, url, body) {
   const r = await fetch('api/admin/' + url, { method, headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + PW }, body: body ? JSON.stringify(body) : undefined, cache: 'no-store' });
   const d = await r.json().catch(() => ({})); if (r.status === 401) { lock(d.message); throw new Error('locked'); } if (!r.ok) throw new Error(d.message || 'Failed'); return d;
 }
 function lock(msg) { PW = ''; try { sessionStorage.removeItem('proshno-admin'); } catch {} $('#main').hidden = true; $('#login').hidden = false; $('#loginMsg').innerHTML = msg ? `<div class="msg bad">${esc(msg)}</div>` : ''; }
-function flash(msg, ok = true) { $('#flash').innerHTML = `<div class="msg ${ok ? 'ok' : 'bad'}">${esc(msg)}</div>`; clearTimeout(flash.t); flash.t = setTimeout(() => $('#flash').innerHTML = '', 4000); }
-async function load() { try { const d = await call('GET', 'users'); USERS = d.users; $('#login').hidden = true; $('#main').hidden = false; draw(); } catch (e) { if (e.message !== 'locked') flash(e.message, false); } }
-const span = ms => { ms = Math.abs(ms); const d = Math.floor(ms / 864e5), h = Math.floor(ms % 864e5 / 36e5), m = Math.floor(ms % 36e5 / 6e4); return d ? `${d}d ${h}h` : h ? `${h}h ${m}m` : `${m}m`; };
-const day = t => new Date(t).toLocaleString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
-function when(u) {
-  const now = Date.now();
-  if (u.status === 'off') return 'Switched off — cannot use the app.';
-  if (u.status === 'trial') return `Free time ends in <b>${span(u.trialEnd - now)}</b> (${day(u.trialEnd)}).`;
-  if (u.status === 'waiting') return u.trialEnd ? `Free time ended <b>${span(now - u.trialEnd)} ago</b>. Cannot use the app until you approve.` : 'No access yet.';
-  if (u.status === 'expired') return `Access ended on <b>${esc(u.until)}</b>.`;
-  return u.until === 'forever' ? 'Approved with <b>no end date</b>.' : `Approved until <b>${esc(u.until)}</b> (${span(u.end - now)} left).`;
+function flash(msg, ok = true) { $('#flash').innerHTML = `<div class="msg ${ok ? 'ok' : 'bad'}">${esc(msg)}</div>`; clearTimeout(flash.t); flash.t = setTimeout(() => $('#flash').innerHTML = '', 4500); }
+async function load() { try { const d = await call('GET', 'users'); USERS = d.users; $('#login').hidden = true; $('#main').hidden = false; if (!USERS.some(u => u.status === TAB) && TAB !== 'all') TAB = 'all'; draw(); } catch (e) { if (e.message !== 'locked') flash(e.message, false); } }
+
+/* times are shown in Bangladesh time */
+const TZ = 'Asia/Dhaka';
+const fmt = t => t ? new Date(t).toLocaleString('en-GB', { timeZone: TZ, day: 'numeric', month: 'short', year: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true }) : '—';
+const fmtDay = t => new Date(t).toLocaleDateString('en-GB', { timeZone: TZ, day: 'numeric', month: 'short', year: 'numeric' });
+function span(ms) {
+  ms = Math.abs(ms); const d = Math.floor(ms / D), h = Math.floor(ms % D / H), m = Math.floor(ms % H / 6e4);
+  return d ? `${d} day${d > 1 ? 's' : ''}${h ? ` ${h} h` : ''}` : h ? `${h} h ${m} min` : `${Math.max(1, m)} min`;
 }
-const plusMonths = n => { const d = new Date(); d.setMonth(d.getMonth() + n); return d.toISOString().slice(0, 10); };
+const ago = t => t ? span(Date.now() - t) + ' ago' : 'never';
+// value for <input type=datetime-local> in Bangladesh time
+const toInput = t => { const d = new Date(t + 6 * H); return d.toISOString().slice(0, 16); };
+const fromInput = v => Date.parse(v + ':00+06:00');
+
+function access(u) {
+  const now = Date.now(), left = u.end - now;
+  if (u.status === 'off') return { k: 'Switched off', end: 'Cannot use the app', left: '', cls: 'c-mute', pct: 0 };
+  if (u.forever) return { k: 'Approved', end: 'No end date', left: '∞', sub: 'unlimited', cls: 'c-ok', pct: 100 };
+  if (!u.end) return { k: 'No access', end: 'Not approved yet', left: '', cls: 'c-bad', pct: 0 };
+  const start = u.status === 'trial' ? u.createdAt : (u.approvedAt || u.createdAt);
+  const pct = left > 0 ? Math.max(3, Math.min(100, left / Math.max(1, u.end - start) * 100)) : 0;
+  const k = u.status === 'trial' ? 'Free time ends' : u.status === 'approved' ? 'Access ends' : u.status === 'waiting' ? 'Free time ended' : 'Access ended';
+  return { k, end: fmt(u.end), left: left > 0 ? span(left) : span(left), sub: left > 0 ? 'left' : 'ago', cls: left <= 0 ? 'c-bad' : left < D ? 'c-warn' : 'c-ok', pct };
+}
+
 function draw() {
   const count = k => k === 'all' ? USERS.length : USERS.filter(u => u.status === k).length;
   $('#tabs').innerHTML = TABS.map(([k, t]) => `<button class="tab" data-tab="${k}" aria-pressed="${k === TAB}">${t}<i>${count(k)}</i></button>`).join('');
   const q = $('#q').value.trim().toLowerCase();
   const list = USERS.filter(u => (TAB === 'all' || u.status === TAB) && (!q || [u.name, u.phone, u.email].join(' ').toLowerCase().includes(q)));
-  $('#list').innerHTML = list.length ? list.map(u => {
-    const wa = u.phone ? 'https://wa.me/' + (u.phone.startsWith('88') ? u.phone : u.phone.startsWith('+') ? u.phone.slice(1) : '88' + u.phone) : '';
-    const st = { waiting: 'Waiting', trial: 'Free time', approved: 'Approved', expired: 'Ended', off: 'Off' }[u.status];
-    return `<div class="card user" data-email="${esc(u.email)}">
-      <div class="top"><div><div class="nm">${esc(u.name || '(no name)')}</div>
-        <div class="sub">${u.phone ? `<a href="tel:${esc(u.phone)}">${esc(u.phone)}</a> · <a href="${esc(wa)}" target="_blank" rel="noopener">WhatsApp</a> · ` : ''}${esc(u.email)}</div></div>
-        <span class="chip s-${u.status}">${st}</span></div>
-      <div class="when">${when(u)} <span class="sub">· joined ${day(u.createdAt)} · ${u.devices.length}/${u.maxDevices} phones${u.lastSeen ? ' · last opened ' + day(u.lastSeen) : ''}</span></div>
-      <div class="acts"><span class="lbl">Approve:</span>
-        <button class="btn pri" data-a="until" data-v="${plusMonths(1)}">1 month</button>
-        <button class="btn pri" data-a="until" data-v="${plusMonths(3)}">3 months</button>
-        <button class="btn pri" data-a="until" data-v="${plusMonths(12)}">1 year</button>
-        <button class="btn pri" data-a="until" data-v="forever">No end</button>
-        <button class="btn" data-a="date">Pick date…</button>
+  $('#list').innerHTML = list.length ? list.map(card).join('') : `<div class="empty">${TAB === 'waiting' ? 'Nobody is waiting for approval.' : 'No accounts here.'}</div>`;
+}
+function card(u) {
+  const wa = u.phone ? 'https://wa.me/' + (u.phone.startsWith('88') ? u.phone : u.phone.startsWith('+') ? u.phone.slice(1) : '88' + u.phone) : '';
+  const st = { waiting: 'Waiting for approval', trial: 'Free time', approved: 'Approved', expired: 'Access ended', off: 'Switched off' }[u.status];
+  const a = access(u), now = Date.now();
+  const startEdit = u.end && !u.forever ? Math.max(u.end, now) : now;
+  return `<div class="card user" data-email="${esc(u.email)}">
+    <div class="top"><div><div class="nm">${esc(u.name || '(no name)')}</div>
+      <div class="sub">${u.phone ? `<a href="tel:${esc(u.phone)}">${esc(u.phone)}</a> · <a href="${esc(wa)}" target="_blank" rel="noopener">WhatsApp</a> · ` : ''}${esc(u.email)}</div></div>
+      <span class="chip s-${u.status}">${st}</span></div>
+
+    <div class="acc">
+      <div class="acc-top"><div><div class="acc-k">${a.k}</div><div class="acc-end">${a.end}</div></div>
+        ${a.left ? `<div class="acc-left ${a.cls}">${a.left}<small>${a.sub || ''}</small></div>` : ''}</div>
+      <div class="bar"><i style="width:${a.pct}%;background:${a.cls === 'c-bad' ? 'var(--red)' : a.cls === 'c-warn' ? 'var(--warn)' : a.cls === 'c-mute' ? 'var(--line)' : 'var(--ok)'}"></i></div>
+      <div class="edit">
+        <div class="row"><span class="lbl">Add time</span>
+          <button class="btn sm pri" data-a="add" data-v="1">+1 day</button>
+          <button class="btn sm pri" data-a="add" data-v="7">+7 days</button>
+          <button class="btn sm pri" data-a="add" data-v="30">+1 month</button>
+          <button class="btn sm pri" data-a="add" data-v="90">+3 months</button>
+          <button class="btn sm pri" data-a="add" data-v="365">+1 year</button>
+          <button class="btn sm pri" data-a="forever" ${u.forever ? 'disabled' : ''}>No end</button></div>
+        <div class="row"><span class="lbl">Remove</span>
+          <button class="btn sm" data-a="add" data-v="-1" ${u.end > now ? '' : 'disabled'}>−1 day</button>
+          <button class="btn sm" data-a="add" data-v="-7" ${u.end > now ? '' : 'disabled'}>−7 days</button>
+          <button class="btn sm bad" data-a="endnow" ${u.end > now || u.forever ? '' : 'disabled'}>End now</button></div>
+        <div class="row"><span class="lbl">Exact end</span>
+          <input type="datetime-local" class="endIn" value="${toInput(u.forever ? now + 30 * D : startEdit)}">
+          <button class="btn sm pri" data-a="set">Save end time</button></div>
+        <div class="sub" style="margin-top:6px">“Add time” counts from ${u.end > now && !u.forever ? 'the current end' : 'now'}. Times are Bangladesh time.</div>
       </div>
-      <div class="acts" style="border-top:0;padding-top:6px">
-        ${u.until ? '<button class="btn" data-a="until" data-v="">Remove approval</button>' : ''}
-        <button class="btn" data-a="toggle">${u.disabled ? 'Switch on' : 'Switch off'}</button>
-        <button class="btn" data-a="reset" ${u.devices.length ? '' : 'disabled'}>Reset phones</button>
-        <button class="btn" data-a="pw">New password</button>
-        <button class="btn bad" data-a="del">Delete</button>
-      </div></div>`;
-  }).join('') : `<div class="empty">${TAB === 'waiting' ? 'Nobody is waiting for approval.' : 'No accounts here.'}</div>`;
+    </div>
+
+    <div class="det">
+      <div><span>Joined</span>${fmt(u.createdAt)}<br><span>${ago(u.createdAt)}</span></div>
+      <div><span>Free time</span>${u.trialEnd ? (u.trialEnd > now ? 'ends ' : 'ended ') + fmt(u.trialEnd) : 'none'}</div>
+      <div><span>Approved until</span>${u.until === 'forever' ? 'No end' : u.untilEnd ? fmt(u.untilEnd) : 'not approved'}</div>
+      <div><span>Last opened the app</span>${u.lastSeen ? fmt(u.lastSeen) + `<br><span>${ago(u.lastSeen)}</span>` : 'never'}</div>
+    </div>
+    <div class="phones"><b>Phones ${u.devices.length}/${u.maxDevices}</b>
+      ${u.devices.length ? `<ul>${u.devices.map(d => `<li>${esc(d.name)} — since ${fmtDay(d.since)}, last used ${ago(d.lastSeen)}</li>`).join('')}</ul>` : '<span class="sub"> · none yet</span>'}
+      <span class="row" style="margin-top:6px"><span class="sub">Allow</span><select class="maxDev" style="width:auto">${[1,2,3,4,5].map(n => `<option ${n === u.maxDevices ? 'selected' : ''}>${n}</option>`).join('')}</select><span class="sub">phones</span></span>
+    </div>
+    <div class="acts">
+      <button class="btn" data-a="toggle">${u.disabled ? 'Switch on' : 'Switch off'}</button>
+      <button class="btn" data-a="reset" ${u.devices.length ? '' : 'disabled'}>Reset phones</button>
+      <button class="btn" data-a="pw">New password</button>
+      <button class="btn bad" data-a="del">Delete</button>
+    </div></div>`;
 }
 async function patch(email, body, msg) { try { const d = await call('PATCH', 'users/' + encodeURIComponent(email), body); USERS = USERS.map(u => u.email === email ? d.user : u); draw(); flash(msg); } catch (e) { if (e.message !== 'locked') flash(e.message, false); } }
 document.addEventListener('click', async e => {
   const t = e.target.closest('[data-tab]'); if (t) { TAB = t.dataset.tab; draw(); return; }
-  const b = e.target.closest('[data-a]'); if (!b) return;
-  const email = b.closest('[data-email]').dataset.email, u = USERS.find(x => x.email === email), who = u.name || u.email;
-  const a = b.dataset.a;
-  if (a === 'until') return patch(email, { until: b.dataset.v }, b.dataset.v === '' ? `Approval removed for ${who}.` : `${who} approved ${b.dataset.v === 'forever' ? 'with no end' : 'until ' + b.dataset.v}.`);
-  if (a === 'date') { const v = prompt('Approve until (YYYY-MM-DD):', plusMonths(1)); if (v) patch(email, { until: v.trim() }, `${who} approved until ${v.trim()}.`); return; }
+  const b = e.target.closest('[data-a]'); if (!b || b.disabled) return;
+  const box = b.closest('[data-email]'), email = box.dataset.email, u = USERS.find(x => x.email === email), who = u.name || u.email;
+  const a = b.dataset.a, now = Date.now();
+  if (a === 'add') {
+    const n = +b.dataset.v, base = u.forever ? now : n > 0 ? Math.max(u.end || 0, now) : u.end;
+    const t = Math.max(now, base + n * D);
+    return patch(email, { endAt: t }, `${who}: access now ends ${fmt(t)}.`);
+  }
+  if (a === 'forever') return patch(email, { endAt: 'forever' }, `${who}: approved with no end date.`);
+  if (a === 'endnow') { if (!confirm(`End ${who}'s access now? The app locks the next time their phone is online.`)) return; return patch(email, { endAt: now }, `${who}: access ended.`); }
+  if (a === 'set') {
+    const v = box.querySelector('.endIn').value; const t = fromInput(v);
+    if (!v || isNaN(t)) return flash('Pick a date and time first.', false);
+    return patch(email, { endAt: t }, `${who}: access now ends ${fmt(t)}.`);
+  }
   if (a === 'toggle') return patch(email, { disabled: !u.disabled }, `${who} switched ${u.disabled ? 'on' : 'off'}.`);
   if (a === 'reset') return patch(email, { resetDevices: true }, `${who} can now sign in on new phones.`);
   if (a === 'pw') { const v = prompt(`New password for ${who} (at least 6 characters):`); if (v) patch(email, { password: v }, `Password changed for ${who}. Tell them the new one.`); return; }
   if (a === 'del') { if (!confirm(`Delete ${who}'s account? This cannot be undone.`)) return; try { await call('DELETE', 'users/' + encodeURIComponent(email)); USERS = USERS.filter(x => x.email !== email); draw(); flash(`${who} deleted.`); } catch (e2) { if (e2.message !== 'locked') flash(e2.message, false); } }
+});
+document.addEventListener('change', e => {
+  if (!e.target.classList.contains('maxDev')) return;
+  const email = e.target.closest('[data-email]').dataset.email, u = USERS.find(x => x.email === email);
+  patch(email, { maxDevices: +e.target.value }, `${u.name || u.email} can now use ${e.target.value} phone${e.target.value > 1 ? 's' : ''}.`);
 });
 $('#q').addEventListener('input', draw);
 $('#reload').onclick = load;
@@ -149,7 +227,8 @@ $('#addForm').onsubmit = async e => {
   e.preventDefault(); const f = Object.fromEntries(new FormData(e.target)); f.until = f.until || 'forever';
   try { const d = await call('POST', 'users', f); USERS.unshift(d.user); e.target.reset(); TAB = 'all'; draw(); flash('Account added.'); } catch (e2) { if (e2.message !== 'locked') flash(e2.message, false); }
 };
-setInterval(() => { if (!$('#main').hidden) draw(); }, 60000);
+// keep the times fresh, but never while you are typing or picking a date
+setInterval(() => { if (!$('#main').hidden && !document.activeElement?.closest?.('#list')) draw(); }, 60000);
 if (PW) load(); else lock();
 </script>
 </body>

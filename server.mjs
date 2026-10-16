@@ -85,7 +85,8 @@ function checkPassword(pw, stored) {
 const DUMMY_HASH = hashPassword(crypto.randomBytes(12).toString('hex'));   // so a wrong email takes as long as a wrong password
 
 // until: '' = free trial only · 'YYYY-MM-DD' = approved to the end of that day (Bangladesh time) · 'forever'
-const untilEnd = u => u.until === 'forever' ? Infinity : u.until ? Date.parse(u.until + 'T23:59:59.999+06:00') : 0;
+// until: '' = free trial only · 'YYYY-MM-DD' = to the end of that day (Bangladesh time) · a full ISO time = exactly then · 'forever'
+const untilEnd = u => u.until === 'forever' ? Infinity : !u.until ? 0 : u.until.includes('T') ? Date.parse(u.until) : Date.parse(u.until + 'T23:59:59.999+06:00');
 const accessEnd = u => Math.max(u.trialEnd || 0, untilEnd(u));
 const onTrial = u => !u.until || untilEnd(u) < (u.trialEnd || 0);
 function refusal(u, device) {
@@ -130,7 +131,7 @@ function readBody(req) {
   });
 }
 const status = u => u.disabled ? 'off' : accessEnd(u) < Date.now() ? (u.until ? 'expired' : 'waiting') : onTrial(u) ? 'trial' : 'approved';
-const publicUser = u => ({ email: u.email, name: u.name || '', phone: u.phone || '', until: u.until || '', trialEnd: u.trialEnd || 0, end: accessEnd(u) === Infinity ? 0 : accessEnd(u), status: status(u),
+const publicUser = u => ({ email: u.email, name: u.name || '', phone: u.phone || '', until: u.until || '', trialEnd: u.trialEnd || 0, untilEnd: untilEnd(u) === Infinity ? 0 : untilEnd(u), end: accessEnd(u) === Infinity ? 0 : accessEnd(u), forever: accessEnd(u) === Infinity, approvedAt: u.approvedAt || 0, status: status(u),
   disabled: !!u.disabled, maxDevices: u.maxDevices, devices: u.devices.map(d => ({ name: d.name, since: d.since, lastSeen: d.lastSeen })), createdAt: u.createdAt, lastSeen: u.lastSeen || null });
 const validUntil = s => s === '' || s === 'forever' || (/^\d{4}-\d{2}-\d{2}$/.test(s) && !isNaN(Date.parse(s)));
 const deviceName = s => String(s || 'Phone').slice(0, 80);
@@ -206,6 +207,12 @@ async function api(req, res, route) {
     if (u && req.method === 'PATCH') {
       if (body.password != null) { if (String(body.password).length < 6) return fail(res, 400, 'bad_request', 'The password needs at least 6 characters.'); u.pass = hashPassword(String(body.password)); u.v++; }
       if (body.until != null) { if (!validUntil(String(body.until))) return fail(res, 400, 'bad_request', 'Access must be a date or "forever".'); u.until = String(body.until); }
+      // the admin sets the exact end of access: 'forever' or a time in ms (this replaces any free time left)
+      if (body.endAt != null) {
+        u.approvedAt = Date.now();
+        if (body.endAt === 'forever') u.until = 'forever';
+        else { const t = Math.round(+body.endAt); if (!isFinite(t) || t < 0 || t > Date.now() + 50 * 365 * DAY) return fail(res, 400, 'bad_request', 'That end time is not valid.'); u.until = new Date(t).toISOString(); u.trialEnd = Math.min(u.trialEnd || 0, t); }
+      }
       if (body.disabled != null) u.disabled = !!body.disabled;
       if (body.maxDevices != null) u.maxDevices = Math.max(1, Math.min(10, +body.maxDevices || DEFAULT_MAX_DEVICES));
       if (body.resetDevices) u.devices = [];
