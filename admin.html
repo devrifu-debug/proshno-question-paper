@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#101219">
+<title>Proshno admin</title>
+<link rel="icon" href="icons/favicon-32.png" type="image/png">
+<style>
+:root{--bg:#101219;--surface:#181B24;--surface-2:#1F2330;--line:#2B3040;--fg:#EEF1F7;--muted:#9AA3B5;--accent:#1CD5E5;--accent-ink:#0B1B4D;--red:#FF3D93;--ok:#4CD684;--warn:#F0B35A;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.5 'Hind Siliguri',system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+button,input,select{font:inherit;color:inherit}
+.wrap{max-width:860px;margin:0 auto;padding:16px 16px 60px}
+header{display:flex;align-items:center;gap:10px;justify-content:space-between;padding:6px 0 14px}
+h1{font-size:20px;margin:0}
+h1 b{color:var(--accent)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px}
+.btn{border:1px solid var(--line);background:var(--surface-2);border-radius:10px;padding:8px 12px;cursor:pointer;font-weight:600;font-size:14px;white-space:nowrap}
+.btn:hover{border-color:var(--accent)}
+.btn.pri{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.btn.bad{color:var(--red)}
+.btn:disabled{opacity:.5;cursor:default}
+input,select{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:9px 11px;width:100%}
+input:focus,select:focus{outline:2px solid var(--accent);outline-offset:-1px}
+label{font-size:13px;color:var(--muted);display:block;margin:0 0 4px}
+.tabs{display:flex;gap:6px;overflow-x:auto;padding:2px 0 12px}
+.tab{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 12px;cursor:pointer;white-space:nowrap;font-size:14px}
+.tab[aria-pressed=true]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);font-weight:700}
+.tab i{font-style:normal;opacity:.75;margin-left:4px}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.user{margin:10px 0}
+.top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.nm{font-weight:700;font-size:16px}
+.sub{color:var(--muted);font-size:13.5px;word-break:break-all}
+.sub a{color:var(--accent);text-decoration:none}
+.chip{font-size:12.5px;font-weight:700;border-radius:999px;padding:3px 10px;white-space:nowrap}
+.s-waiting{background:rgba(255,61,147,.16);color:var(--red)}
+.s-trial{background:rgba(240,179,90,.16);color:var(--warn)}
+.s-approved{background:rgba(76,214,132,.15);color:var(--ok)}
+.s-expired{background:rgba(255,61,147,.16);color:var(--red)}
+.s-off{background:var(--surface-2);color:var(--muted)}
+.when{font-size:13.5px;margin:8px 0 10px}
+.acts{display:flex;gap:6px;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:10px}
+.acts .lbl{font-size:13px;color:var(--muted);align-self:center;margin-right:2px}
+.msg{padding:10px 12px;border-radius:10px;margin:10px 0;font-size:14px}
+.msg.bad{background:rgba(255,61,147,.14);color:var(--red)}
+.msg.ok{background:rgba(76,214,132,.12);color:var(--ok)}
+.empty{color:var(--muted);text-align:center;padding:30px 10px}
+details summary{cursor:pointer;font-weight:700}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-top:12px}
+#login{max-width:380px;margin:12vh auto 0}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div id="login" class="card" hidden>
+    <h1 style="margin-bottom:12px"><b>প্রশ্ন</b> admin</h1>
+    <form id="loginForm"><label for="pw">Admin password</label><input id="pw" type="password" autocomplete="current-password" autofocus>
+      <div id="loginMsg"></div><button class="btn pri" style="margin-top:12px;width:100%">Open</button></form>
+  </div>
+  <div id="main" hidden>
+    <header><h1><b>প্রশ্ন</b> admin</h1><div class="row"><button class="btn" id="reload">Refresh</button><button class="btn" id="logout">Lock</button></div></header>
+    <div id="flash"></div>
+    <div class="row" style="margin-bottom:10px"><input id="q" type="search" placeholder="Search name, mobile or email" style="flex:1;min-width:200px"></div>
+    <div class="tabs" id="tabs"></div>
+    <div id="list"></div>
+    <details class="card" style="margin-top:18px"><summary>Add an account yourself</summary>
+      <form id="addForm"><div class="grid">
+        <div><label>Name</label><input name="name"></div><div><label>Mobile</label><input name="phone" inputmode="tel"></div>
+        <div><label>Email *</label><input name="email" type="email" required></div><div><label>Password * (6+)</label><input name="password" required minlength="6"></div>
+        <div><label>Access until (empty = no end)</label><input name="until" type="date"></div></div>
+        <button class="btn pri" style="margin-top:12px">Add account</button></form>
+    </details>
+  </div>
+</div>
+<script>
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let PW = ''; try { PW = sessionStorage.getItem('proshno-admin') || ''; } catch {}
+let USERS = [], TAB = 'waiting';
+const TABS = [['waiting', 'Waiting for approval'], ['trial', 'On free time'], ['approved', 'Approved'], ['expired', 'Access ended'], ['off', 'Switched off'], ['all', 'All']];
+async function call(method, url, body) {
+  const r = await fetch('api/admin/' + url, { method, headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + PW }, body: body ? JSON.stringify(body) : undefined, cache: 'no-store' });
+  const d = await r.json().catch(() => ({})); if (r.status === 401) { lock(d.message); throw new Error('locked'); } if (!r.ok) throw new Error(d.message || 'Failed'); return d;
+}
+function lock(msg) { PW = ''; try { sessionStorage.removeItem('proshno-admin'); } catch {} $('#main').hidden = true; $('#login').hidden = false; $('#loginMsg').innerHTML = msg ? `<div class="msg bad">${esc(msg)}</div>` : ''; }
+function flash(msg, ok = true) { $('#flash').innerHTML = `<div class="msg ${ok ? 'ok' : 'bad'}">${esc(msg)}</div>`; clearTimeout(flash.t); flash.t = setTimeout(() => $('#flash').innerHTML = '', 4000); }
+async function load() { try { const d = await call('GET', 'users'); USERS = d.users; $('#login').hidden = true; $('#main').hidden = false; draw(); } catch (e) { if (e.message !== 'locked') flash(e.message, false); } }
+const span = ms => { ms = Math.abs(ms); const d = Math.floor(ms / 864e5), h = Math.floor(ms % 864e5 / 36e5), m = Math.floor(ms % 36e5 / 6e4); return d ? `${d}d ${h}h` : h ? `${h}h ${m}m` : `${m}m`; };
+const day = t => new Date(t).toLocaleString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+function when(u) {
+  const now = Date.now();
+  if (u.status === 'off') return 'Switched off — cannot use the app.';
+  if (u.status === 'trial') return `Free time ends in <b>${span(u.trialEnd - now)}</b> (${day(u.trialEnd)}).`;
+  if (u.status === 'waiting') return u.trialEnd ? `Free time ended <b>${span(now - u.trialEnd)} ago</b>. Cannot use the app until you approve.` : 'No access yet.';
+  if (u.status === 'expired') return `Access ended on <b>${esc(u.until)}</b>.`;
+  return u.until === 'forever' ? 'Approved with <b>no end date</b>.' : `Approved until <b>${esc(u.until)}</b> (${span(u.end - now)} left).`;
+}
+const plusMonths = n => { const d = new Date(); d.setMonth(d.getMonth() + n); return d.toISOString().slice(0, 10); };
+function draw() {
+  const count = k => k === 'all' ? USERS.length : USERS.filter(u => u.status === k).length;
+  $('#tabs').innerHTML = TABS.map(([k, t]) => `<button class="tab" data-tab="${k}" aria-pressed="${k === TAB}">${t}<i>${count(k)}</i></button>`).join('');
+  const q = $('#q').value.trim().toLowerCase();
+  const list = USERS.filter(u => (TAB === 'all' || u.status === TAB) && (!q || [u.name, u.phone, u.email].join(' ').toLowerCase().includes(q)));
+  $('#list').innerHTML = list.length ? list.map(u => {
+    const wa = u.phone ? 'https://wa.me/' + (u.phone.startsWith('88') ? u.phone : u.phone.startsWith('+') ? u.phone.slice(1) : '88' + u.phone) : '';
+    const st = { waiting: 'Waiting', trial: 'Free time', approved: 'Approved', expired: 'Ended', off: 'Off' }[u.status];
+    return `<div class="card user" data-email="${esc(u.email)}">
+      <div class="top"><div><div class="nm">${esc(u.name || '(no name)')}</div>
+        <div class="sub">${u.phone ? `<a href="tel:${esc(u.phone)}">${esc(u.phone)}</a> · <a href="${esc(wa)}" target="_blank" rel="noopener">WhatsApp</a> · ` : ''}${esc(u.email)}</div></div>
+        <span class="chip s-${u.status}">${st}</span></div>
+      <div class="when">${when(u)} <span class="sub">· joined ${day(u.createdAt)} · ${u.devices.length}/${u.maxDevices} phones${u.lastSeen ? ' · last opened ' + day(u.lastSeen) : ''}</span></div>
+      <div class="acts"><span class="lbl">Approve:</span>
+        <button class="btn pri" data-a="until" data-v="${plusMonths(1)}">1 month</button>
+        <button class="btn pri" data-a="until" data-v="${plusMonths(3)}">3 months</button>
+        <button class="btn pri" data-a="until" data-v="${plusMonths(12)}">1 year</button>
+        <button class="btn pri" data-a="until" data-v="forever">No end</button>
+        <button class="btn" data-a="date">Pick date…</button>
+      </div>
+      <div class="acts" style="border-top:0;padding-top:6px">
+        ${u.until ? '<button class="btn" data-a="until" data-v="">Remove approval</button>' : ''}
+        <button class="btn" data-a="toggle">${u.disabled ? 'Switch on' : 'Switch off'}</button>
+        <button class="btn" data-a="reset" ${u.devices.length ? '' : 'disabled'}>Reset phones</button>
+        <button class="btn" data-a="pw">New password</button>
+        <button class="btn bad" data-a="del">Delete</button>
+      </div></div>`;
+  }).join('') : `<div class="empty">${TAB === 'waiting' ? 'Nobody is waiting for approval.' : 'No accounts here.'}</div>`;
+}
+async function patch(email, body, msg) { try { const d = await call('PATCH', 'users/' + encodeURIComponent(email), body); USERS = USERS.map(u => u.email === email ? d.user : u); draw(); flash(msg); } catch (e) { if (e.message !== 'locked') flash(e.message, false); } }
+document.addEventListener('click', async e => {
+  const t = e.target.closest('[data-tab]'); if (t) { TAB = t.dataset.tab; draw(); return; }
+  const b = e.target.closest('[data-a]'); if (!b) return;
+  const email = b.closest('[data-email]').dataset.email, u = USERS.find(x => x.email === email), who = u.name || u.email;
+  const a = b.dataset.a;
+  if (a === 'until') return patch(email, { until: b.dataset.v }, b.dataset.v === '' ? `Approval removed for ${who}.` : `${who} approved ${b.dataset.v === 'forever' ? 'with no end' : 'until ' + b.dataset.v}.`);
+  if (a === 'date') { const v = prompt('Approve until (YYYY-MM-DD):', plusMonths(1)); if (v) patch(email, { until: v.trim() }, `${who} approved until ${v.trim()}.`); return; }
+  if (a === 'toggle') return patch(email, { disabled: !u.disabled }, `${who} switched ${u.disabled ? 'on' : 'off'}.`);
+  if (a === 'reset') return patch(email, { resetDevices: true }, `${who} can now sign in on new phones.`);
+  if (a === 'pw') { const v = prompt(`New password for ${who} (at least 6 characters):`); if (v) patch(email, { password: v }, `Password changed for ${who}. Tell them the new one.`); return; }
+  if (a === 'del') { if (!confirm(`Delete ${who}'s account? This cannot be undone.`)) return; try { await call('DELETE', 'users/' + encodeURIComponent(email)); USERS = USERS.filter(x => x.email !== email); draw(); flash(`${who} deleted.`); } catch (e2) { if (e2.message !== 'locked') flash(e2.message, false); } }
+});
+$('#q').addEventListener('input', draw);
+$('#reload').onclick = load;
+$('#logout').onclick = () => lock();
+$('#loginForm').onsubmit = e => { e.preventDefault(); PW = $('#pw').value; try { sessionStorage.setItem('proshno-admin', PW); } catch {} load(); };
+$('#addForm').onsubmit = async e => {
+  e.preventDefault(); const f = Object.fromEntries(new FormData(e.target)); f.until = f.until || 'forever';
+  try { const d = await call('POST', 'users', f); USERS.unshift(d.user); e.target.reset(); TAB = 'all'; draw(); flash('Account added.'); } catch (e2) { if (e2.message !== 'locked') flash(e2.message, false); }
+};
+setInterval(() => { if (!$('#main').hidden) draw(); }, 60000);
+if (PW) load(); else lock();
+</script>
+</body>
+</html>

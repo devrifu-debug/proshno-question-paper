@@ -6,6 +6,51 @@
 <title>প্রশ্ন — প্রশ্নপত্র ও এমসিকিউ</title>
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#101219">
+<script src="auth-config.js"></script>
+<script>if(window.PROSHNO_AUTH)document.documentElement.classList.add("authwait")</script>
+<style id="authcss">
+html.authwait body>*:not(#gate){visibility:hidden}
+#gate{position:fixed;inset:0;z-index:2147483000;background:radial-gradient(900px 420px at 50% -10%,var(--accent-soft),transparent 70%),var(--bg);overflow:auto;display:flex;align-items:flex-start;justify-content:center;padding:max(20px,env(safe-area-inset-top)) 16px 32px;color:var(--fg);font-family:var(--f-ui)}
+#gate[hidden]{display:none}
+.g-card{width:100%;max-width:420px;margin:auto 0;background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:20px 20px 22px;box-shadow:var(--shadow)}
+.g-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.g-logo{font-size:30px;font-weight:800;color:var(--accent);position:relative;line-height:1}
+.g-logo::after{content:"";position:absolute;right:-12px;top:2px;width:8px;height:8px;border-radius:50%;background:var(--red)}
+#gate .langsw{margin-left:0}
+#gate h2{font-size:23px;margin:4px 0 4px;line-height:1.3}
+.g-sub{color:var(--muted);margin:0 0 14px;font-size:15px}
+.g-sub b{color:var(--accent)}
+#gate label{display:block;font-size:14px;font-weight:600;margin:12px 0 5px}
+#gate input{width:100%;background:var(--bg);border:1.5px solid var(--line);border-radius:12px;padding:12px 13px;font:16px var(--f-ui);color:var(--fg);min-height:48px}
+#gate input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--glow)}
+.g-pw{position:relative}.g-pw input{padding-right:48px}
+.g-eye{position:absolute;right:4px;top:4px;bottom:4px;width:42px;border:0;background:none;color:var(--muted);cursor:pointer;border-radius:10px}
+.g-main,.g-second,.g-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:50px;border-radius:14px;font:700 16px var(--f-ui);cursor:pointer;margin-top:16px;text-decoration:none}
+.g-main{border:0;background:var(--accent);color:var(--accent-ink);box-shadow:0 6px 20px var(--glow)}
+.g-main:disabled{opacity:.7}
+.g-second{background:transparent;border:1.5px solid var(--accent);color:var(--accent);margin-top:0}
+.g-or{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:13px;margin:18px 0 12px}.g-or::before,.g-or::after{content:"";flex:1;height:1px;background:var(--line)}
+.g-alt{text-align:center;color:var(--muted);font-size:14.5px;margin:16px 0 0}
+.g-alt button{border:0;background:none;color:var(--accent);font:700 14.5px var(--f-ui);cursor:pointer;padding:6px}
+.g-msg{background:var(--red-soft);color:var(--red);border-radius:12px;padding:10px 12px;margin-top:14px;font-size:14.5px}
+.g-lock{font-size:42px;margin:4px 0 6px}
+.g-contact{background:var(--surface-2);border:1px solid var(--line);border-radius:14px;padding:12px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.g-contact span{flex:1 1 100%;font-size:15px}
+.g-contact .g-btn{flex:1;margin:0;min-height:44px;font-size:15px;border:1.5px solid var(--line);color:var(--fg);background:var(--surface)}
+.g-contact .g-wa{background:#25D366;border-color:#25D366;color:#06210f}
+.g-load{display:flex;justify-content:center;padding:40px 0}
+.g-spin{width:18px;height:18px;border-radius:50%;border:2.5px solid currentColor;border-right-color:transparent;animation:gspin .7s linear infinite;display:inline-block}
+.g-load .g-spin{width:30px;height:30px;color:var(--accent)}
+@keyframes gspin{to{transform:rotate(360deg)}}
+.acct{position:absolute;top:max(14px,env(safe-area-inset-top));left:16px;right:120px;display:flex;flex-wrap:wrap;align-items:center;gap:4px 8px;font-size:13px;line-height:1.3}
+.acct[hidden]{display:none}
+.acct-n{font-weight:700;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.acct-t{color:var(--warn);background:var(--warn-soft);border-radius:999px;padding:2px 8px;font-weight:600;white-space:nowrap}
+.acct-t.ok{color:var(--accent-t);background:var(--accent-soft)}
+.acct button{border:0;background:none;color:var(--muted);font:600 13px var(--f-ui);text-decoration:underline;cursor:pointer;padding:2px}
+.home:has(.acct:not([hidden])) .in{padding-top:44px}
+</style>
+
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="প্রশ্ন">
@@ -1381,6 +1426,217 @@ I18N.addPats([
 I18N.onChange(l => { try{ $('#chkFrame').contentWindow?.postMessage({proshnoLang: l}, location.origin); }catch(e){} });
 $('#chkFrame').addEventListener('load', () => { try{ $('#chkFrame').contentWindow.postMessage({proshnoLang: I18N.lang}, location.origin); }catch(e){} });
 I18N.start();
+/* ---------------- sign-in (only when the app is served by server.mjs) ----------------
+   server.mjs serves auth-config.js with its public key. Without it (a plain static copy, the preview) the app stays open.
+   Anyone can make an account; it works for the free days, then the app stays locked until the admin approves it.
+   The phone keeps a signed pass, so the app also works offline — but never past the end of the person's access. */
+(function () {
+  const CFG = window.PROSHNO_AUTH; if (!CFG || !CFG.key) return;
+  const BASE = window.PROSHNO_AUTH_BASE || '';
+  const GUARD = window.PROSHNO_AUTH_MODE === 'guard';   // the MCQ test page: no screens of its own, sends people to the app
+  const LS = {
+    get(k, d) { try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
+    set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} },
+    del(k) { try { localStorage.removeItem(k); } catch (e) {} },
+  };
+  const K = 'proshno-auth', KD = 'proshno-device';
+  const device = () => { let d = LS.get(KD, ''); if (!d) { d = (crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).slice(2) + Date.now().toString(36)); LS.set(KD, d); } return d; };
+  const bytes = s => { const b = atob(s.replace(/-/g, '+').replace(/_/g, '/') + '==='.slice((s.length + 3) % 4)); return Uint8Array.from(b, c => c.charCodeAt(0)); };
+  let key = null;
+  // the pass payload if it is genuine and was given to this phone (expired or not)
+  async function read() {
+    const a = LS.get(K, null); if (!a || !a.token || !crypto.subtle) return null;
+    try {
+      const [body, sig] = a.token.split('.');
+      key = key || await crypto.subtle.importKey('jwk', CFG.key, { name: 'ECDSA', namedCurve: 'P-256' }, false, ['verify']);
+      if (!await crypto.subtle.verify({ name: 'ECDSA', hash: 'SHA-256' }, key, bytes(sig), new TextEncoder().encode(body))) return null;
+      const p = JSON.parse(new TextDecoder().decode(bytes(body)));
+      return p.d === device() ? p : null;
+    } catch (e) { return null; }
+  }
+  const valid = p => !!p && p.exp > Date.now();
+
+  if (GUARD) {
+    if (window.parent !== window) return;   // inside the app: the app's own sign-in screen covers it
+    const go = async () => { if (!valid(await read())) location.replace(BASE || '../'); };
+    go(); setInterval(go, 30000); document.addEventListener('visibilitychange', () => document.visibilityState === 'visible' && go());
+    return;
+  }
+
+  /* ---------- texts ---------- */
+  const HAS_I18N = typeof I18N !== 'undefined';
+  const lang = () => (HAS_I18N ? I18N.lang : 'bn');
+  const T = (bn, en) => lang() === 'en' ? en : bn;
+  const N = s => lang() === 'en' ? String(s) : String(s).replace(/[0-9]/g, d => '০১২৩৪৫৬৭৮৯'[d]);
+  const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const DAYS = CFG.trialDays || 2;
+  function left(ms) {
+    ms = Math.max(0, ms); const d = Math.floor(ms / 864e5), h = Math.floor(ms % 864e5 / 36e5), m = Math.max(1, Math.floor(ms % 36e5 / 6e4));
+    if (d) return T(`${N(d)} দিন ${N(h)} ঘণ্টা`, `${d} day${d > 1 ? 's' : ''} ${h} h`);
+    if (h) return T(`${N(h)} ঘণ্টা ${N(m)} মিনিট`, `${h} h ${m} min`);
+    return T(`${N(m)} মিনিট`, `${m} min`);
+  }
+  const ERR = {
+    wrong: () => T('ইমেইল বা পাসওয়ার্ড ভুল।', 'Wrong email or password.'),
+    bad_request: () => T('সব ঘর পূরণ করুন।', 'Please fill in every box.'),
+    bad_phone: () => T('সঠিক মোবাইল নম্বর দিন (যেমন ০১৭XXXXXXXX)।', 'Enter a valid mobile number (like 017XXXXXXXX).'),
+    bad_email: () => T('সঠিক ইমেইল দিন।', 'Enter a valid email.'),
+    short_password: () => T('পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে।', 'The password needs at least 6 characters.'),
+    exists: () => T('এই ইমেইলে আগেই অ্যাকাউন্ট আছে। সাইন ইন করুন।', 'This email already has an account. Sign in instead.'),
+    phone_exists: () => T('এই মোবাইল নম্বরে আগেই অ্যাকাউন্ট আছে। সাইন ইন করুন।', 'This mobile number already has an account. Sign in instead.'),
+    too_many: () => T('অনেকবার চেষ্টা হয়েছে। ১৫ মিনিট পরে আবার চেষ্টা করুন।', 'Too many tries. Please try again in 15 minutes.'),
+    devices: () => T('এই অ্যাকাউন্ট আগেই ২টি ফোনে চালু আছে। নতুন ফোনে চালাতে অ্যাডমিনের সাথে যোগাযোগ করুন।', 'This account is already used on 2 phones. Contact the admin to use it on a new phone.'),
+    signed_out: () => T('আবার সাইন ইন করুন।', 'Please sign in again.'),
+    offline: () => T('ইন্টারনেট নেই। সাইন ইন করতে ইন্টারনেট চালু করুন।', 'You are offline. Connect to the internet to sign in.'),
+    network: () => T('সার্ভারে পৌঁছানো যায়নি। ইন্টারনেট দেখে আবার চেষ্টা করুন।', 'Could not reach the server. Check your internet and try again.'),
+  };
+  const LOCK = {
+    trial_over: [() => T(`আপনার ${N(DAYS)} দিনের ফ্রি সময় শেষ`, `Your ${DAYS}-day free time is over`), () => T('অ্যাপটি আবার ব্যবহার করতে অ্যাডমিনের অনুমতি লাগবে। অনুমতি পেলে নিচের বোতাম চাপুন।', 'You need the admin’s permission to keep using the app. Once you have it, tap the button below.')],
+    trial_used: [() => T('এই ফোনে আগেই ফ্রি সময় নেওয়া হয়েছে', 'This phone has already used its free time'), () => T('আপনার অ্যাকাউন্ট তৈরি হয়েছে। অ্যাপ ব্যবহার করতে অ্যাডমিনের অনুমতি লাগবে। অনুমতি পেলে নিচের বোতাম চাপুন।', 'Your account is made. You need the admin’s permission to use the app. Once you have it, tap the button below.')],
+    expired: [() => T('আপনার অনুমতির মেয়াদ শেষ', 'Your access has ended'), () => T('আবার চালু করতে অ্যাডমিনের সাথে যোগাযোগ করুন। অনুমতি পেলে নিচের বোতাম চাপুন।', 'Contact the admin to renew. Once renewed, tap the button below.')],
+    disabled: [() => T('এই অ্যাকাউন্টটি বন্ধ আছে', 'This account is switched off'), () => T('বিস্তারিত জানতে অ্যাডমিনের সাথে যোগাযোগ করুন।', 'Contact the admin for details.')],
+  };
+
+  /* ---------- state ---------- */
+  const S = { view: 'loading', msg: '', busy: false, code: '', name: '', contact: CFG.contact || '', email: LS.get('proshno-last-email', ''), pass: null };
+  const post = async (route, body) => {
+    const r = await fetch(BASE + 'api/' + route, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body), cache: 'no-store' });
+    const d = await r.json().catch(() => ({})); return Object.assign(d, { ok: r.ok, status: r.status });
+  };
+  const devName = () => { const u = navigator.userAgent; return /iphone/i.test(u) ? 'iPhone' : /ipad/i.test(u) ? 'iPad' : /android/i.test(u) ? 'Android phone' : /mac/i.test(u) ? 'Mac' : /windows/i.test(u) ? 'Windows computer' : 'Computer'; };
+  function save(d) { LS.set(K, { token: d.token }); LS.set('proshno-auth-at', Date.now()); if (d.email) LS.set('proshno-last-email', d.email); }
+  async function unlock() {
+    S.pass = await read(); S.view = 'in'; S.msg = '';
+    document.documentElement.classList.remove('authwait'); draw();
+  }
+  function lock(code, extra) {
+    S.view = 'locked'; S.code = LOCK[code] ? code : 'trial_over'; S.busy = false;
+    if (extra && extra.contact) S.contact = extra.contact;
+    if (extra && extra.name) S.name = extra.name;
+    draw();
+  }
+  function signin(msg) { S.view = 'signin'; S.msg = msg || ''; S.busy = false; draw(); }
+  // ask the server for a fresh pass (needs internet)
+  async function renew(force) {
+    if (navigator.onLine === false || !LS.get(K, null)) return;
+    if (!force && S.view === 'in' && Date.now() - LS.get('proshno-auth-at', 0) < 6 * 36e5) return;
+    let d; try { d = await post('refresh', { token: LS.get(K, {}).token }); } catch (e) { return; }
+    if (d.ok) { save(d); if (S.view !== 'in') await unlock(); else { S.pass = await read(); draw(); } return; }
+    if (d.status === 401 && LOCK[d.error]) return lock(d.error, d);
+    if (d.status === 401) { LS.del(K); signin(ERR.signed_out()); }
+  }
+  // every so often while the app is open: lock it the moment the pass runs out
+  async function tick() {
+    if (S.view !== 'in') return;
+    const p = await read();
+    if (valid(p)) { S.pass = p; draw(); return renew(false); }
+    if (p && p.end && p.end <= Date.now()) { lock(p.t ? 'trial_over' : 'expired', { name: p.n }); return renew(true); }
+    if (navigator.onLine === false) { LS.del(K); return signin(T('অনেক দিন অফলাইন ছিলেন। ইন্টারনেট চালু করে আবার সাইন ইন করুন।', 'You have been offline too long. Connect to the internet and sign in again.')); }
+    renew(true);
+  }
+
+  /* ---------- screens ---------- */
+  const LSW = '<div class="langsw" role="group" aria-label="ভাষা / Language"><button type="button" data-lang="bn">বাং</button><button type="button" data-lang="en">EN</button></div>';
+  const eye = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>';
+  const pw = (id, ac) => `<div class="g-pw"><input id="${id}" type="password" autocomplete="${ac}" required minlength="6"><button type="button" class="g-eye" data-g="eye" aria-label="${T('পাসওয়ার্ড দেখুন', 'Show password')}">${eye}</button></div>`;
+  function contactBox() {
+    const c = S.contact; if (!c) return '';
+    const m = c.replace(/[০-৯]/g, d => '০১২৩৪৫৬৭৮৯'.indexOf(d)).match(/(\+?88)?01[3-9]\d{8}/);
+    const wa = m ? 'https://wa.me/88' + m[0].replace(/^\+?88/, '') : '';
+    return `<div class="g-contact"><span>${T('যোগাযোগ', 'Contact')}: <b>${esc(c)}</b></span>${wa ? `<a class="g-btn g-wa" href="${wa}" target="_blank" rel="noopener">WhatsApp</a><a class="g-btn" href="tel:${m[0]}">${T('কল করুন', 'Call')}</a>` : ''}</div>`;
+  }
+  function screen() {
+    const msg = S.msg ? `<div class="g-msg" role="alert">${esc(S.msg)}</div>` : '';
+    if (S.view === 'loading') return `<div class="g-load"><span class="g-spin"></span></div>`;
+    if (S.view === 'signup') return `<h2>${T('নতুন অ্যাকাউন্ট', 'Create an account')}</h2>
+      <p class="g-sub">${T(`অ্যাকাউন্ট খুললেই <b>${N(DAYS)} দিন ফ্রি</b> ব্যবহার করতে পারবেন।`, `Your first <b>${DAYS} days are free</b>.`)}</p>
+      <form id="gUp" novalidate>
+        <label for="gName">${T('আপনার নাম', 'Your name')}</label><input id="gName" autocomplete="name" required maxlength="80">
+        <label for="gPhone">${T('মোবাইল নম্বর', 'Mobile number')}</label><input id="gPhone" type="tel" inputmode="tel" autocomplete="tel" placeholder="01XXXXXXXXX" required>
+        <label for="gEmail">${T('ইমেইল', 'Email')}</label><input id="gEmail" type="email" inputmode="email" autocomplete="username" autocapitalize="off" spellcheck="false" required>
+        <label for="gPw">${T('পাসওয়ার্ড (কমপক্ষে ৬ অক্ষর)', 'Password (at least 6 characters)')}</label>${pw('gPw', 'new-password')}
+        ${msg}<button class="g-main" ${S.busy ? 'disabled' : ''}>${S.busy ? '<span class="g-spin"></span>' : ''}${T(`অ্যাকাউন্ট খুলুন — ${N(DAYS)} দিন ফ্রি`, `Create account — ${DAYS} days free`)}</button>
+      </form>
+      <p class="g-alt">${T('আগে অ্যাকাউন্ট খুলেছেন?', 'Already have an account?')} <button type="button" data-g="signin">${T('সাইন ইন', 'Sign in')}</button></p>`;
+    if (S.view === 'locked') { const [h, p] = LOCK[S.code]; return `<div class="g-lock">⏳</div><h2>${h()}</h2>
+      ${S.name ? `<p class="g-sub" style="margin-bottom:4px">${esc(S.name)}</p>` : ''}<p class="g-sub">${p()}</p>${contactBox()}${msg}
+      <button class="g-main" data-g="recheck" ${S.busy ? 'disabled' : ''}>${S.busy ? '<span class="g-spin"></span>' : ''}${T('অনুমতি পেয়েছি — আবার চেক করুন', 'I have permission — check again')}</button>
+      <p class="g-alt"><button type="button" data-g="signout">${T('অন্য অ্যাকাউন্টে সাইন ইন', 'Sign in with another account')}</button></p>`; }
+    return `<h2>${T('সাইন ইন', 'Sign in')}</h2><p class="g-sub">${T('প্রশ্নপত্র তৈরি ও এমসিকিউ পরীক্ষা — আপনার অ্যাকাউন্ট দিয়ে।', 'Question papers and MCQ tests — with your account.')}</p>
+      <form id="gIn" novalidate>
+        <label for="gEmail">${T('ইমেইল', 'Email')}</label><input id="gEmail" type="email" inputmode="email" autocomplete="username" autocapitalize="off" spellcheck="false" required value="${esc(S.email)}">
+        <label for="gPw">${T('পাসওয়ার্ড', 'Password')}</label>${pw('gPw', 'current-password')}
+        ${msg}<button class="g-main" ${S.busy ? 'disabled' : ''}>${S.busy ? '<span class="g-spin"></span>' : ''}${T('সাইন ইন', 'Sign in')}</button>
+      </form>
+      <div class="g-or"><span>${T('নতুন?', 'New here?')}</span></div>
+      <button type="button" class="g-second" data-g="signup">${T(`নতুন অ্যাকাউন্ট খুলুন — ${N(DAYS)} দিন ফ্রি`, `Create an account — ${DAYS} days free`)}</button>`;
+  }
+  let gate = null, pill = null;
+  function draw() {
+    if (!gate) { gate = document.createElement('div'); gate.id = 'gate'; gate.setAttribute('data-noi18n', ''); document.body.appendChild(gate); }
+    if (S.view === 'in') { gate.hidden = true; gate.innerHTML = ''; drawPill(); return; }
+    const keep = {}; gate.querySelectorAll('input[id]').forEach(i => { if (i.type !== 'password') keep[i.id] = i.value; });
+    gate.hidden = false;
+    gate.innerHTML = `<div class="g-card"><div class="g-head"><span class="g-logo">প্রশ্ন</span>${LSW}</div>${screen()}</div>`;
+    Object.keys(keep).forEach(id => { const i = gate.querySelector('#' + id); if (i && keep[id]) i.value = keep[id]; });
+    gate.querySelectorAll('.langsw button').forEach(b => b.setAttribute('aria-pressed', b.dataset.lang === lang()));
+    if (pill) pill.hidden = true;
+  }
+  function drawPill() {
+    const home = document.getElementById('homeView'); if (!home) return;
+    if (!pill) { pill = document.createElement('div'); pill.className = 'acct'; pill.setAttribute('data-noi18n', ''); home.appendChild(pill); }
+    const p = S.pass; if (!p) { pill.hidden = true; return; }
+    const until = p.t ? `<span class="acct-t">${T('ফ্রি', 'Free')}: ${T('আর', '')} ${left(p.end - Date.now())}${T('', ' left')}</span>` : p.end ? `<span class="acct-t ok">${T('মেয়াদ', 'Until')}: ${new Date(p.end).toLocaleDateString(lang() === 'en' ? 'en-GB' : 'bn-BD', { day: 'numeric', month: 'short', year: 'numeric' })}</span>` : '';
+    pill.hidden = false;
+    pill.innerHTML = `<span class="acct-n">${esc(p.n || p.e)}</span>${until}<button type="button" data-g="signout">${T('সাইন আউট', 'Sign out')}</button>`;
+  }
+
+  /* ---------- actions ---------- */
+  async function submit(kind) {
+    if (navigator.onLine === false) { S.msg = ERR.offline(); return draw(); }
+    const v = id => (gate.querySelector('#' + id) || {}).value || '';
+    const body = { email: v('gEmail').trim(), password: v('gPw'), device: device(), deviceName: devName() };
+    if (kind === 'signup') { body.name = v('gName').trim(); body.phone = v('gPhone').trim(); if (!body.name || !body.phone || !body.email || !body.password) { S.msg = ERR.bad_request(); return draw(); } }
+    else if (!body.email || !body.password) { S.msg = ERR.bad_request(); return draw(); }
+    S.email = body.email; S.busy = true; S.msg = ''; draw();
+    let d; try { d = await post(kind === 'signup' ? 'signup' : 'login', body); } catch (e) { d = { error: 'network' }; }
+    S.busy = false;
+    if (d.ok) { save(d); return unlock(); }
+    if (LOCK[d.error]) { LS.set('proshno-last-email', body.email); return lock(d.error, d); }
+    S.msg = (ERR[d.error] || ERR.network)(); draw();
+    setTimeout(() => { const i = gate.querySelector(d.error === 'wrong' ? '#gPw' : 'input'); i && i.focus(); }, 30);
+  }
+  document.addEventListener('submit', e => { if (e.target.id === 'gIn' || e.target.id === 'gUp') { e.preventDefault(); submit(e.target.id === 'gUp' ? 'signup' : 'signin'); } });
+  document.addEventListener('click', async e => {
+    const b = e.target.closest('[data-g]'); if (!b) return;
+    const a = b.dataset.g;
+    if (a === 'signin') return signin();
+    if (a === 'signup') { S.view = 'signup'; S.msg = ''; return draw(); }
+    if (a === 'eye') { const i = b.previousElementSibling; i.type = i.type === 'password' ? 'text' : 'password'; return; }
+    if (a === 'signout') { LS.del(K); S.pass = null; S.name = ''; document.documentElement.classList.add('authwait'); return signin(); }
+    if (a === 'recheck') {
+      if (!LS.get(K, null)) return signin(T('অনুমতি পেয়ে থাকলে সাইন ইন করুন।', 'If you have permission now, sign in.'));
+      if (navigator.onLine === false) { S.msg = ERR.offline(); return draw(); }
+      S.busy = true; S.msg = ''; draw(); await renew(true);
+      if (S.view === 'locked') { S.busy = false; S.msg = T('এখনও অনুমতি দেওয়া হয়নি।', 'Not approved yet.'); draw(); }
+    }
+  });
+  if (HAS_I18N) I18N.onChange(() => draw());
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') tick(); });
+  window.addEventListener('online', () => renew(true));
+  setInterval(tick, 30000);
+
+  /* ---------- start ---------- */
+  draw();
+  (async () => {
+    const p = await read();
+    if (valid(p)) { await unlock(); renew(true); return; }
+    if (p && p.end && p.end <= Date.now()) { lock(p.t ? 'trial_over' : 'expired', { name: p.n }); renew(true); return; }
+    if (p) { if (navigator.onLine !== false) { await renew(true); if (S.view !== 'loading') return; } LS.del(K); }
+    signin();
+  })();
+})();
+
 </script>
 
 </html>
