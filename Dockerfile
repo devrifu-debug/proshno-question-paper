@@ -2,6 +2,7 @@
 FROM node:22-alpine
 WORKDIR /app
 COPY server.mjs index.html admin.html sw.js manifest.webmanifest ./
+COPY lib ./lib
 COPY icons ./icons
 COPY checker ./checker
 # users and the signing key live here: mount a volume on /data so they survive redeploys

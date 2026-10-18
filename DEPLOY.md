@@ -1,7 +1,7 @@
 # Running Proshno with sign-in
 
-Sign-in only works when the app is served by `server.mjs`. GitHub Pages and other plain file hosts
-can't check passwords, so a copy served there stays open to everyone.
+Sign-in works on **Vercel with Supabase**, or on your own server with `server.mjs` (Dokploy or Docker).
+On plain file hosts like GitHub Pages, or on Vercel before a database is connected, the app stays open to everyone.
 
 ## How access works
 
@@ -15,6 +15,26 @@ can't check passwords, so a copy served there stays open to everyone.
 - **Offline use:** the app keeps working offline, but never past the end of a person's access.
   For someone on free time, that is the moment the 2 days end.
 - **Removing access:** "Switch off" or "Remove approval" on /admin takes effect the next time their phone is online.
+
+## Deploy on Vercel with Supabase
+
+On Vercel, the sign-in runs as a function (`api/handler.mjs`) and accounts are kept in Supabase.
+The tables (`proshno_users`, `proshno_trial_devices`, `proshno_settings`) are created automatically the first time someone uses the app.
+
+1. Connect Supabase to the Vercel project:
+   - **Easy way:** Vercel → your project → **Storage** → **Supabase**. This adds `POSTGRES_URL` for you.
+   - **If you made the project on supabase.com yourself:** open **Connect** in Supabase and copy the **Transaction pooler** string (port 6543).
+     Add it in Vercel as `DATABASE_URL`, with your database password in place of `[YOUR-PASSWORD]`.
+2. Add these in Vercel → **Settings → Environment Variables**:
+   - `ADMIN_PASSWORD`: your admin password.
+   - `CONTACT`: e.g. `WhatsApp 01XXXXXXXXX`.
+   - `TRIAL_DAYS`: optional, default `2`.
+3. Redeploy. Pushing to GitHub does this automatically.
+4. Check `https://your-site.vercel.app/api/healthz`. It should say `"database":true`.
+   Then open `/admin`.
+
+You can see every account in Supabase → **Table Editor** → `proshno_users`.
+Change accounts from `/admin`, not by editing the table.
 
 ## Deploy on Dokploy (or any Docker host)
 
