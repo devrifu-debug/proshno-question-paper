@@ -35,6 +35,7 @@ html.authwait body>*:not(#gate){visibility:hidden}
 .g-msg{background:var(--red-soft);color:var(--red);border-radius:12px;padding:10px 12px;margin-top:14px;font-size:14.5px}
 .g-lock{font-size:42px;margin:4px 0 6px}
 .g-hint{color:var(--muted);font-size:13.5px;margin:12px 0 0}
+.g-clerk{min-height:60px;margin-top:6px}.g-clerk-host{width:100%}
 .g-note{background:var(--accent-soft);color:var(--accent-t);border-radius:12px;padding:10px 12px;margin-top:14px;font-size:14.5px}
 #gate input.g-code{font:800 28px/1 var(--f-ui);letter-spacing:.45em;text-align:center;padding:12px 0 12px .45em}
 .g-contact{background:var(--surface-2);border:1px solid var(--line);border-radius:14px;padding:12px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
@@ -1473,7 +1474,8 @@ I18N.start();
   const N = s => lang() === 'en' ? String(s) : String(s).replace(/[0-9]/g, d => '০১২৩৪৫৬৭৮৯'[d]);
   const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const DAYS = CFG.trialDays || 2;
-  const VERIFY = !!CFG.verify;   // 6-digit email codes for new accounts and forgotten passwords
+  const CLERK = CFG.clerk && CFG.clerk.key && CFG.clerk.host ? CFG.clerk : null;   // sign in with Clerk (email codes, Google)
+  const VERIFY = !CLERK && !!CFG.verify;   // 6-digit email codes for new accounts and forgotten passwords
   function left(ms) {
     ms = Math.max(0, ms); const d = Math.floor(ms / 864e5), h = Math.floor(ms % 864e5 / 36e5), m = Math.max(1, Math.floor(ms % 36e5 / 6e4));
     if (d) return T(`${N(d)} দিন ${N(h)} ঘণ্টা`, `${d} day${d > 1 ? 's' : ''} ${h} h`);
@@ -1498,6 +1500,10 @@ I18N.start();
     too_many_tries: () => T('অনেকবার ভুল কোড দেওয়া হয়েছে। নতুন কোড নিন।', 'Too many wrong codes. Ask for a new one.'),
     no_code: () => T('নতুন কোড নিন।', 'Ask for a new code.'),
     wait: d => T(`নতুন কোডের জন্য ${N((d && d.wait) || 60)} সেকেন্ড অপেক্ষা করুন।`, `Please wait ${(d && d.wait) || 60} seconds for a new code.`),
+    clerk_failed: () => T('সাইন-ইন সেবায় পৌঁছানো যায়নি। একটু পরে আবার চেষ্টা করুন।', 'Could not reach the sign-in service. Please try again shortly.'),
+    clerk_no_email: () => T('আপনার ইমেইল এখনও যাচাই হয়নি। আবার সাইন ইন করে কোডটি দিন।', 'Your email is not verified yet. Sign in again and enter the code.'),
+    clerk_signed_out: () => T('আবার সাইন ইন করুন।', 'Please sign in again.'),
+    clerk_load: () => T('সাইন-ইন খোলা যায়নি। ইন্টারনেট দেখে আবার চেষ্টা করুন।', 'The sign-in could not open. Check your internet and try again.'),
     mail_failed: () => T('ইমেইল পাঠানো যায়নি। ইমেইল ঠিকানা ঠিক আছে কিনা দেখে আবার চেষ্টা করুন।', 'The email could not be sent. Check the address and try again.'),
   };
   const LOCK = {
@@ -1558,6 +1564,18 @@ I18N.start();
   function screen() {
     const msg = S.msg ? `<div class="g-msg" role="alert">${esc(S.msg)}</div>` : '';
     if (S.view === 'loading') return `<div class="g-load"><span class="g-spin"></span></div>`;
+    if (CLERK && S.view === 'profile') return `<h2>${T('প্রায় শেষ!', 'Almost done!')}</h2>
+      <p class="g-sub">${S.profileEmail ? `<b>${esc(S.profileEmail)}</b><br>` : ''}${T(`আপনার নাম ও মোবাইল নম্বর দিন — তারপর <b>${N(DAYS)} দিন ফ্রি</b> শুরু।`, `Add your name and mobile number — then your <b>${DAYS} free days</b> start.`)}</p>
+      <form id="gProfile" novalidate>
+        <label for="gName">${T('আপনার নাম', 'Your name')}</label><input id="gName" autocomplete="name" required maxlength="80" value="${esc(S.profileName || '')}">
+        <label for="gPhone">${T('মোবাইল নম্বর', 'Mobile number')}</label><input id="gPhone" type="tel" inputmode="tel" autocomplete="tel" placeholder="01XXXXXXXXX" required>
+        ${msg}<button class="g-main" ${S.busy ? 'disabled' : ''}>${S.busy ? '<span class="g-spin"></span>' : ''}${T(`শুরু করুন — ${N(DAYS)} দিন ফ্রি`, `Start — ${DAYS} days free`)}</button>
+      </form>
+      <p class="g-alt"><button type="button" data-g="signout">${T('অন্য অ্যাকাউন্টে সাইন ইন', 'Sign in with another account')}</button></p>`;
+    if (CLERK && ['signin', 'signup', 'forgot', 'code'].includes(S.view)) return `<h2>${T('সাইন ইন / নতুন অ্যাকাউন্ট', 'Sign in / Create account')}</h2>
+      <p class="g-sub">${T(`ইমেইল কোড বা Google দিয়ে। নতুন হলে প্রথম <b>${N(DAYS)} দিন ফ্রি</b>।`, `With an email code or Google. New here? Your first <b>${DAYS} days are free</b>.`)}</p>
+      ${msg}<div class="g-clerk">${S.busy || !clerkReady ? '<div class="g-load"><span class="g-spin"></span></div>' : ''}</div>
+      ${clerkFailed ? `<button class="g-main" data-g="clerkretry">${T('আবার চেষ্টা করুন', 'Try again')}</button>` : ''}`;
     if (S.view === 'signup') return `<h2>${T('নতুন অ্যাকাউন্ট', 'Create an account')}</h2>
       <p class="g-sub">${T(`অ্যাকাউন্ট খুললেই <b>${N(DAYS)} দিন ফ্রি</b> ব্যবহার করতে পারবেন।`, `Your first <b>${DAYS} days are free</b>.`)}</p>
       <form id="gUp" novalidate>
@@ -1599,6 +1617,59 @@ I18N.start();
       <button type="button" class="g-second" data-g="signup">${T(`নতুন অ্যাকাউন্ট খুলুন — ${N(DAYS)} দিন ফ্রি`, `Create an account — ${DAYS} days free`)}</button>`;
   }
   let gate = null, pill = null;
+  /* ---------- Clerk ---------- */
+  let clerkP = null, clerkHost = null, clerkMounted = false, clerkReady = false, clerkFailed = false, exchanging = false;
+  const APPEAR = { variables: { colorPrimary: '#1CD5E5', colorBackground: '#181B24', colorText: '#EEF1F7', colorTextSecondary: '#9AA3B5', colorInputBackground: '#101219', colorInputText: '#EEF1F7', colorTextOnPrimaryBackground: '#0B1B4D', colorNeutral: '#EEF1F7', borderRadius: '12px', fontFamily: "'Hind Siliguri', system-ui, sans-serif" },
+    elements: { rootBox: { width: '100%' }, cardBox: { width: '100%', boxShadow: 'none', border: '0' }, card: { boxShadow: 'none', background: 'transparent', padding: '4px 0' } } };
+  function loadClerk() {
+    return clerkP ||= new Promise((res, rej) => {
+      if (window.Clerk && window.Clerk.load) return res(window.Clerk);
+      const sc = document.createElement('script');
+      sc.src = `https://${CLERK.host}/npm/@clerk/clerk-js@5/dist/clerk.browser.js`; sc.async = true; sc.crossOrigin = 'anonymous';
+      sc.setAttribute('data-clerk-publishable-key', CLERK.key);
+      sc.onload = () => window.Clerk ? res(window.Clerk) : rej(new Error('no Clerk'));
+      sc.onerror = () => rej(new Error('Clerk did not load'));
+      document.head.appendChild(sc);
+    }).then(async C => {
+      if (!C.loaded) await C.load({ appearance: APPEAR });
+      C.addListener(e => { if (e && e.session && ['signin', 'signup', 'forgot', 'code'].includes(S.view)) exchange(); });
+      return C;
+    }).catch(e => { clerkP = null; throw e; });
+  }
+  function clerkSlot() {
+    if (!CLERK || !gate) return;
+    const slot = gate.querySelector('.g-clerk'); if (!slot) return;
+    if (!clerkHost) { clerkHost = document.createElement('div'); clerkHost.className = 'g-clerk-host'; }
+    slot.appendChild(clerkHost);
+    if (clerkMounted || clerkFailed || S.busy) return;
+    clerkMounted = true;
+    loadClerk().then(C => {
+      clerkReady = true;
+      if (C.session) { draw(); return exchange(); }
+      C.mountSignIn(clerkHost, { appearance: APPEAR, withSignUp: true });
+      draw();
+    }).catch(() => { clerkMounted = false; clerkFailed = true; S.msg = ERR.clerk_load(); draw(); });
+  }
+  // swap the Clerk session for our own pass (works offline afterwards)
+  async function exchange() {
+    if (exchanging) return; exchanging = true;
+    S.busy = true; S.msg = ''; draw();
+    let d;
+    try {
+      const C = await loadClerk(); const token = C.session && await C.session.getToken();
+      if (!token) d = { error: 'clerk_signed_out' };
+      else d = await post('clerk', { token, device: device(), deviceName: devName(), ...(S.profile || {}) });
+    } catch (e) { d = { error: 'network' }; }
+    exchanging = false; S.busy = false;
+    if (d.ok) { save(d); S.profile = null; return unlock(); }
+    if (LOCK[d.error]) { if (d.email) LS.set('proshno-last-email', d.email); return lock(d.error, d); }
+    if (d.error === 'need_profile' || ((d.error === 'bad_phone' || d.error === 'phone_exists') && S.profile)) {
+      S.view = 'profile'; S.profileName = (S.profile && S.profile.name) || d.name || ''; S.profileEmail = d.email || S.profileEmail || '';
+      S.msg = d.error === 'need_profile' ? '' : errText(d); return draw();
+    }
+    if (d.error === 'clerk_signed_out') { try { const C = await loadClerk(); await C.signOut(); } catch (e) {} }
+    S.view = 'signin'; S.msg = errText(d); draw();
+  }
   function draw() {
     if (!gate) { gate = document.createElement('div'); gate.id = 'gate'; gate.setAttribute('data-noi18n', ''); document.body.appendChild(gate); }
     if (S.view === 'in') { gate.hidden = true; gate.innerHTML = ''; drawPill(); return; }
@@ -1608,7 +1679,7 @@ I18N.start();
     Object.keys(keep).forEach(id => { const i = gate.querySelector('#' + id); if (i && keep[id]) i.value = keep[id]; });
     gate.querySelectorAll('.langsw button').forEach(b => b.setAttribute('aria-pressed', b.dataset.lang === lang()));
     if (pill) pill.hidden = true;
-    resendLabel();
+    resendLabel(); clerkSlot();
   }
   function resendLabel() {
     const b = gate && gate.querySelector('#gResend'); if (!b) return;
@@ -1671,9 +1742,14 @@ I18N.start();
     setTimeout(() => { const i = gate.querySelector(d.error === 'wrong' ? '#gPw' : 'input'); i && i.focus(); }, 30);
   }
   document.addEventListener('submit', e => {
-    const id = e.target.id; if (!['gIn', 'gUp', 'gForgot', 'gCodeForm'].includes(id)) return;
+    const id = e.target.id; if (!['gIn', 'gUp', 'gForgot', 'gCodeForm', 'gProfile'].includes(id)) return;
     e.preventDefault();
     if (id === 'gCodeForm') return verifyCode();
+    if (id === 'gProfile') {
+      const name = ((gate.querySelector('#gName') || {}).value || '').trim(), phone = ((gate.querySelector('#gPhone') || {}).value || '').trim();
+      if (!name || !phone) { S.msg = ERR.bad_request(); return draw(); }
+      S.profile = { name, phone }; S.profileName = name; return exchange();
+    }
     submit(id === 'gUp' ? 'signup' : id === 'gForgot' ? 'forgot' : 'signin');
   });
   document.addEventListener('click', async e => {
@@ -1689,7 +1765,12 @@ I18N.start();
       return;
     }
     if (a === 'eye') { const i = b.previousElementSibling; i.type = i.type === 'password' ? 'text' : 'password'; return; }
-    if (a === 'signout') { LS.del(K); S.pass = null; S.name = ''; document.documentElement.classList.add('authwait'); return signin(); }
+    if (a === 'signout') {
+      LS.del(K); S.pass = null; S.name = ''; S.profile = null; document.documentElement.classList.add('authwait');
+      if (CLERK) { try { const C = await loadClerk(); if (C.session) await C.signOut(); } catch (e) {} }
+      return signin();
+    }
+    if (a === 'clerkretry') { clerkFailed = false; S.msg = ''; return draw(); }
     if (a === 'recheck') {
       if (!LS.get(K, null)) return signin(T('অনুমতি পেয়ে থাকলে সাইন ইন করুন।', 'If you have permission now, sign in.'));
       if (navigator.onLine === false) { S.msg = ERR.offline(); return draw(); }

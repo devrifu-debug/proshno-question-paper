@@ -36,7 +36,25 @@ The tables (`proshno_users`, `proshno_trial_devices`, `proshno_settings`) are cr
 You can see every account in Supabase → **Table Editor** → `proshno_users`.
 Change accounts from `/admin`, not by editing the table.
 
-## Email codes (optional, with Resend)
+## Sign in with Clerk (recommended for email codes and Google)
+
+When both Clerk keys are set, Clerk shows the sign-in box: email code, Google, and forgotten password.
+It takes over from the app's own email and password screens.
+After signing in, a new person gives their name and mobile number once, and their free days start.
+Free days, approval, phones and `/admin` work exactly as before.
+The app keeps working offline for signed-in people.
+
+1. At clerk.com, create an application. Turn on **Email** (verification code) and **Google**. Leave Phone off.
+2. In **Configure → API Keys**, copy the keys into Vercel (or Dokploy):
+   - `CLERK_PUBLISHABLE_KEY`: `pk_test_…` (later `pk_live_…`)
+   - `CLERK_SECRET_KEY`: `sk_test_…` (later `sk_live_…`). Keep it only in the host's settings.
+3. Redeploy. `/api/healthz` shows `"clerk": true`.
+
+`pk_test`/`sk_test` keys work on any address, with a small "Development mode" label.
+For real users, switch Clerk to **Production**. Add your own domain there, add the DNS records Clerk shows, and set up Google with your own Google credentials as Clerk explains.
+Then replace both keys with the `pk_live_`/`sk_live_` ones and redeploy.
+
+## Email codes (optional, with Resend — not needed when Clerk is on)
 
 When `RESEND_API_KEY` is set, new accounts need a 6-digit code sent to their email.
 A "Forgot password?" option also appears on the sign-in screen.
