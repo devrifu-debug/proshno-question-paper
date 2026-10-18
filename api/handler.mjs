@@ -3,13 +3,14 @@
 // Needs: POSTGRES_URL (added by the Supabase integration) or DATABASE_URL, plus ADMIN_PASSWORD and CONTACT.
 import { createAuth } from '../lib/core.mjs';
 import { pgStore, connectionString, dbVarName } from '../lib/store-pg.mjs';
+import { resendMailer } from '../lib/mail.mjs';
 
 let auth = null;
 function getAuth() {
   if (auth) return auth;
   const conn = connectionString(process.env);
   if (!conn) return null;
-  return auth = createAuth(pgStore(conn), process.env);
+  return auth = createAuth(pgStore(conn), process.env, resendMailer(process.env));
 }
 const send = (res, status, body, type = 'application/json') => {
   res.statusCode = status;
@@ -38,7 +39,7 @@ export default async function handler(req, res) {
       const names = Object.keys(process.env).filter(k => /POSTGRES|DATABASE|SUPABASE/i.test(k)).sort();
       let db = !!a, error;
       if (a) { try { await a.authConfig(); } catch (e) { db = false; error = String(e.message || e).slice(0, 200); } }
-      return send(res, 200, { ok: true, database: db, using: dbVarName(process.env) || null, adminPassword: !!process.env.ADMIN_PASSWORD, contact: !!process.env.CONTACT, databaseSettingsFound: names, ...(error ? { error } : {}) });
+      return send(res, 200, { ok: true, database: db, using: dbVarName(process.env) || null, adminPassword: !!process.env.ADMIN_PASSWORD, contact: !!process.env.CONTACT, emailCodes: !!process.env.RESEND_API_KEY, mailFrom: process.env.RESEND_API_KEY ? (process.env.MAIL_FROM || 'Proshno <onboarding@resend.dev>') : null, databaseSettingsFound: names, ...(error ? { error } : {}) });
     }
     if (!a) return send(res, 503, { error: 'no_database', message: 'The database is not connected yet.' });
     let body = req.body;

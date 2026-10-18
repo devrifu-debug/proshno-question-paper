@@ -9,6 +9,7 @@
 //   DATA_DIR        where the accounts and the signing key live — must survive redeploys (a mounted volume)
 //   CONTACT         shown to people whose free time is over, e.g. "WhatsApp 01XXXXXXXXX"
 //   TRIAL_DAYS      free time after sign-up (default 2)
+//   RESEND_API_KEY  turns on 6-digit email codes for sign-up and forgotten passwords (with MAIL_FROM)
 //   PORT            default 5173
 import http from 'node:http';
 import zlib from 'node:zlib';
@@ -17,11 +18,12 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createAuth } from './lib/core.mjs';
 import { fileStore } from './lib/store-file.mjs';
+import { resendMailer } from './lib/mail.mjs';
 
 const ROOT = path.dirname(fileURLToPath(import.meta.url));
 const PORT = +process.env.PORT || 5173;
 const DATA = path.resolve(process.env.DATA_DIR || path.join(ROOT, 'data'));
-const auth = createAuth(fileStore(DATA), process.env);
+const auth = createAuth(fileStore(DATA), process.env, resendMailer(process.env));
 
 /* ---------- API ---------- */
 const clientIp = req => String(req.headers['x-forwarded-for'] || '').split(',')[0].trim() || req.socket.remoteAddress;

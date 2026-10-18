@@ -37,6 +37,7 @@ label{font-size:13px;color:var(--muted);display:block;margin:0 0 4px}
 .nm{font-weight:700;font-size:17px}
 .sub{color:var(--muted);font-size:13.5px;word-break:break-all}
 .sub a{color:var(--accent);text-decoration:none}
+.vf{color:var(--ok);font-weight:700;font-size:12.5px;white-space:nowrap}
 .chip{font-size:12.5px;font-weight:700;border-radius:999px;padding:3px 10px;white-space:nowrap}
 .s-waiting,.s-expired{background:rgba(255,61,147,.16);color:var(--red)}
 .s-trial{background:rgba(240,179,90,.16);color:var(--warn)}
@@ -148,7 +149,7 @@ function card(u) {
   const startEdit = u.end && !u.forever ? Math.max(u.end, now) : now;
   return `<div class="card user" data-email="${esc(u.email)}">
     <div class="top"><div><div class="nm">${esc(u.name || '(no name)')}</div>
-      <div class="sub">${u.phone ? `<a href="tel:${esc(u.phone)}">${esc(u.phone)}</a> · <a href="${esc(wa)}" target="_blank" rel="noopener">WhatsApp</a> · ` : ''}${esc(u.email)}</div></div>
+      <div class="sub">${u.phone ? `<a href="tel:${esc(u.phone)}">${esc(u.phone)}</a> · <a href="${esc(wa)}" target="_blank" rel="noopener">WhatsApp</a> · ` : ''}${esc(u.email)}${u.verified ? ' <span class="vf" title="Email checked with a code">✓ verified</span>' : ''}</div></div>
       <span class="chip s-${u.status}">${st}</span></div>
 
     <div class="acc">

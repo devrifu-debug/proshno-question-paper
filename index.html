@@ -34,6 +34,9 @@ html.authwait body>*:not(#gate){visibility:hidden}
 .g-alt button{border:0;background:none;color:var(--accent);font:700 14.5px var(--f-ui);cursor:pointer;padding:6px}
 .g-msg{background:var(--red-soft);color:var(--red);border-radius:12px;padding:10px 12px;margin-top:14px;font-size:14.5px}
 .g-lock{font-size:42px;margin:4px 0 6px}
+.g-hint{color:var(--muted);font-size:13.5px;margin:12px 0 0}
+.g-note{background:var(--accent-soft);color:var(--accent-t);border-radius:12px;padding:10px 12px;margin-top:14px;font-size:14.5px}
+#gate input.g-code{font:800 28px/1 var(--f-ui);letter-spacing:.45em;text-align:center;padding:12px 0 12px .45em}
 .g-contact{background:var(--surface-2);border:1px solid var(--line);border-radius:14px;padding:12px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 .g-contact span{flex:1 1 100%;font-size:15px}
 .g-contact .g-btn{flex:1;margin:0;min-height:44px;font-size:15px;border:1.5px solid var(--line);color:var(--fg);background:var(--surface)}
@@ -1470,6 +1473,7 @@ I18N.start();
   const N = s => lang() === 'en' ? String(s) : String(s).replace(/[0-9]/g, d => '০১২৩৪৫৬৭৮৯'[d]);
   const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const DAYS = CFG.trialDays || 2;
+  const VERIFY = !!CFG.verify;   // 6-digit email codes for new accounts and forgotten passwords
   function left(ms) {
     ms = Math.max(0, ms); const d = Math.floor(ms / 864e5), h = Math.floor(ms % 864e5 / 36e5), m = Math.max(1, Math.floor(ms % 36e5 / 6e4));
     if (d) return T(`${N(d)} দিন ${N(h)} ঘণ্টা`, `${d} day${d > 1 ? 's' : ''} ${h} h`);
@@ -1489,6 +1493,12 @@ I18N.start();
     signed_out: () => T('আবার সাইন ইন করুন।', 'Please sign in again.'),
     offline: () => T('ইন্টারনেট নেই। সাইন ইন করতে ইন্টারনেট চালু করুন।', 'You are offline. Connect to the internet to sign in.'),
     network: () => T('সার্ভারে পৌঁছানো যায়নি। ইন্টারনেট দেখে আবার চেষ্টা করুন।', 'Could not reach the server. Check your internet and try again.'),
+    bad_code: d => T(`কোডটি মেলেনি। ইমেইল দেখে আবার লিখুন${d && d.left != null ? ` (আর ${N(d.left)} বার চেষ্টা করা যাবে)` : ''}।`, `That code is not right. Check your email and try again${d && d.left != null ? ` (${d.left} tries left)` : ''}.`),
+    code_expired: () => T('কোডের মেয়াদ শেষ। নতুন কোড নিন।', 'The code has expired. Ask for a new one.'),
+    too_many_tries: () => T('অনেকবার ভুল কোড দেওয়া হয়েছে। নতুন কোড নিন।', 'Too many wrong codes. Ask for a new one.'),
+    no_code: () => T('নতুন কোড নিন।', 'Ask for a new code.'),
+    wait: d => T(`নতুন কোডের জন্য ${N((d && d.wait) || 60)} সেকেন্ড অপেক্ষা করুন।`, `Please wait ${(d && d.wait) || 60} seconds for a new code.`),
+    mail_failed: () => T('ইমেইল পাঠানো যায়নি। ইমেইল ঠিকানা ঠিক আছে কিনা দেখে আবার চেষ্টা করুন।', 'The email could not be sent. Check the address and try again.'),
   };
   const LOCK = {
     trial_over: [() => T(`আপনার ${N(DAYS)} দিনের ফ্রি সময় শেষ`, `Your ${DAYS}-day free time is over`), () => T('অ্যাপটি আবার ব্যবহার করতে অ্যাডমিনের অনুমতি লাগবে। অনুমতি পেলে নিচের বোতাম চাপুন।', 'You need the admin’s permission to keep using the app. Once you have it, tap the button below.')],
@@ -1498,7 +1508,7 @@ I18N.start();
   };
 
   /* ---------- state ---------- */
-  const S = { view: 'loading', msg: '', busy: false, code: '', name: '', contact: CFG.contact || '', email: LS.get('proshno-last-email', ''), pass: null };
+  const S = { view: 'loading', msg: '', note: '', busy: false, code: '', name: '', contact: CFG.contact || '', email: LS.get('proshno-last-email', ''), pass: null, pending: null, canResendAt: 0 };
   const post = async (route, body) => {
     const r = await fetch(BASE + 'api/' + route, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body), cache: 'no-store' });
     const d = await r.json().catch(() => ({})); return Object.assign(d, { ok: r.ok, status: r.status });
@@ -1515,7 +1525,7 @@ I18N.start();
     if (extra && extra.name) S.name = extra.name;
     draw();
   }
-  function signin(msg) { S.view = 'signin'; S.msg = msg || ''; S.busy = false; draw(); }
+  function signin(msg) { S.view = 'signin'; S.msg = msg || ''; S.note = ''; S.busy = false; S.pending = null; draw(); }
   // ask the server for a fresh pass (needs internet)
   async function renew(force) {
     if (navigator.onLine === false || !LS.get(K, null)) return;
@@ -1555,9 +1565,25 @@ I18N.start();
         <label for="gPhone">${T('মোবাইল নম্বর', 'Mobile number')}</label><input id="gPhone" type="tel" inputmode="tel" autocomplete="tel" placeholder="01XXXXXXXXX" required>
         <label for="gEmail">${T('ইমেইল', 'Email')}</label><input id="gEmail" type="email" inputmode="email" autocomplete="username" autocapitalize="off" spellcheck="false" required>
         <label for="gPw">${T('পাসওয়ার্ড (কমপক্ষে ৬ অক্ষর)', 'Password (at least 6 characters)')}</label>${pw('gPw', 'new-password')}
-        ${msg}<button class="g-main" ${S.busy ? 'disabled' : ''}>${S.busy ? '<span class="g-spin"></span>' : ''}${T(`অ্যাকাউন্ট খুলুন — ${N(DAYS)} দিন ফ্রি`, `Create account — ${DAYS} days free`)}</button>
+        ${VERIFY ? `<p class="g-hint">${T('আপনার ইমেইলে একটি যাচাই কোড যাবে — সঠিক ইমেইল দিন।', 'A code will be sent to your email — use a real address.')}</p>` : ''}${msg}<button class="g-main" ${S.busy ? 'disabled' : ''}>${S.busy ? '<span class="g-spin"></span>' : ''}${VERIFY ? T('কোড পাঠান', 'Send code') : T(`অ্যাকাউন্ট খুলুন — ${N(DAYS)} দিন ফ্রি`, `Create account — ${DAYS} days free`)}</button>
       </form>
       <p class="g-alt">${T('আগে অ্যাকাউন্ট খুলেছেন?', 'Already have an account?')} <button type="button" data-g="signin">${T('সাইন ইন', 'Sign in')}</button></p>`;
+    if (S.view === 'forgot') return `<h2>${T('পাসওয়ার্ড ভুলে গেছেন?', 'Forgot your password?')}</h2>
+      <p class="g-sub">${T('আপনার ইমেইলে একটি কোড পাঠানো হবে। কোড দিয়ে নতুন পাসওয়ার্ড সেট করুন।', 'We will email you a code. Use it to set a new password.')}</p>
+      <form id="gForgot" novalidate>
+        <label for="gEmail">${T('ইমেইল', 'Email')}</label><input id="gEmail" type="email" inputmode="email" autocomplete="username" autocapitalize="off" spellcheck="false" required value="${esc(S.email)}">
+        ${msg}<button class="g-main" ${S.busy ? 'disabled' : ''}>${S.busy ? '<span class="g-spin"></span>' : ''}${T('কোড পাঠান', 'Send code')}</button>
+      </form>
+      <p class="g-alt"><button type="button" data-g="signin">${T('← সাইন ইনে ফিরুন', '← Back to sign in')}</button></p>`;
+    if (S.view === 'code') { const reset = S.pending && S.pending.kind === 'reset', em = S.pending ? S.pending.email : ''; return `<div class="g-lock">✉️</div>
+      <h2>${T('ইমেইল দেখুন', 'Check your email')}</h2>
+      <p class="g-sub">${T(`<b>${esc(em)}</b>-এ ৬ সংখ্যার একটি কোড পাঠানো হয়েছে। না পেলে স্প্যাম ফোল্ডারও দেখুন।`, `We sent a 6-digit code to <b>${esc(em)}</b>. If you can’t find it, check the spam folder.`)}</p>
+      <form id="gCodeForm" novalidate>
+        <label for="gCode">${T('৬ সংখ্যার কোড', '6-digit code')}</label><input id="gCode" class="g-code" inputmode="numeric" autocomplete="one-time-code" maxlength="6" required>
+        ${reset ? `<label for="gPw">${T('নতুন পাসওয়ার্ড (কমপক্ষে ৬ অক্ষর)', 'New password (at least 6 characters)')}</label>${pw('gPw', 'new-password')}` : ''}
+        ${S.note ? `<div class="g-note">${esc(S.note)}</div>` : ''}${msg}<button class="g-main" ${S.busy ? 'disabled' : ''}>${S.busy ? '<span class="g-spin"></span>' : ''}${reset ? T('নতুন পাসওয়ার্ড সেট করুন', 'Set new password') : T(`যাচাই করুন — ${N(DAYS)} দিন ফ্রি শুরু`, `Verify — start ${DAYS} free days`)}</button>
+      </form>
+      <p class="g-alt"><button type="button" data-g="resend" id="gResend">${T('আবার কোড পাঠান', 'Send the code again')}</button> · <button type="button" data-g="${reset ? 'forgot' : 'signup'}">${T('ইমেইল বদলান', 'Change email')}</button></p>`; }
     if (S.view === 'locked') { const [h, p] = LOCK[S.code]; return `<div class="g-lock">⏳</div><h2>${h()}</h2>
       ${S.name ? `<p class="g-sub" style="margin-bottom:4px">${esc(S.name)}</p>` : ''}<p class="g-sub">${p()}</p>${contactBox()}${msg}
       <button class="g-main" data-g="recheck" ${S.busy ? 'disabled' : ''}>${S.busy ? '<span class="g-spin"></span>' : ''}${T('অনুমতি পেয়েছি — আবার চেক করুন', 'I have permission — check again')}</button>
@@ -1568,6 +1594,7 @@ I18N.start();
         <label for="gPw">${T('পাসওয়ার্ড', 'Password')}</label>${pw('gPw', 'current-password')}
         ${msg}<button class="g-main" ${S.busy ? 'disabled' : ''}>${S.busy ? '<span class="g-spin"></span>' : ''}${T('সাইন ইন', 'Sign in')}</button>
       </form>
+      ${VERIFY ? `<p class="g-alt" style="margin-top:10px"><button type="button" data-g="forgot">${T('পাসওয়ার্ড ভুলে গেছেন?', 'Forgot password?')}</button></p>` : ''}
       <div class="g-or"><span>${T('নতুন?', 'New here?')}</span></div>
       <button type="button" class="g-second" data-g="signup">${T(`নতুন অ্যাকাউন্ট খুলুন — ${N(DAYS)} দিন ফ্রি`, `Create an account — ${DAYS} days free`)}</button>`;
   }
@@ -1581,7 +1608,14 @@ I18N.start();
     Object.keys(keep).forEach(id => { const i = gate.querySelector('#' + id); if (i && keep[id]) i.value = keep[id]; });
     gate.querySelectorAll('.langsw button').forEach(b => b.setAttribute('aria-pressed', b.dataset.lang === lang()));
     if (pill) pill.hidden = true;
+    resendLabel();
   }
+  function resendLabel() {
+    const b = gate && gate.querySelector('#gResend'); if (!b) return;
+    const s = Math.ceil((S.canResendAt - Date.now()) / 1000);
+    b.disabled = s > 0; b.textContent = s > 0 ? T(`আবার কোড পাঠান (${N(s)})`, `Send the code again (${s})`) : T('আবার কোড পাঠান', 'Send the code again');
+  }
+  setInterval(resendLabel, 1000);
   function drawPill() {
     const home = document.getElementById('homeView'); if (!home) return;
     if (!pill) { pill = document.createElement('div'); pill.className = 'acct'; pill.setAttribute('data-noi18n', ''); home.appendChild(pill); }
@@ -1592,26 +1626,68 @@ I18N.start();
   }
 
   /* ---------- actions ---------- */
+  const errText = d => (ERR[d.error] || ERR.network)(d);
+  // ask for a code by email (new account or forgotten password)
+  async function askCode(kind, body) {
+    S.busy = true; S.msg = ''; S.note = ''; draw();
+    let d; try { d = await post(kind === 'reset' ? 'reset-code' : 'signup-code', body); } catch (e) { d = { error: 'network' }; }
+    S.busy = false;
+    if (d.ok) {
+      S.pending = { kind, email: body.email, body }; S.view = 'code'; S.canResendAt = Date.now() + (d.wait || 60) * 1000; draw();
+      setTimeout(() => { const i = gate.querySelector('#gCode'); i && i.focus(); }, 30); return true;
+    }
+    if (d.error === 'wait') S.canResendAt = Date.now() + (d.wait || 60) * 1000;
+    S.msg = errText(d); draw(); return false;
+  }
+  async function verifyCode() {
+    if (navigator.onLine === false) { S.msg = ERR.offline(); return draw(); }
+    const P = S.pending; if (!P) return signin();
+    const code = ((gate.querySelector('#gCode') || {}).value || '').replace(/[০-৯]/g, d => '০১২৩৪৫৬৭৮৯'.indexOf(d)).replace(/\D/g, '');
+    if (code.length !== 6) { S.msg = T('ইমেইলে পাওয়া ৬ সংখ্যার কোডটি লিখুন।', 'Enter the 6-digit code from your email.'); return draw(); }
+    const body = { ...P.body, code, device: device(), deviceName: devName() };
+    if (P.kind === 'reset') { body.password = (gate.querySelector('#gPw') || {}).value || ''; if (body.password.length < 6) { S.msg = ERR.short_password(); return draw(); } }
+    S.busy = true; S.msg = ''; draw();
+    let d; try { d = await post(P.kind === 'reset' ? 'reset' : 'signup', body); } catch (e) { d = { error: 'network' }; }
+    S.busy = false;
+    if (d.ok) { save(d); S.pending = null; return unlock(); }
+    if (LOCK[d.error]) { LS.set('proshno-last-email', P.email); S.pending = null; return lock(d.error, d); }
+    S.msg = errText(d); draw();
+  }
   async function submit(kind) {
     if (navigator.onLine === false) { S.msg = ERR.offline(); return draw(); }
     const v = id => (gate.querySelector('#' + id) || {}).value || '';
+    if (kind === 'forgot') { const email = v('gEmail').trim(); if (!email) { S.msg = ERR.bad_email(); return draw(); } S.email = email; return askCode('reset', { email }); }
     const body = { email: v('gEmail').trim(), password: v('gPw'), device: device(), deviceName: devName() };
     if (kind === 'signup') { body.name = v('gName').trim(); body.phone = v('gPhone').trim(); if (!body.name || !body.phone || !body.email || !body.password) { S.msg = ERR.bad_request(); return draw(); } }
     else if (!body.email || !body.password) { S.msg = ERR.bad_request(); return draw(); }
-    S.email = body.email; S.busy = true; S.msg = ''; draw();
+    S.email = body.email;
+    if (kind === 'signup' && VERIFY) return askCode('signup', body);
+    S.busy = true; S.msg = ''; draw();
     let d; try { d = await post(kind === 'signup' ? 'signup' : 'login', body); } catch (e) { d = { error: 'network' }; }
     S.busy = false;
     if (d.ok) { save(d); return unlock(); }
     if (LOCK[d.error]) { LS.set('proshno-last-email', body.email); return lock(d.error, d); }
-    S.msg = (ERR[d.error] || ERR.network)(); draw();
+    S.msg = errText(d); draw();
     setTimeout(() => { const i = gate.querySelector(d.error === 'wrong' ? '#gPw' : 'input'); i && i.focus(); }, 30);
   }
-  document.addEventListener('submit', e => { if (e.target.id === 'gIn' || e.target.id === 'gUp') { e.preventDefault(); submit(e.target.id === 'gUp' ? 'signup' : 'signin'); } });
+  document.addEventListener('submit', e => {
+    const id = e.target.id; if (!['gIn', 'gUp', 'gForgot', 'gCodeForm'].includes(id)) return;
+    e.preventDefault();
+    if (id === 'gCodeForm') return verifyCode();
+    submit(id === 'gUp' ? 'signup' : id === 'gForgot' ? 'forgot' : 'signin');
+  });
   document.addEventListener('click', async e => {
     const b = e.target.closest('[data-g]'); if (!b) return;
     const a = b.dataset.g;
     if (a === 'signin') return signin();
-    if (a === 'signup') { S.view = 'signup'; S.msg = ''; return draw(); }
+    if (a === 'signup') { S.view = 'signup'; S.msg = ''; S.note = ''; return draw(); }
+    if (a === 'forgot') { const em = gate && gate.querySelector('#gEmail'); if (em && em.value) S.email = em.value.trim(); S.view = 'forgot'; S.msg = ''; S.note = ''; return draw(); }
+    if (a === 'resend') {
+      if (!S.pending || Date.now() < S.canResendAt) return;
+      if (navigator.onLine === false) { S.msg = ERR.offline(); return draw(); }
+      if (await askCode(S.pending.kind, S.pending.body)) { S.note = T('নতুন কোড পাঠানো হয়েছে।', 'A new code has been sent.'); draw(); }
+      return;
+    }
     if (a === 'eye') { const i = b.previousElementSibling; i.type = i.type === 'password' ? 'text' : 'password'; return; }
     if (a === 'signout') { LS.del(K); S.pass = null; S.name = ''; document.documentElement.classList.add('authwait'); return signin(); }
     if (a === 'recheck') {

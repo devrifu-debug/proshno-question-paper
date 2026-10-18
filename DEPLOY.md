@@ -36,6 +36,22 @@ The tables (`proshno_users`, `proshno_trial_devices`, `proshno_settings`) are cr
 You can see every account in Supabase → **Table Editor** → `proshno_users`.
 Change accounts from `/admin`, not by editing the table.
 
+## Email codes (optional, with Resend)
+
+When `RESEND_API_KEY` is set, new accounts need a 6-digit code sent to their email.
+A "Forgot password?" option also appears on the sign-in screen.
+Codes work for 10 minutes and allow 5 tries. A new code can be requested once a minute.
+
+1. Make a free account at resend.com and add your domain (Domains → Add Domain), e.g. `mail.yourdomain.com`.
+   Add the DNS records it shows, then wait until the domain is **Verified**.
+2. Create an API key with **Sending access**.
+3. Add two settings in Vercel (or in Dokploy):
+   - `RESEND_API_KEY`: the `re_…` key. Keep it only here, never in the code.
+   - `MAIL_FROM`: e.g. `Proshno <no-reply@mail.yourdomain.com>`, using the domain you verified.
+4. Redeploy. `/api/healthz` then shows `"emailCodes": true`.
+
+Until the domain is verified, Resend only delivers to the email address of your Resend account.
+
 ## Deploy on Dokploy (or any Docker host)
 
 1. Create an **Application** from the GitHub repo `devrifu-debug/proshno-question-paper`, branch `main`.
