@@ -2,7 +2,7 @@
 // vercel.json sends /api/* and /auth-config.js here.
 // Needs: POSTGRES_URL (added by the Supabase integration) or DATABASE_URL, plus ADMIN_PASSWORD and CONTACT.
 import { createAuth } from '../lib/core.mjs';
-import { pgStore, connectionString } from '../lib/store-pg.mjs';
+import { pgStore, connectionString, dbVarName } from '../lib/store-pg.mjs';
 
 let auth = null;
 function getAuth() {
@@ -33,7 +33,13 @@ export default async function handler(req, res) {
       if (!a) return send(res, 200, '/* sign-in is off: connect a database (POSTGRES_URL) */\n', 'text/javascript; charset=utf-8');
       return send(res, 200, await a.authConfig(), 'text/javascript; charset=utf-8');
     }
-    if (route === 'healthz') return send(res, 200, { ok: true, database: !!a });
+    if (route === 'healthz') {
+      // names only (never values), so a missing setting is easy to spot
+      const names = Object.keys(process.env).filter(k => /POSTGRES|DATABASE|SUPABASE/i.test(k)).sort();
+      let db = !!a, error;
+      if (a) { try { await a.authConfig(); } catch (e) { db = false; error = String(e.message || e).slice(0, 200); } }
+      return send(res, 200, { ok: true, database: db, using: dbVarName(process.env) || null, adminPassword: !!process.env.ADMIN_PASSWORD, contact: !!process.env.CONTACT, databaseSettingsFound: names, ...(error ? { error } : {}) });
+    }
     if (!a) return send(res, 503, { error: 'no_database', message: 'The database is not connected yet.' });
     let body = req.body;
     if (typeof body === 'string') { try { body = JSON.parse(body || '{}'); } catch { return send(res, 400, { error: 'bad_request', message: 'Bad request.' }); } }
