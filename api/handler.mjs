@@ -36,11 +36,11 @@ export default async function handler(req, res) {
       return send(res, 200, await a.authConfig(), 'text/javascript; charset=utf-8');
     }
     if (route === 'healthz') {
-      // names only (never values), so a missing setting is easy to spot
-      const names = Object.keys(process.env).filter(k => /POSTGRES|DATABASE|SUPABASE/i.test(k)).sort();
+      // yes/no only, so a missing setting is easy to spot without showing anything about the setup
+      const names = Object.keys(process.env).filter(k => /POSTGRES|DATABASE|SUPABASE/i.test(k));
       let db = !!a, error;
       if (a) { try { await a.authConfig(); } catch (e) { db = false; error = String(e.message || e).slice(0, 200); } }
-      return send(res, 200, { ok: true, database: db, using: dbVarName(process.env) || null, adminPassword: !!process.env.ADMIN_PASSWORD, contact: !!process.env.CONTACT, emailCodes: !!process.env.RESEND_API_KEY, clerk: !!(process.env.CLERK_PUBLISHABLE_KEY && process.env.CLERK_SECRET_KEY), mailFrom: process.env.RESEND_API_KEY ? (process.env.MAIL_FROM || 'Proshno <onboarding@resend.dev>') : null, databaseSettingsFound: names, ...(error ? { error } : {}) });
+      return send(res, 200, { ok: true, database: db,  adminPassword: !!process.env.ADMIN_PASSWORD, contact: !!process.env.CONTACT, emailCodes: !!process.env.RESEND_API_KEY, clerk: !!(process.env.CLERK_PUBLISHABLE_KEY && process.env.CLERK_SECRET_KEY), mailFrom: process.env.RESEND_API_KEY ? (process.env.MAIL_FROM || 'Proshno <onboarding@resend.dev>') : null, databaseSettingsFound: names.length, ...(error ? { error } : {}) });
     }
     if (!a) return send(res, 503, { error: 'no_database', message: 'The database is not connected yet.' });
     let body = req.body;
