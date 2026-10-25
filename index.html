@@ -1574,7 +1574,7 @@ I18N.start();
       <p class="g-alt"><button type="button" data-g="signout">${T('অন্য অ্যাকাউন্টে সাইন ইন', 'Sign in with another account')}</button></p>`;
     if (CLERK && ['signin', 'signup', 'forgot', 'code'].includes(S.view)) return `<h2>${T('সাইন ইন / নতুন অ্যাকাউন্ট', 'Sign in / Create account')}</h2>
       <p class="g-sub">${T(`ইমেইল কোড বা Google দিয়ে। নতুন হলে প্রথম <b>${N(DAYS)} দিন ফ্রি</b>।`, `With an email code or Google. New here? Your first <b>${DAYS} days are free</b>.`)}</p>
-      ${msg}<div class="g-clerk">${S.busy || !clerkReady ? '<div class="g-load"><span class="g-spin"></span></div>' : ''}</div>
+      ${msg}<div class="g-clerk">${(S.busy || !clerkReady) && !clerkFailed ? '<div class="g-load"><span class="g-spin"></span></div>' : ''}</div>
       ${clerkFailed ? `<button class="g-main" data-g="clerkretry">${T('আবার চেষ্টা করুন', 'Try again')}</button>` : ''}`;
     if (S.view === 'signup') return `<h2>${T('নতুন অ্যাকাউন্ট', 'Create an account')}</h2>
       <p class="g-sub">${T(`অ্যাকাউন্ট খুললেই <b>${N(DAYS)} দিন ফ্রি</b> ব্যবহার করতে পারবেন।`, `Your first <b>${DAYS} days are free</b>.`)}</p>
